@@ -48,7 +48,7 @@ function initIRC(pw) {
 var lastPost = null;
 
 function searchYoutube(message) {
-	var match = message.match(/^https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|&)/);
+	var match = message.match(/https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|&)/);
 	if (!match || !match[4]) return;
 
 	youtube.video(match[4], function (err, details) {
