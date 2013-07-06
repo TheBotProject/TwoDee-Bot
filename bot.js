@@ -16,7 +16,7 @@ var client = new irc.Client('irc.snoonet.org', 'MoeBot', {
 
 client.on('quit', function (nick) {
 	if (nick === client.nick) {
-		console.error('IRC disconnected us - reason: ' + );
+		console.error('IRC disconnected us - stopping' );
 		process.exit(1);
 	}
 });
