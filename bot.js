@@ -57,12 +57,15 @@ function searchNew() {
 
 }
 
-redwrap.r(reddits).new(function (err, data, res) {
-	if (err || data.error) {
-		console.error('Couldn\'t retrieve last post! Error: ' + (err || data.error));
-		process.exit(1);
-	}
 
-	lastPost = data.data.children[0].data.id;
-	console.log('last post id: ' + lastPost);
-});
+if (!lastPost) {
+	redwrap.r(reddits).new(function (err, data, res) {
+		if (err || data.error) {
+			console.error('Couldn\'t retrieve last post! Error: ' + (err || data.error));
+			process.exit(1);
+		}
+
+		lastPost = data.data.children[0].data.id;
+		console.log('last post id: ' + lastPost);
+	});
+}
