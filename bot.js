@@ -56,8 +56,8 @@ function searchNew() {
 					break; // already processed these posts
 				}
 
-				console.log('annoucing new link: [' + post.subreddit + '] [' + post.author + '] ' + post.title + ' [ http://redd.it/' + post.id + ' ]' + (post.over_18 ? ' [NSFW]' : ''));
-				client.say(channelName, '[' + post.subreddit + '] [' + post.author + '] ' + post.title + ' [ http://redd.it/' + post.id + ' ]' + (post.over_18 ? ' [NSFW]' : ''));
+				console.log('annoucing new link: ' + post.title);
+				client.say(channelName, '[' + post.subreddit + '] [' + post.author + '] ' + post.title + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 ? ' [NSFW]' : ''));
 			}
 
 			lastPost = data.data.children[0].data.id;
