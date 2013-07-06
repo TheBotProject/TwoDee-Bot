@@ -14,9 +14,11 @@ var client = new irc.Client('irc.snoonet.org', 'MoeBot', {
 	floodProtection: true
 });
 
-client.on('quit', function () {
-	console.error('IRC disconnected us - closing');
-	process.exit(1);
+client.on('quit', function (nick) {
+	if (nick === client.nick) {
+		console.error('IRC disconnected us - reason: ' + );
+		process.exit(1);
+	}
 });
 
 client.on('error', function (e) {
