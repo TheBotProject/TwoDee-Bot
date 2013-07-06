@@ -50,12 +50,12 @@ var lastPost = null;
 function searchYoutube(message) {
 	var id = null;
 
-	var match = message.match(/https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|&)/);
+	var match = message.match(/https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|&| )/);
 	if (match && match[4]) {
 		id = match[4];
 	}
 
-	var match = message.match(/https?:\/\/(www.)?youtu.be\/(.*?)($|\/)/);
+	var match = message.match(/https?:\/\/(www.)?youtu.be\/(.*?)($|\/| )/);
 	if (match && match[2]) {
 		id = match[2];
 	}
