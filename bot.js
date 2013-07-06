@@ -2,6 +2,8 @@
 var redwrap = require('redwrap');
 var fs = require('fs');
 
+var youtube = require('youtube-feeds');
+
 /*
 var channelName = '#TwoDeeTest';
 var reddits = 'all';
@@ -37,9 +39,24 @@ function initIRC(pw) {
 			setInterval(searchNew, 10 * 1000);
 		}
 	});
+
+	client.on('message' + channelName, function (from, message) {
+		searchYoutube(message);
+	});
 }
 
 var lastPost = null;
+
+function searchYoutube(message) {
+	var match = message.match(/^https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|&)/);
+	if (!match || !match[4]) return;
+
+	youtube.video(match[4], function (err, details) {
+		if (err) return;
+
+		client.say(channelName, details.title + ' [' + Math.floor(details.duration / 60) + ':' + ((details.duration % 60 < 10 ? '0' : '') + (details.duration % 60)) + '] - https://youtu.be/' + details.id);
+	});
+}
 
 function searchNew() {
 	redwrap.r(reddits).new(function (err, data, res) {

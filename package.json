@@ -4,6 +4,7 @@
 	"private": true,
 	"dependencies": {
 		"redwrap": "x",
-		"irc": "x"
+		"irc": "x",
+		"youtube-feeds": "x"
 	}
 }
