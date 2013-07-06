@@ -1,5 +1,6 @@
 ﻿var irc = require('irc');
 var redwrap = require('redwrap');
+var fs = require('fs');
 
 /*
 var channelName = '#TwoDeeTest';
@@ -8,30 +9,33 @@ var reddits = 'all';
 var channelName = '#TwoDee';
 var reddits = 'awwnime+pantsu+melanime+luckyyuri+kyoaniyuri+patchuu+moescape+imouto';
 
-var client = new irc.Client('irc.snoonet.org', 'MoeBot', {
-	userName: 'MoeBot',
-	channels: [channelName],
-	floodProtection: true
-});
+function initIRC(pw) {
+	var client = new irc.Client('irc.snoonet.org', 'MoeBot', {
+		userName: 'MoeBot',
+		channels: [channelName],
+		floodProtection: true,
+		password: pw
+	});
 
-client.on('quit', function (nick) {
-	if (nick === client.nick) {
-		console.error('IRC disconnected us - stopping' );
-		process.exit(1);
-	}
-});
+	client.on('quit', function (nick) {
+		if (nick === client.nick) {
+			console.error('IRC disconnected us - stopping');
+			process.exit(1);
+		}
+	});
 
-client.on('error', function (e) {
-	console.error('IRC error');
-	console.log(e);
-});
+	client.on('error', function (e) {
+		console.error('IRC error');
+		console.log(e);
+	});
 
-client.on('join', function (channel, user) {
-	if (channel === channelName && user === client.nick) {
-		console.log('Connected to IRC - starting requests');
-		setInterval(searchNew, 10 * 1000);
-	}
-});
+	client.on('join', function (channel, user) {
+		if (channel === channelName && user === client.nick) {
+			console.log('Connected to IRC - starting requests');
+			setInterval(searchNew, 10 * 1000);
+		}
+	});
+}
 
 var lastPost = null;
 
@@ -72,3 +76,12 @@ if (!lastPost) {
 		console.log('last post id: ' + lastPost);
 	});
 }
+
+fs.readFile('.pw', { encoding: 'utf8' }, function (err, data) {
+	var pw = null;
+	if (!err) {
+		pw = data;
+	}
+
+	initIRC(pw);
+});
