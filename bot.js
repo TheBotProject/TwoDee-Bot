@@ -48,10 +48,23 @@ function initIRC(pw) {
 var lastPost = null;
 
 function searchYoutube(message) {
-	var match = message.match(/https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|&)/);
-	if (!match || !match[4]) return;
+	var id = null;
 
-	youtube.video(match[4], function (err, details) {
+	var match = message.match(/https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|&)/);
+	if (match && match[4]) {
+		id = match[4];
+	}
+
+	var match = message.match(/https?:\/\/(www.)?youtu.be\/(.*?)($|\/)/);
+	if (match && match[2]) {
+		id = match[2];
+	}
+
+	postYT(id);
+}
+
+function postYT(id) {
+	youtube.video(id, function (err, details) {
 		if (err) return;
 
 		client.say(channelName, details.title + ' [' + Math.floor(details.duration / 60) + ':' + ((details.duration % 60 < 10 ? '0' : '') + (details.duration % 60)) + '] - https://youtu.be/' + details.id);
