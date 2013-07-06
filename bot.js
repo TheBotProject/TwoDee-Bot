@@ -10,7 +10,8 @@ var reddits = 'awwnime+pantsu+melanime+luckyyuri+kyoaniyuri+patchuu+moescape+imo
 
 var client = new irc.Client('irc.snoonet.org', 'MoeBot', {
 	userName: 'MoeBot',
-	channels: [channelName]
+	channels: [channelName],
+	floodProtection: true
 });
 
 client.on('quit', function () {
