@@ -1,0 +1,9 @@
+﻿{
+	"name": "TwoDee-Bot",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {
+		"redwrap": "x",
+		"irc": "x"
+	}
+}
