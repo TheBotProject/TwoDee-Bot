@@ -50,17 +50,21 @@ var lastPost = null;
 function searchYoutube(message) {
 	var id = null;
 
-	var match = message.match(/https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|&| )/);
-	if (match && match[4]) {
-		id = match[4];
+	var re = /https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|[^\w-])/g;
+	var match;
+
+	while (match = re.exec(message)) {
+		if (match[4]) {
+			postYT(match[4]);
+		}
 	}
 
-	var match = message.match(/https?:\/\/(www.)?youtu.be\/(.*?)($|\/| )/);
-	if (match && match[2]) {
-		id = match[2];
+	re = /https?:\/\/(www.)?youtu.be\/(.*?)($|[^\w-])/g;
+	while (match = re.exec(message)) {
+		if (match[2]) {
+			postYT(match[2]);
+		}
 	}
-
-	postYT(id);
 }
 
 function postYT(id) {
