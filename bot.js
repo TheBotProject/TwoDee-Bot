@@ -8,9 +8,10 @@ var reddits = 'all';
 */
 var channelName = '#TwoDee';
 var reddits = 'awwnime+pantsu+melanime+luckyyuri+kyoaniyuri+patchuu+moescape+imouto';
+var client;
 
 function initIRC(pw) {
-	var client = new irc.Client('irc.snoonet.org', 'MoeBot', {
+	client = new irc.Client('irc.snoonet.org', 'MoeBot', {
 		userName: 'MoeBot',
 		channels: [channelName],
 		floodProtection: true,
