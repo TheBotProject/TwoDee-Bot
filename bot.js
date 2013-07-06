@@ -6,13 +6,14 @@ var fs = require('fs');
 var channelName = '#TwoDeeTest';
 var reddits = 'all';
 */
+var botName = 'MoeBot';
 var channelName = '#TwoDee';
 var reddits = 'awwnime+pantsu+melanime+luckyyuri+kyoaniyuri+patchuu+moescape+imouto';
 var client;
 
 function initIRC(pw) {
-	client = new irc.Client('irc.snoonet.org', 'MoeBot', {
-		userName: 'MoeBot',
+	client = new irc.Client('irc.snoonet.org', botName, {
+		userName: botName,
 		channels: [channelName],
 		floodProtection: true,
 		password: pw
