@@ -44,7 +44,7 @@ function searchNew() {
 				var post = data.data.children[i].data;
 				if (post.id === lastPost) {
 					console.log('found last post - stopping');
-					return; // already processed these posts
+					break; // already processed these posts
 				}
 
 				console.log('annoucing new link: [' + post.subreddit + '] [' + post.author + '] ' + post.title + ' [ http://redd.it/' + post.id + ' ]' + (post.over_18 ? ' [NSFW]' : ''));
