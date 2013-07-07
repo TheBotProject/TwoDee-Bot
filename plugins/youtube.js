@@ -30,7 +30,7 @@ module.exports = function (client, channelName) {
 		messageHandler: function (from, message) {
 			var id = null;
 
-			var re = /https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|[^\w-])/g;
+			var re = /https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|[^\w-])/gi;
 			var match;
 
 			while (match = re.exec(message)) {
@@ -39,7 +39,7 @@ module.exports = function (client, channelName) {
 				}
 			}
 
-			re = /https?:\/\/(www.)?youtu.be\/(.*?)($|[^\w-])/g;
+			re = /https?:\/\/(www.)?youtu.be\/(.*?)($|[^\w-])/gi;
 			while (match = re.exec(message)) {
 				if (match[2]) {
 					postVideo(match[2]);
