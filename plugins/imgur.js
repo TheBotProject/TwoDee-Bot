@@ -19,7 +19,12 @@ try {
 				if (err) return;
 
 				data = JSON.parse(data).data;
-				if (!data || !data.length) return;
+				if (!data) return;
+
+				if (!data.length) {
+					client.say(channelName, 'Sorry, no results for: ' + query);
+					return;
+				}
 
 				if (data[0].is_album) {
 					postAlbum(data[0]);
