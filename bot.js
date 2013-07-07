@@ -45,7 +45,7 @@ function initIRC(pw) {
 	});
 }
 
-var lastPost = null;
+var lastSeen = [];
 
 function searchYoutube(message) {
 	var id = null;
@@ -82,34 +82,35 @@ function searchNew() {
 			return;
 		}
 
-		if (data.data.children.length) {
-			for (var i = 0; i < data.data.children.length; ++i) {
-				var post = data.data.children[i].data;
-				if (post.id === lastPost) {
-					console.log('found last post - stopping');
-					break; // already processed these posts
-				}
-
-				console.log('annoucing new link: ' + post.title);
-				client.say(channelName, '[' + post.subreddit + '] [' + post.author + '] ' + post.title + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 ? ' [NSFW]' : ''));
+		for (var i = 0; i < data.data.children.length; ++i) {
+			var post = data.data.children[i].data;
+			if (lastSeen.indexOf(post.id) !== -1) {
+				console.log('found last post - stopping');
+				break; // already processed these posts
 			}
+			lastSeen.push(post.id);
 
-			lastPost = data.data.children[0].data.id;
+			console.log('annoucing new link: ' + post.title);
+			client.say(channelName, '[' + post.subreddit + '] [' + post.author + '] ' + post.title + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 ? ' [NSFW]' : ''));
 		}
 	});
 
 }
 
 
-if (!lastPost) {
+if (!lastSeen.length) {
 	redwrap.r(reddits).new(function (err, data, res) {
 		if (err || data.error) {
 			console.error('Couldn\'t retrieve last post! Error: ' + (err || data.error));
 			process.exit(1);
 		}
 
-		lastPost = data.data.children[0].data.id;
-		console.log('last post id: ' + lastPost);
+		for (var i = 0; i < data.data.children.length; ++i) {
+			var post = data.data.children[i].data;
+			lastSeen.push(post.id);
+		}
+
+		console.log('saved last posts');
 	});
 }
 
@@ -121,3 +122,8 @@ fs.readFile('.pw', { encoding: 'utf8' }, function (err, data) {
 
 	initIRC(pw);
 });
+
+setInterval(function () {
+	console.log('Cleaning memory');
+	lastSeen.splice(0, lastSeen.length - 50);
+}, 24 * 3600);
