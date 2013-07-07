@@ -35,6 +35,11 @@ module.exports = function (client, channelName) {
 	return {
 		commands: {
 			pet: function (from, message) {
+				if (from.toLowerCase() === message.toLowerCase()) {
+					client.say(channelName, 'Only someone else can give me the pet command for you :(');
+					return;
+				}
+
 				var rnd = random(0, pets.length - 1);
 				var pet = pets[rnd][0];
 
