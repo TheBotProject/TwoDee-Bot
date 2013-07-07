@@ -23,6 +23,10 @@ module.exports = function (client, channelName) {
 		process.exit();
 	});
 
+	process.on("exit", function () {
+		fs.writeFileSync(__dirname + '/.pets', JSON.stringify(savedPets));
+	});
+
 	function random(min, max) {
 		return min + Math.floor(Math.random() * ((max - min) + 1));
 	}
