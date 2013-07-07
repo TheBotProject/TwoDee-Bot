@@ -1,15 +1,26 @@
-﻿var request = require('request');
+﻿var google = require('google');
+var request = require('request');
+var ent = require('ent');
 
 module.exports = function (client, channelName) {
 
 	function searchAnime(query) {
-		request.get('http://mal-api.com/anime/search?q=' + encodeURIComponent(query), function (err, r, data) {
-			if (err) return;
+		google.resultsPerPage = 3;
 
-			var items = JSON.parse(data);
-			if (!items.length) return;
+		google('site:myanimelist.net/anime/ ' + query, function (err, next, links) {
+			if (err || !links.length) return;
 
-			client.say(channelName, items[0].title + ' (' + (items[0].episodes ? items[0].episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + items[0].id);
+			for (var i = 0; i < links.length; ++i) {
+				var match = links[i].link.match(/^https?:\/\/myanimelist\.net\/anime\/(\d+)/);
+				if (match) {
+					request('http://mal-api.com/anime/' + match[1], function (err, r, data) {
+						if (err) return;
+
+						data = JSON.parse(data);
+						client.say(channelName, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
+					});
+				}
+			}
 		});
 	}
 
