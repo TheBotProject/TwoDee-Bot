@@ -27,12 +27,16 @@ module.exports = function (client, channelName) {
 								deferred.resolve(JSON.parse(data));
 							}
 						});
+					} else {
+						q.resolve(undefined);
 					}
 					return deferred.promise;
 				})
 			).then(function (datas) {
 				for (var i = 0; i < datas.length; ++i) {
 					var data = datas[i];
+					if (!data) continue;
+
 					client.say(channelName, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
 				}
 			}).done();
