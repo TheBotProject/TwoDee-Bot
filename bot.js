@@ -133,4 +133,4 @@ fs.readFile('.pw', { encoding: 'utf8' }, function (err, data) {
 setInterval(function () {
 	console.log('Cleaning memory');
 	lastSeen.splice(0, lastSeen.length - 50);
-}, 24 * 3600);
+}, 24 * 3600 * 1000);
