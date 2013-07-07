@@ -17,6 +17,12 @@ var commands = {};
 var lastSeen = [];
 
 function registerPlugin(instance) {
+	if (instance instanceof Function) {
+		instance = instance(client, channelName);
+	} else if (typeof instance === 'string') {
+		instance = require(instance)(client, channelName);
+	}
+
 	if (instance.messageHandler) {
 		messageHandlers.push(instance.messageHandler);
 	}
@@ -66,7 +72,7 @@ function initIRC(pw) {
 		}
 	});
 
-	registerPlugin(require('./ytSearch')(client, channelName));
+	registerPlugin('./ytSearch');
 }
 
 function searchNew() {
