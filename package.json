@@ -5,6 +5,7 @@
 	"dependencies": {
 		"redwrap": "x",
 		"irc": "x",
-		"youtube-feeds": "x"
+		"youtube-feeds": "x",
+		"request": "x"
 	}
 }

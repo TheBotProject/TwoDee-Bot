@@ -73,6 +73,7 @@ function initIRC(pw) {
 	});
 
 	registerPlugin('./plugins/youtube');
+	registerPlugin('./plugins/imgur');
 }
 
 function searchNew() {
