@@ -75,6 +75,7 @@ function initIRC(pw) {
 	registerPlugin('./plugins/youtube');
 	registerPlugin('./plugins/imgur');
 	registerPlugin('./plugins/mal');
+	registerPlugin('./plugins/pixiv');
 }
 
 function searchNew() {
