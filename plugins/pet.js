@@ -6,30 +6,6 @@ module.exports = function (client, channelName) {
 
 	var savedPets = JSON.parse(fs.readFileSync(__dirname + '/.pets', { encoding: 'utf8' }));
 
-	function save() {
-		fs.writeFileSync(__dirname + '/.pets', JSON.stringify(savedPets));
-	}
-
-	if (process.platform === "win32") {
-		var rl = readLine.createInterface({
-			input: process.stdin,
-			output: process.stdout
-		});
-
-		rl.on("SIGINT", function () {
-			process.emit("SIGINT");
-		});
-	}
-
-	process.on("SIGINT", function () {
-		save();
-		process.exit();
-	});
-
-	process.on("SIGTERM", function () {
-		save();
-	});
-
 	function random(min, max) {
 		return min + Math.floor(Math.random() * ((max - min) + 1));
 	}
@@ -55,8 +31,8 @@ module.exports = function (client, channelName) {
 				}
 
 				savedPets[message.toLowerCase()][rnd] = savedPets[message.toLowerCase()][rnd] ? savedPets[message.toLowerCase()][rnd] + 1 : 1;
-				
 				client.action(channelName, pet + ' ' + message);
+				fs.writeFileSync(__dirname + '/.pets', JSON.stringify(savedPets));
 			},
 
 			pets: function (from, message) {
