@@ -54,8 +54,15 @@ function initIRC(pw) {
 	});
 
 	client.on('message' + channelName, function (from, message) {
-		for (var i = 0; i < messageHandlers.length; ++i) {
-			messageHandlers[i](from, message);
+		if (message[0] === '!') {
+			var cmd = message.split(' ')[0].substring(1);
+			if (commands[cmd]) {
+				commands[cmd](message.substring(cmd.length + 2));
+			}
+		} else {
+			for (var i = 0; i < messageHandlers.length; ++i) {
+				messageHandlers[i](from, message);
+			}
 		}
 	});
 
