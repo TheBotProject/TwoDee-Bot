@@ -77,6 +77,7 @@ function initIRC(pw) {
 	registerPlugin('./plugins/mal');
 	registerPlugin('./plugins/pixiv');
 	registerPlugin('./plugins/sauce');
+	registerPlugin('./plugins/whattowatch');
 }
 
 function searchNew() {
