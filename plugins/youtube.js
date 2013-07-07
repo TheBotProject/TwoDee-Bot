@@ -28,8 +28,6 @@ module.exports = function (client, channelName) {
 
 	return {
 		messageHandler: function (from, message) {
-			var id = null;
-
 			var re = /https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|[^\w-])/gi;
 			var match;
 
