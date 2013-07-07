@@ -36,7 +36,7 @@ function initIRC(pw) {
 	client.on('join', function (channel, user) {
 		if (channel === channelName && user === client.nick) {
 			console.log('Connected to IRC - starting requests');
-			setInterval(searchNew, 10 * 1000);
+			setInterval(searchNew, 30 * 1000);
 		}
 	});
 
