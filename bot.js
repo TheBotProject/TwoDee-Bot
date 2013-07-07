@@ -72,7 +72,7 @@ function initIRC(pw) {
 		}
 	});
 
-	registerPlugin('./ytSearch');
+	registerPlugin('./plugins/youtube');
 }
 
 function searchNew() {
