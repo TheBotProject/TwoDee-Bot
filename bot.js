@@ -2,8 +2,6 @@
 var redwrap = require('redwrap');
 var fs = require('fs');
 
-var youtube = require('youtube-feeds');
-
 /*
 var channelName = '#TwoDeeTest';
 var reddits = 'all';
@@ -12,6 +10,21 @@ var botName = 'MoeBot';
 var channelName = '#TwoDee';
 var reddits = 'awwnime+pantsu+melanime+luckyyuri+kyoaniyuri+patchuu+moescape+imouto+ZettaiRyouiki';
 var client;
+
+var messageHandlers = [];
+var commands = {};
+
+var lastSeen = [];
+
+function registerPlugin(instance) {
+	if (instance.messageHandler) {
+		messageHandlers.push(instance.messageHandler);
+	}
+
+	for (var cmd in instance.commands) {
+		commands[cmd] = instance.commands[cmd];
+	}
+}
 
 function initIRC(pw) {
 	client = new irc.Client('irc.snoonet.org', botName, {
@@ -41,38 +54,12 @@ function initIRC(pw) {
 	});
 
 	client.on('message' + channelName, function (from, message) {
-		searchYoutube(message);
-	});
-}
-
-var lastSeen = [];
-
-function searchYoutube(message) {
-	var id = null;
-
-	var re = /https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|[^\w-])/g;
-	var match;
-
-	while (match = re.exec(message)) {
-		if (match[4]) {
-			postYT(match[4]);
+		for (var i = 0; i < messageHandlers.length; ++i) {
+			messageHandlers[i](from, message);
 		}
-	}
-
-	re = /https?:\/\/(www.)?youtu.be\/(.*?)($|[^\w-])/g;
-	while (match = re.exec(message)) {
-		if (match[2]) {
-			postYT(match[2]);
-		}
-	}
-}
-
-function postYT(id) {
-	youtube.video(id, function (err, details) {
-		if (err) return;
-
-		client.say(channelName, details.title + ' [' + Math.floor(details.duration / 60) + ':' + ((details.duration % 60 < 10 ? '0' : '') + (details.duration % 60)) + '] - https://youtu.be/' + details.id);
 	});
+
+	registerPlugin(require('./ytSearch')(client, channelName));
 }
 
 function searchNew() {
