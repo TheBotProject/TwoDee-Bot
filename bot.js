@@ -10,7 +10,7 @@ var reddits = 'all';
 */
 var botName = 'MoeBot';
 var channelName = '#TwoDee';
-var reddits = 'awwnime+pantsu+melanime+luckyyuri+kyoaniyuri+patchuu+moescape+imouto';
+var reddits = 'awwnime+pantsu+melanime+luckyyuri+kyoaniyuri+patchuu+moescape+imouto+ZettaiRyouiki';
 var client;
 
 function initIRC(pw) {
