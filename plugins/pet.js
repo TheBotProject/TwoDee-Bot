@@ -39,7 +39,7 @@ module.exports = function (client, channelName) {
 				if (!message) message = from;
 
 				if (!savedPets[message.toLowerCase()]) {
-					client.say(channelName, from + ' didn\'t get any pets yet :(');
+					client.say(channelName, message + ' didn\'t get any pets yet :(');
 					return;
 				}
 
