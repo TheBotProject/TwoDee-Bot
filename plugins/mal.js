@@ -8,7 +8,11 @@ module.exports = function (client, channelName) {
 		google.resultsPerPage = 3;
 
 		google('site:myanimelist.net/anime/ ' + query, function (err, next, links) {
-			if (err || !links.length) return;
+			if (err) return;
+
+			if (!links.length) {
+				client.say(channelName, 'Sorry, no results for: ' + query);
+			}
 
 			for (var i = 0; i < links.length; ++i) {
 				var match = links[i].link.match(/^https?:\/\/myanimelist\.net\/anime\/(\d+)/);
