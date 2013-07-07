@@ -6,14 +6,37 @@ try {
 
 	module.exports = function (client, channelName) {
 
-		function postAlbum(id) {
-			request.get({ url: 'https://api.imgur.com/3/album/' + id, headers: { Authorization: 'Client-ID ' + clientId } }, function (err, r, data) {
+		function postAlbum(details) {
+			client.say(channelName, details.title + ' (' + details.images_count + ' images)' + (details.account_url ? ' [' + details.account_url + ']' : '') + (details.nsfw ? ' [NSFW]' : '') + ' - ' + details.link);
+		}
+
+		function postImage(details) {
+			client.say(channelName, details.title + (details.account_url ? ' [' + details.account_url + ']' : '') + (details.nsfw ? ' [NSFW]' : '') + ' - ' + details.link);
+		}
+
+		function postGallerySearch(query) {
+			request.get({ url: 'https://api.imgur.com/3/gallery/search?q=' + encodeURIComponent(query), headers: { Authorization: 'Client-ID ' + clientId } }, function(err, r, data) {
+				if (err) return;
+
+				data = JSON.parse(data).data;
+				if (!data || !data.length) return;
+
+				if (data[0].is_album) {
+					postAlbum(data[0]);
+				} else {
+					postImage(data[0]);
+				}
+			});
+		}
+
+		function postAlbumInfo(id) {
+			request.get({ url: 'https://api.imgur.com/3/album/' + encodeURIComponent(id), headers: { Authorization: 'Client-ID ' + clientId } }, function (err, r, data) {
 				if (err) return;
 
 				data = JSON.parse(data).data;
 				if (!data) return;
 
-				client.say(channelName, data.title + ' (' + data.images_count + ' images)' + (data.account_url ? ' [' + data.account_url + ']' : '') + (data.nsfw ? ' [NSFW]' : '') + ' - ' + data.link);
+				postAlbum(data);
 			});
 		}
 
@@ -24,6 +47,12 @@ try {
 					if (match[2]) {
 						postAlbum(match[2]);
 					}
+				}
+			},
+
+			commands: {
+				imgur: function (from, message) {
+					postGallerySearch(message);
 				}
 			}
 		};
