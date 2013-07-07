@@ -9,7 +9,7 @@ module.exports = function (client, channelName) {
 
 			csv().from.string(data).to.array(function (arr) {
 				arr = arr[0];
-				client.say(channelName, arr[3] + ' [' + arr[5] + '] - ' + arr[9].replace(/\/mobile|_480mw/g, ''));
+				client.say(channelName, arr[3] + ' [' + arr[5] + '] - http://pixiv.net/member_illust.php?illust_id=' + id);
 			});
 		});
 	}
