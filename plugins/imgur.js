@@ -50,7 +50,7 @@ try {
 				re = /https?:\/\/(www.)?imgur.com\/a\/(.*?)($|[^\w-])/gi;
 				while (match = re.exec(message)) {
 					if (match[2]) {
-						postAlbum(match[2]);
+						postAlbumInfo(match[2]);
 					}
 				}
 			},
