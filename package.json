@@ -9,6 +9,7 @@
 		"request": "x",
 		"google": "0.3.x",
 		"ent": "x",
-		"csv": "0.2.x"
+		"csv": "0.2.x",
+		"cheerio": "x"
 	}
 }
