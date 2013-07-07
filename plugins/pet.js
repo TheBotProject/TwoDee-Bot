@@ -6,6 +6,10 @@ module.exports = function (client, channelName) {
 
 	var savedPets = JSON.parse(fs.readFileSync(__dirname + '/.pets', { encoding: 'utf8' }));
 
+	function save() {
+		fs.writeFileSync(__dirname + '/.pets', JSON.stringify(savedPets));
+	}
+
 	if (process.platform === "win32") {
 		var rl = readLine.createInterface({
 			input: process.stdin,
@@ -15,16 +19,15 @@ module.exports = function (client, channelName) {
 		rl.on("SIGINT", function () {
 			process.emit("SIGINT");
 		});
-
 	}
 
 	process.on("SIGINT", function () {
-		fs.writeFileSync(__dirname + '/.pets', JSON.stringify(savedPets));
+		save();
 		process.exit();
 	});
 
-	process.on("exit", function () {
-		fs.writeFileSync(__dirname + '/.pets', JSON.stringify(savedPets));
+	process.on("SIGTERM", function () {
+		save();
 	});
 
 	function random(min, max) {
