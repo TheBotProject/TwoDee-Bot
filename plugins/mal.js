@@ -28,7 +28,7 @@ module.exports = function (client, channelName) {
 							}
 						});
 					} else {
-						q.resolve(undefined);
+						deferred.resolve(undefined);
 					}
 					return deferred.promise;
 				})
