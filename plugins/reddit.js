@@ -46,5 +46,10 @@ module.exports = function (client, channelName) {
 
 	setInterval(searchNew, 30 * 1000);
 
+	setInterval(function () {
+		console.log('Cleaning memory');
+		lastSeen.splice(0, lastSeen.length - 50);
+	}, 24 * 3600 * 1000);
+
 	return {};
 }
