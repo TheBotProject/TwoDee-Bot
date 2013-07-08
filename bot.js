@@ -1,6 +1,7 @@
 ﻿var irc = require('irc');
 var redwrap = require('redwrap');
 var fs = require('fs');
+var ent = require('ent');
 
 /*
 var channelName = '#TwoDeeTest';
@@ -97,7 +98,7 @@ function searchNew() {
 			lastSeen.push(post.id);
 
 			console.log('annoucing new link: ' + post.title);
-			client.say(channelName, '[' + post.subreddit + '] [' + post.author + '] ' + post.title + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 ? ' [NSFW]' : ''));
+			client.say(channelName, '[' + post.subreddit + '] [' + post.author + '] ' + ent.decode(post.title) + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 ? ' [NSFW]' : ''));
 		}
 	});
 
