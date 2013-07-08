@@ -1,14 +1,14 @@
 ﻿var redwrap = require('redwrap');
 var ent = require('ent');
-
-var reddits = 'awwnime+pantsu+melanime+luckyyuri+kyoaniyuri+patchuu+moescape+imouto+ZettaiRyouiki';
+var fs = require('fs');
 
 module.exports = function (client, channelName) {
 
+	var reddits = [];
 	var lastSeen = [];
 
 	function searchNew() {
-		redwrap.r(reddits).new(function (err, data, res) {
+		redwrap.r(reddits.join('+')).new(function (err, data, res) {
 			if (err || data.error) {
 				console.error('Error "' + (err || data.error) + '" when refreshing post list, retrying on next interval');
 				return;
@@ -28,23 +28,36 @@ module.exports = function (client, channelName) {
 		});
 	}
 
-	if (!lastSeen.length) {
-		redwrap.r(reddits).new(function (err, data, res) {
-			if (err || data.error) {
-				console.error('Couldn\'t retrieve last post! Error: ' + (err || data.error));
-				process.exit(1);
-			}
+	function init() {
+		if (!lastSeen.length) {
+			redwrap.r(reddits.join('+')).new(function (err, data, res) {
+				if (err || data.error) {
+					console.error('Couldn\'t retrieve last post! Error: ' + (err || data.error));
+					process.exit(1);
+				}
 
-			for (var i = 0; i < data.data.children.length; ++i) {
-				var post = data.data.children[i].data;
-				lastSeen.push(post.id);
-			}
+				for (var i = 0; i < data.data.children.length; ++i) {
+					var post = data.data.children[i].data;
+					lastSeen.push(post.id);
+				}
 
-			console.log('saved last posts');
-		});
+				console.log('saved last posts');
+			});
+		}
+
+		setInterval(searchNew, 30 * 1000);
 	}
 
-	setInterval(searchNew, 30 * 1000);
+	fs.readFile(__dirname + '/.reddit', { encoding: 'utf8' }, function (err, data) {
+		if (err) {
+			console.error('Reddit plugin config file missing...');
+			return;
+		}
+
+		reddits = JSON.parse(data);
+		init();
+	});
+
 
 	setInterval(function () {
 		console.log('Cleaning memory');
