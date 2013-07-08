@@ -1,0 +1,16 @@
+{
+	"server": "irc.snoonet.org",
+	"channel": "#TwoDee",
+	"nick": "MoeBot",
+	"password": null,
+	"plugins": [
+		"reddit",
+		"youtube",
+		"imgur",
+		"mal",
+		"pixiv",
+		"sauce",
+		"whattowatch",
+		"pet"
+	]
+}
