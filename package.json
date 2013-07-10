@@ -11,6 +11,8 @@
 		"ent": "x",
 		"csv": "0.2.x",
 		"cheerio": "x",
-		"q": "x"
+		"q": "x",
+		"nyaatorrents": "git://github.com/Sebmaster/node-nyaatorrents.git",
+		"filesize": "x"
 	}
 }
