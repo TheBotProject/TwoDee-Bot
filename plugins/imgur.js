@@ -47,6 +47,8 @@ try {
 
 		return {
 			messageHandler: function (from, message) {
+				var re, match;
+
 				re = /https?:\/\/(www.)?imgur.com\/a\/(.*?)($|[^\w-])/gi;
 				while (match = re.exec(message)) {
 					if (match[2]) {
