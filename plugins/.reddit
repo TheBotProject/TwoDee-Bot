@@ -1,11 +1,11 @@
-[
-	"awwnime",
-	"pantsu",
-	"melanime",
-	"luckyyuri",
-	"kyoaniyuri",
-	"patchuu",
-	"moescape",
-	"imouto",
-	"ZettaiRyouiki"
-]
+{
+	"awwnime": { "nsfl": false, "color": null },
+	"pantsu": { "nsfl": false, "color": null },
+	"melanime": { "nsfl": false, "color": null },
+	"luckyyuri": { "nsfl": false, "color": null },
+	"kyoaniyuri": { "nsfl": false, "color": null },
+	"patchuu": { "nsfl": false, "color": null },
+	"moescape": { "nsfl": false, "color": null },
+	"imouto": { "nsfl": false, "color": null },
+	"zettairyouiki": { "nsfl": false, "color": "06,00" }
+}
