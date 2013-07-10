@@ -16,6 +16,8 @@ module.exports = function (client, channelName) {
 
 	return {
 		messageHandler: function (from, message) {
+			var re, match;
+
 			re = /https?:\/\/(www.)?pixiv.net\/member_illust.php\?((.+)&)?illust_id=([\d]+)/gi;
 			while (match = re.exec(message)) {
 				if (match[4]) {
