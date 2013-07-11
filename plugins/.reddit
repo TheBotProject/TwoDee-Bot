@@ -7,5 +7,6 @@
 	"patchuu": { "nsfl": false, "color": null },
 	"moescape": { "nsfl": false, "color": null },
 	"imouto": { "nsfl": false, "color": null },
-	"zettairyouiki": { "nsfl": false, "color": "06,00" }
+	"zettairyouiki": { "nsfl": false, "color": "06,00" },
+	"animefigures": { "nsfl": false, "color": null }
 }
