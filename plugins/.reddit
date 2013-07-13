@@ -8,5 +8,6 @@
 	"moescape": { "nsfl": false, "color": null },
 	"imouto": { "nsfl": false, "color": null },
 	"zettairyouiki": { "nsfl": false, "color": "06" },
-	"animefigures": { "nsfl": false, "color": null }
+	"animefigures": { "nsfl": false, "color": null },
+	"kitsunemimi" { "nsfl": false, "color": null }
 }
