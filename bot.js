@@ -45,7 +45,7 @@ client.on('error', function (e) {
 	console.log(e);
 });
 
-client.on('join', function (channel, user) {
+client.once('join', function (channel, user) {
 	if (channel === config.channel && user === client.nick) {
 		console.log('Connected to IRC');
 
