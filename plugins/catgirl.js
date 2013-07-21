@@ -22,14 +22,18 @@ module.exports = function (client, channelName) {
 	return {
 		commands: {
 			catgirl: function (from, message) {
-				requestAndParse('http://safebooru.org/index.php?page=dapi&s=post&q=index&tags=cat_ears&limit=0', function (err, res) {
+				this.sb(from, 'cat_tail');
+			},
+
+			sb: function (from, message) {
+				requestAndParse('http://safebooru.org/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(message) + '&limit=0', function (err, res) {
 					if (err) {
 						console.error('Catgirl error: ' + err);
 						return;
 					}
 
 					var rand = random(0, res.posts.$.count - 1);
-					requestAndParse('http://safebooru.org/index.php?page=dapi&s=post&q=index&tags=cat_ears&limit=1&pid=' + rand, function (err, res) {
+					requestAndParse('http://safebooru.org/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(message) + '&limit=1&pid=' + rand, function (err, res) {
 						client.say(channelName, res.posts.post[0].$.file_url);
 					});
 				});
