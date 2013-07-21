@@ -13,6 +13,7 @@
 		"cheerio": "x",
 		"q": "x",
 		"nyaatorrents": "git://github.com/Sebmaster/node-nyaatorrents.git",
-		"filesize": "x"
+		"filesize": "x",
+		"xml2js": "x"
 	}
 }
