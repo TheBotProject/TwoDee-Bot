@@ -32,6 +32,11 @@ module.exports = function (client, channelName) {
 						return;
 					}
 
+					if (res.posts.$.count == 0) {
+						client.say(channelName, 'Sorry, nothing found for ' + message);
+						return;
+					}
+
 					var rand = random(0, res.posts.$.count - 1);
 					requestAndParse('http://safebooru.org/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(message) + '&limit=1&pid=' + rand, function (err, res) {
 						client.say(channelName, res.posts.post[0].$.file_url);
