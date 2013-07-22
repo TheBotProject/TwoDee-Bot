@@ -9,6 +9,12 @@ module.exports = function (client, channelName) {
 		}
 	}, 1000);
 
+	client.on('quit', function (user) {
+		if (users[user.toLowerCase()]) {
+			users[user.toLowerCase()].left = new Date();
+		}
+	});
+
 	client.on('part', function (channel, user) {
 		if (users[user.toLowerCase()]) {
 			users[user.toLowerCase()].left = new Date();
