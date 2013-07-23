@@ -23,7 +23,7 @@ module.exports = function (client, channelName) {
 			requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=1&pid=' + rand, function (err, res) {
 				if (!res.posts.post.length) return;
 
-				client.say(channelName, res.posts.post[0].$.file_url);
+				client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? 'NSFW - ' : '') + res.posts.post[0].$.file_url);
 			});
 		});
 	}
