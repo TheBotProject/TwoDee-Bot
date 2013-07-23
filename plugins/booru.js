@@ -15,7 +15,7 @@ module.exports = function (client, channelName) {
 			}
 
 			if (res.posts.$.count == 0) {
-				client.say(channelName, 'Sorry, nothing found for ' + message);
+				client.say(channelName, 'Sorry, nothing found for ' + tags);
 				return;
 			}
 
