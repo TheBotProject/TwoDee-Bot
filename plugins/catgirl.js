@@ -7,6 +7,27 @@ module.exports = function (client, channelName) {
 		return min + Math.floor(Math.random() * ((max - min) + 1));
 	}
 
+	function getBooru(host, tags) {
+		requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=0', function (err, res) {
+			if (err) {
+				console.error('Booru error: ' + err);
+				return;
+			}
+
+			if (res.posts.$.count == 0) {
+				client.say(channelName, 'Sorry, nothing found for ' + message);
+				return;
+			}
+
+			var rand = random(0, res.posts.$.count - 1);
+			requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=1&pid=' + rand, function (err, res) {
+				if (!res.posts.post.length) return;
+
+				client.say(channelName, res.posts.post[0].$.file_url);
+			});
+		});
+	}
+
 	function requestAndParse(url, cb) {
 		request(url, function (err, res, body) {
 			if (err) {
@@ -26,22 +47,11 @@ module.exports = function (client, channelName) {
 			},
 
 			sb: function (from, message) {
-				requestAndParse('http://safebooru.org/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(message) + '&limit=0', function (err, res) {
-					if (err) {
-						console.error('Catgirl error: ' + err);
-						return;
-					}
+				getBooru('http://safebooru.org', message);
+			},
 
-					if (res.posts.$.count == 0) {
-						client.say(channelName, 'Sorry, nothing found for ' + message);
-						return;
-					}
-
-					var rand = random(0, res.posts.$.count - 1);
-					requestAndParse('http://safebooru.org/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(message) + '&limit=1&pid=' + rand, function (err, res) {
-						client.say(channelName, res.posts.post[0].$.file_url);
-					});
-				});
+			gb: function (from, message) {
+				getBooru('http://gelbooru.com', message);
 			}
 		}
 	};
