@@ -32,7 +32,6 @@ module.exports = function (client, channelName) {
 
 				savedPets[message.toLowerCase()][rnd] = savedPets[message.toLowerCase()][rnd] ? savedPets[message.toLowerCase()][rnd] + 1 : 1;
 				client.action(channelName, pet + ' ' + message);
-				fs.writeFileSync(__dirname + '/.pets', JSON.stringify(savedPets));
 			},
 
 			pets: function (from, message) {
@@ -50,6 +49,10 @@ module.exports = function (client, channelName) {
 
 				client.say(channelName, message + ' has ' + owns.join(', '));
 			}
+		},
+
+		save: function () {
+			fs.writeFileSync(__dirname + '/.pets', JSON.stringify(savedPets));
 		}
 	};
 };

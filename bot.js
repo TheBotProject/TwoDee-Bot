@@ -7,6 +7,7 @@ var reddits = 'all';
 */
 var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
 
+var saves = [];
 var messageHandlers = [];
 var commands = {};
 
@@ -24,6 +25,18 @@ function registerPlugin(instance) {
 	for (var cmd in instance.commands) {
 		commands[cmd] = instance.commands[cmd];
 	}
+
+	if (instance.save) {
+		saves[saves.length] = instance.save;
+	}
+}
+
+function gracefulExit() {
+	for (var i = 0; i < saves.length; ++i) {
+		saves[i]();
+	}
+
+	process.exit(0);
 }
 
 var client = new irc.Client(config.server, config.nick, {
@@ -52,6 +65,8 @@ client.once('join', function (channel, user) {
 		for (var i = 0; i < config.plugins.length; ++i) {
 			registerPlugin('./plugins/' + config.plugins[i]);
 		}
+
+		process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 	}
 });
 
