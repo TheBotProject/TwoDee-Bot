@@ -66,7 +66,7 @@ client.once('join', function (channel, user) {
 			registerPlugin('./plugins/' + config.plugins[i]);
 		}
 
-		process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
+		process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit).on('SIGSTOP', gracefulExit);
 	}
 });
 
