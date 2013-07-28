@@ -6,6 +6,7 @@ var channelName = '#TwoDeeTest';
 var reddits = 'all';
 */
 var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', { encoding: 'utf8' }));
+var state = JSON.parse(fs.readFileSync(__dirname + '/state.json', { encoding: 'utf8' }));
 
 var saves = [];
 var messageHandlers = [];
@@ -32,6 +33,8 @@ function registerPlugin(instance) {
 }
 
 function gracefulExit() {
+	fs.writeFileSync(__dirname + '/state.json', JSON.stringify(state));
+
 	for (var i = 0; i < saves.length; ++i) {
 		saves[i]();
 	}
@@ -41,9 +44,9 @@ function gracefulExit() {
 
 var client = new irc.Client(config.server, config.nick, {
 	userName: config.nick,
-	channels: [config.channel],
+	autoRejoin: false,
 	floodProtection: true,
-	password: config.password
+	password: config.password,
 });
 
 client.on('quit', function (nick) {
@@ -58,16 +61,39 @@ client.on('error', function (e) {
 	console.log(e);
 });
 
-client.once('join', function (channel, user) {
-	if (channel === config.channel && user === client.nick) {
+client.on('invite', function (channel, inviteUser) {
+	client.whois(inviteUser, function (info) {
+		if (info.channels.indexOf('@' + channel) === -1) return;
+
+		if (!state[channel]) {
+			state[channel] = {};
+		}
+
+		state[channel].active = true;
+		client.join(channel);
+	});
+});
+
+client.on('kick', function (channel) {
+	state[channel].active = false;
+});
+
+
+client.on('join', function (channel, user) {
+	/*if (channel === config.channel && user === client.nick) {
 		console.log('Connected to IRC');
 
 		for (var i = 0; i < config.plugins.length; ++i) {
 			registerPlugin('./plugins/' + config.plugins[i]);
 		}
 
-		process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
-	}
+	}*/
+});
+
+client.on('message#', function (nick, to, text, message) {
+	console.log(nick);
+	console.log(to);
+	console.log(text);
 });
 
 client.on('message' + config.channel, function (from, message) {
@@ -80,5 +106,15 @@ client.on('message' + config.channel, function (from, message) {
 		for (var i = 0; i < messageHandlers.length; ++i) {
 			messageHandlers[i](from, message);
 		}
+	}
+});
+
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
+
+client.on('registered', function () {
+	for (var channel in state) {
+		if (!state[channel].active) continue;
+
+		client.join(channel);
 	}
 });
