@@ -11,6 +11,7 @@ var state = JSON.parse(fs.readFileSync(__dirname + '/state.json', { encoding: 'u
 var saves = [];
 var messageHandlers = {};
 var commands = {};
+var plugins = {};
 
 function registerPlugin(instance, channel) {
 	if (!channel) throw new Error('Invalid plugin registration params');
@@ -21,12 +22,10 @@ function registerPlugin(instance, channel) {
 		instance = require(instance)(client, channel);
 	}
 
-	if (!messageHandlers[channel]) messageHandlers[channel] = [];
 	if (instance.messageHandler) {
 		messageHandlers[channel].push(instance.messageHandler);
 	}
 
-	if (!commands[channel]) commands[channel] = {};
 	for (var cmd in instance.commands) {
 		commands[channel][cmd] = instance.commands[cmd];
 	}
@@ -34,6 +33,8 @@ function registerPlugin(instance, channel) {
 	if (instance.save) {
 		saves[saves.length] = instance.save;
 	}
+
+	plugins[channel].push(instance);
 }
 
 function gracefulExit() {
@@ -44,6 +45,18 @@ function gracefulExit() {
 	}
 
 	process.exit(0);
+}
+
+function removePlugins(channel) {
+	delete commands[channel];
+	delete messageHandlers[channel];
+
+	for (var i = 0; i < plugins[channel].length; ++i) {
+		if (plugins[channel][i].disable) {
+			plugins[channel][i].disable();
+		}
+	}
+	delete plugins[channel];
 }
 
 var client = new irc.Client(config.server, config.nick, {
@@ -80,11 +93,17 @@ client.on('invite', function (channel, inviteUser) {
 
 client.on('kick', function (channel) {
 	state[channel].active = false;
+
+	removePlugins(channel);
 });
 
 client.on('join', function (channel, user) {
 	if (user === client.nick && state[channel]) {
 		console.log('Connected to ' + channel);
+
+		if (!messageHandlers[channel]) messageHandlers[channel] = [];
+		if (!commands[channel]) commands[channel] = {};
+		if (!plugins[channel]) plugins[channel] = [];
 
 		for (var i = 0; i < config.plugins.length; ++i) {
 			registerPlugin('./plugins/' + config.plugins[i], channel);
