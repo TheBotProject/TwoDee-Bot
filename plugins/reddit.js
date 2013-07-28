@@ -6,6 +6,7 @@ module.exports = function (client, channelName) {
 
 	var reddits = {};
 	var lastUpdate = null;
+	var interval;
 
 	function searchNew() {
 		redwrap.r(Object.keys(reddits).join('+')).new(function (err, data, res) {
@@ -47,7 +48,7 @@ module.exports = function (client, channelName) {
 			});
 		}
 
-		setInterval(searchNew, 30 * 1000);
+		interval = setInterval(searchNew, 30 * 1000);
 	}
 
 	fs.readFile(__dirname + '/.reddit', { encoding: 'utf8' }, function (err, data) {
@@ -60,5 +61,9 @@ module.exports = function (client, channelName) {
 		init();
 	});
 
-	return {};
+	return {
+		disable: function () {
+			clearInterval(interval);
+		}
+	};
 };

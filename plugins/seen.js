@@ -20,31 +20,39 @@ module.exports = function (client, channelName) {
 	}
 
 	var users = {};
-	setTimeout(function () {
+	function refreshUsers() {
 		for (var i in client.chans[channelName.toLowerCase()].users) {
+			if (users[i.toLowerCase()]) continue;
+
 			users[i.toLowerCase()] = { joined: null, left: null };
 		}
-	}, 1000);
+	}
 
-	client.on('quit', function (user) {
-		if (users[user.toLowerCase()]) {
-			users[user.toLowerCase()].left = new Date();
-		}
-	});
-
-	client.on('part', function (channel, user) {
-		if (users[user.toLowerCase()]) {
-			users[user.toLowerCase()].left = new Date();
-		}
-	});
-
-	client.on('join', function (channel, user) {
+	function userJoin(channel, user) {
 		if (!users[user.toLowerCase()]) {
 			users[user.toLowerCase()] = { joined: new Date(), left: null };
 		} else {
 			users[user.toLowerCase()].joined = new Date();
 		}
-	});
+	}
+
+	function userLeave(channel, user) {
+		if (users[user.toLowerCase()]) {
+			users[user.toLowerCase()].left = new Date();
+		}
+	}
+
+	refreshUsers();
+	client.once('names', refreshUsers);
+
+
+	var userQuit = userLeave.bind(client, channelName);
+	client.on('quit', userQuit);
+
+	var userPart = userLeave;
+	client.on('part', userPart);
+
+	client.on('join', userJoin);
 
 	return {
 		commands: {
@@ -69,6 +77,13 @@ module.exports = function (client, channelName) {
 					client.say(channelName, 'I haven\'t seen ' + message + ' yet :(');
 				}
 			}
+		},
+
+		disable: function () {
+			client.removeListener('names', refreshUsers);
+			client.removeListener('quit', userQuit);
+			client.removeListener('part', userPart);
+			client.removeListener('join', userJoin);
 		}
 	};
 };
