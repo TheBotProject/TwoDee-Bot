@@ -5,7 +5,7 @@ var fs = require('fs');
 var channelName = '#TwoDeeTest';
 var reddits = 'all';
 */
-var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
+var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', { encoding: 'utf8' }));
 
 var saves = [];
 var messageHandlers = [];
