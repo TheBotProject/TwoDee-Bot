@@ -1,7 +1,6 @@
 {
 	"server": "irc.snoonet.org",
-	"channel": "#TwoDeeTest",
-	"nick": "MoeBotTest",
+	"nick": "MoeBot",
 	"password": null,
 	"plugins": [
 		"reddit",
