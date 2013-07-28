@@ -59,6 +59,12 @@ function removePlugins(channel) {
 	delete plugins[channel];
 }
 
+function checkAbandonChannel(channel) {
+	if (client.chans[channel]) { // we're still connected
+		client.part(channel);
+	}
+}
+
 var client = new irc.Client(config.server, config.nick, {
 	userName: config.nick,
 	autoRejoin: false,
@@ -70,6 +76,24 @@ client.on('quit', function (nick) {
 	if (nick === client.nick) {
 		console.error('IRC disconnected us - stopping');
 		process.exit(1);
+	}
+});
+
+client.on('part', function (channel, nick) {
+	if (nick === client.nick) {
+		state[channel].active = false;
+
+		removePlugins(channel);
+	} else if (state[channel].active && Object.keys(client.chans[channel].users).length === 2) {
+		checkAbandonChannel(channel);
+	}
+});
+
+client.on('quit', function (nick, reason, channels) {
+	for (var i = 0; i < channels.length; ++i) {
+		if (state[channels[i]].active && Object.keys(client.chans[channels[i]].users).length === 1) {
+			checkAbandonChannel(channels[i]);
+		}
 	}
 });
 
@@ -87,6 +111,10 @@ client.on('invite', function (channel, inviteUser) {
 		}
 
 		state[channel].active = true;
+		state[channel].plugins = [];
+		for (var i = 0; i < config.plugins.length; ++i) {
+			state[channel].plugins.push(config.plugins[i]);
+		}
 		client.join(channel);
 	});
 });
@@ -105,9 +133,18 @@ client.on('join', function (channel, user) {
 		if (!commands[channel]) commands[channel] = {};
 		if (!plugins[channel]) plugins[channel] = [];
 
-		for (var i = 0; i < config.plugins.length; ++i) {
-			registerPlugin('./plugins/' + config.plugins[i], channel);
+		for (var i = 0; i < state[channel].plugins.length; ++i) {
+			registerPlugin('./plugins/' + state[channel].plugins[i], channel);
 		}
+
+		client.once('names' + channel, function (nicks) {
+			if (Object.keys(nicks).length === 1) {
+				setTimeout(function () { // irc lib still sends stuff
+					client.part(channel);
+				}, 1000);
+				return;
+			}
+		});
 	}
 });
 
