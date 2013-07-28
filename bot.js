@@ -9,22 +9,26 @@ var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', { encoding: 
 var state = JSON.parse(fs.readFileSync(__dirname + '/state.json', { encoding: 'utf8' }));
 
 var saves = [];
-var messageHandlers = [];
+var messageHandlers = {};
 var commands = {};
 
-function registerPlugin(instance) {
+function registerPlugin(instance, channel) {
+	if (!channel) throw new Error('Invalid plugin registration params');
+
 	if (instance instanceof Function) {
-		instance = instance(client, config.channel);
+		instance = instance(client, channel);
 	} else if (typeof instance === 'string') {
-		instance = require(instance)(client, config.channel);
+		instance = require(instance)(client, channel);
 	}
 
+	if (!messageHandlers[channel]) messageHandlers[channel] = [];
 	if (instance.messageHandler) {
-		messageHandlers.push(instance.messageHandler);
+		messageHandlers[channel].push(instance.messageHandler);
 	}
 
+	if (!commands[channel]) commands[channel] = {};
 	for (var cmd in instance.commands) {
-		commands[cmd] = instance.commands[cmd];
+		commands[channel][cmd] = instance.commands[cmd];
 	}
 
 	if (instance.save) {
@@ -78,33 +82,25 @@ client.on('kick', function (channel) {
 	state[channel].active = false;
 });
 
-
 client.on('join', function (channel, user) {
-	/*if (channel === config.channel && user === client.nick) {
-		console.log('Connected to IRC');
+	if (user === client.nick && state[channel]) {
+		console.log('Connected to ' + channel);
 
 		for (var i = 0; i < config.plugins.length; ++i) {
-			registerPlugin('./plugins/' + config.plugins[i]);
+			registerPlugin('./plugins/' + config.plugins[i], channel);
 		}
-
-	}*/
+	}
 });
 
-client.on('message#', function (nick, to, text, message) {
-	console.log(nick);
-	console.log(to);
-	console.log(text);
-});
-
-client.on('message' + config.channel, function (from, message) {
+client.on('message#', function (from, channel, message) {
 	if (message[0] === '!') {
 		var cmd = message.split(' ')[0].substring(1);
-		if (commands[cmd]) {
-			commands[cmd](from, message.substring(cmd.length + 2));
+		if (commands[channel][cmd]) {
+			commands[channel][cmd](from, message.substring(cmd.length + 2));
 		}
 	} else {
-		for (var i = 0; i < messageHandlers.length; ++i) {
-			messageHandlers[i](from, message);
+		for (var i = 0; i < messageHandlers[channel].length; ++i) {
+			messageHandlers[channel][i](from, message);
 		}
 	}
 });
