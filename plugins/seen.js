@@ -21,7 +21,7 @@ module.exports = function (client, channelName) {
 
 	var users = {};
 	function refreshUsers() {
-		for (var i in client.chans[channelName.toLowerCase()].users) {
+		for (var i in client.chans[channelName].users) {
 			if (users[i.toLowerCase()]) continue;
 
 			users[i.toLowerCase()] = { joined: null, left: null };

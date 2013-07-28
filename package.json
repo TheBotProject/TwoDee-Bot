@@ -4,7 +4,7 @@
 	"private": true,
 	"dependencies": {
 		"redwrap": "x",
-		"irc": "x",
+		"irc": "git://github.com/Sebmaster/node-irc.git",
 		"youtube-feeds": "x",
 		"request": "x",
 		"google": "0.3.x",
