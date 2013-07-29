@@ -13,13 +13,15 @@ module.exports = function (client, channelName) {
 				for (var i = 0; i < results.length && i < 3; ++i) {
 					var result = results.eq(i);
 
-					var similarity = $('.resultsimilarityinfo', result).text();
+					var similarity = parseInt($('.resultsimilarityinfo', result).text(), 10);
+					if (similarity < 80) continue;
+
 					var title = $('.resulttitle', result).text();
 
 					var link = $('.resultcontentcolumn a', result).eq(0).attr('href');
 					if (!link) continue;
 
-					client.say(channelName, title + ' [' + similarity + '] - ' + link);
+					client.say(channelName, title + ' [' + similarity + '%] - ' + link);
 				}
 			} else {
 				client.say(channelName, 'Sorry, no image source found');
