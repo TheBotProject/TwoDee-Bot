@@ -9,21 +9,23 @@ module.exports = function (client, channelName) {
 
 			var $ = cheerio.load(data);
 			var results = $('.resulttablecontent');
-			if (results.length) {
-				for (var i = 0; i < results.length && i < 3; ++i) {
-					var result = results.eq(i);
+			var found = false;
+			for (var i = 0; i < results.length && i < 3; ++i) {
+				var result = results.eq(i);
 
-					var similarity = parseInt($('.resultsimilarityinfo', result).text(), 10);
-					if (similarity < 80) continue;
+				var similarity = parseInt($('.resultsimilarityinfo', result).text(), 10);
+				if (similarity < 80) continue;
 
-					var title = $('.resulttitle', result).text();
+				var title = $('.resulttitle', result).text();
 
-					var link = $('.resultcontentcolumn a', result).eq(0).attr('href');
-					if (!link) continue;
+				var link = $('.resultcontentcolumn a', result).eq(0).attr('href');
+				if (!link) continue;
 
-					client.say(channelName, title + ' [' + similarity + '%] - ' + link);
-				}
-			} else {
+				found = true;
+				client.say(channelName, title + ' [' + similarity + '%] - ' + link);
+			}
+
+			if (!found) {
 				client.say(channelName, 'Sorry, no image source found');
 			}
 		});
