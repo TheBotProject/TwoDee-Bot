@@ -118,6 +118,10 @@ module.exports = function (client, channelName) {
 		}
 	}
 
+	client.on('commands:image', function (image) {
+		parseLinks(image);
+	});
+
 	return {
 		messageHandler: function (from, message) {
 			parseLinks(message);

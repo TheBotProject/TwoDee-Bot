@@ -29,6 +29,7 @@ try {
 				if (data[0].is_album) {
 					postAlbum(data[0]);
 				} else {
+					client.emit('commands:image', data[0].link);
 					postImage(data[0]);
 				}
 			});
