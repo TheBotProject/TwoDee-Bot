@@ -49,7 +49,7 @@ module.exports = function (client, channelName) {
 					}, function (err) {
 						if (err) return console.error(err);
 
-						client.emit('azure:image', blobId);
+						client.emit('azure:image', blobId, partKey);
 					});
 				});
 			});
