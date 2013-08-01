@@ -39,8 +39,6 @@ module.exports = function (client, channelName) {
 				.where('Url eq ?', url);
 
 			tableService.queryEntities(query, function (error, entities) {
-				console.error(error);
-				console.log(entities);
 				if (error || entities.length) return;
 
 				var date = new Date();
