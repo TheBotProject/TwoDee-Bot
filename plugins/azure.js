@@ -2,6 +2,7 @@
 var request = require('request');
 var azure = require('azure');
 var url = require('url');
+var csv = require('csv');
 
 module.exports = function (client, channelName) {
 
@@ -21,7 +22,7 @@ module.exports = function (client, channelName) {
 	blobService.createContainerIfNotExists('images', { publicAccessLevel: 'blob' }, function () { });
 
 	function checkLink(url, fn) {
-		request.head(url, function (err, resp) {
+		request.head({ url: url, headers: { Referer: url } }, function (err, resp) {
 			if (err) return fn(err);
 
 			fn(null, resp.statusCode === 200);
@@ -38,6 +39,8 @@ module.exports = function (client, channelName) {
 				.where('Url eq ?', url);
 
 			tableService.queryEntities(query, function (error, entities) {
+				console.error(error);
+				console.log(entities);
 				if (error || entities.length) return;
 
 				var date = new Date();
@@ -65,6 +68,17 @@ module.exports = function (client, channelName) {
 		});
 	}
 
+	function savePixiv(id) {
+		request('http://spapi.pixiv.net/iphone/illust.php?illust_id=' + id, function (err, r, data) {
+			if (err) return;
+
+			csv().from.string(data).to.array(function (arr) {
+				arr = arr[0];
+				saveLink(arr[9].replace(/\/mobile|_480mw/g, ''));
+			});
+		});
+	}
+
 	function parseLinks(message) {
 		var re, match;
 
@@ -77,16 +91,19 @@ module.exports = function (client, channelName) {
 		while (match = re.exec(message)) {
 			saveLink(match[0]);
 		}
-	}
 
-	var oldSay = client.say;
-	client.say = function (channel, message) {
-		oldSay.apply(client, arguments);
-
-		if (channel === channelName) {
-			parseLinks(message);
+		re = /https?:\/\/(www\.|i\.)?imgur.com\/(\w+)/gi;
+		while (match = re.exec(message)) {
+			saveLink('http://i.imgur.com/' + match[2] + '.jpg');
 		}
-	};
+
+		re = /https?:\/\/(www.)?pixiv.net\/member_illust.php\?((.+)&)?illust_id=([\d]+)/gi;
+		while (match = re.exec(message)) {
+			if (match[4]) {
+				savePixiv(match[4]);
+			}
+		}
+	}
 
 	return {
 		messageHandler: function (from, message) {
