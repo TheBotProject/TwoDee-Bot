@@ -41,8 +41,12 @@ module.exports = function (client) {
 	if (!process.env.AZURE_STORAGE_ACCOUNT || !process.env.AZURE_STORAGE_ACCESS_KEY) {
 		var userData = JSON.parse(fs.readFileSync(path.join(__dirname, 'plugins', '.azure'), { encoding: 'utf8' }));
 
-		process.env.AZURE_STORAGE_ACCOUNT = userData.name;
-		process.env.AZURE_STORAGE_ACCESS_KEY = userData.key;
+		if (userData.name && userData.key) {
+			process.env.AZURE_STORAGE_ACCOUNT = userData.name;
+			process.env.AZURE_STORAGE_ACCESS_KEY = userData.key;
+		} else {
+			console.info('Couldn\'t initialize azure plugin since no userdata was given')
+		}
 	}
 
 	if (process.env.AZURE_STORAGE_ACCOUNT && process.env.AZURE_STORAGE_ACCESS_KEY) {
