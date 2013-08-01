@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html data-ng-app="MoeBot">
+<head>
+    <title>MoeBot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+
+    <script src="/socket.io/socket.io.js" defer="defer"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js" defer="defer"></script>
+    <script src="/app.js" defer="defer"></script>
+</head>
+
+<body data-ng-controller="PictureCtrl">
+    <div class="container">
+        <ul class="list-inline">
+            <li data-ng-repeat="picture in pictures.sort().reverse()">
+                <a href="https://moebot.blob.core.windows.net/images/{{picture}}"><img style="max-height: 200px; max-width: 200px" class="img-thumbnail" data-ng-src="https://moebot.blob.core.windows.net/images/{{picture}}"></a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

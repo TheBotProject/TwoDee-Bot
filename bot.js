@@ -1,6 +1,7 @@
 ﻿var irc = require('irc');
 var fs = require('fs');
 
+var server = require('./server');
 /*
 var channelName = '#TwoDeeTest';
 var reddits = 'all';
@@ -161,6 +162,7 @@ client.on('message#', function (from, channel, message) {
 	}
 });
 
+server(client);
 process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 
 client.on('registered', function () {
