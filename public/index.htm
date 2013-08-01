@@ -14,8 +14,8 @@
 <body data-ng-controller="PictureCtrl">
     <div class="container">
         <ul class="list-inline">
-            <li data-ng-repeat="picture in pictures.sort().reverse()">
-                <a href="https://moebot.blob.core.windows.net/images/{{picture}}"><img style="max-height: 200px; max-width: 200px" class="img-thumbnail" data-ng-src="https://moebot.blob.core.windows.net/images/{{picture}}"></a>
+            <li data-ng-repeat="picture in pictures.sort().reverse() | limitTo: 50">
+                <a href="https://moebot.blob.core.windows.net/images/{{picture}}"><img style="max-height: 200px; max-width: 200px" class="img-thumbnail" data-ng-src="https://moebot.blob.core.windows.net/thumbnails/{{picture}}"></a>
             </li>
         </ul>
     </div>
