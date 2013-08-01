@@ -74,7 +74,7 @@ module.exports = function (client, channelName) {
 
 			csv().from.string(data).to.array(function (arr) {
 				arr = arr[0];
-				saveLink(arr[9].replace(/\/mobile|_480mw/g, ''));
+				saveLink('http://i1.pixiv.net/img' + arr[4] + '/img/' + arr[24] + '/' + arr[0] + '.' + arr[2]);
 			});
 		});
 	}
