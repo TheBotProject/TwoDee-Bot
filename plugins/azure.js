@@ -3,6 +3,9 @@ var request = require('request');
 var azure = require('azure');
 var url = require('url');
 var csv = require('csv');
+var spawn = require('child_process').spawn;
+var BufferStream = require('../BufferStream');
+var config = JSON.parse(fs.readFileSync(__dirname + '/../config.json', { encoding: 'utf8' }));
 
 module.exports = function (client, channelName) {
 
@@ -20,6 +23,7 @@ module.exports = function (client, channelName) {
 	tableService.createTableIfNotExists('images', function () { });
 	var blobService = azure.createBlobService();
 	blobService.createContainerIfNotExists('images', { publicAccessLevel: 'blob' }, function () { });
+	blobService.createContainerIfNotExists('thumbnails', { publicAccessLevel: 'blob' }, function () { });
 
 	function checkLink(url, fn) {
 		request.head({ url: url, headers: { Referer: url } }, function (err, resp) {
@@ -47,8 +51,19 @@ module.exports = function (client, channelName) {
 
 				var req = request.get({ url: url, headers: { Referer: url } });
 
+				var conv = spawn(config.convertPath, ['-', '-thumbnail', '200x200', 'jpg:-']);
+				req.pipe(conv.stdin);
+
+				var thumbnail = new Buffer(0);
+				conv.stdout.on('data', function (data) {
+					thumbnail = Buffer.concat([thumbnail, data]);
+				});
+				conv.stdout.on('end', function () {
+					blobService.createBlockBlobFromStream('thumbnails', blobId.toString(), new BufferStream(thumbnail), thumbnail.length, { contentType: 'image/jpeg' }, function (err) { });
+				});
+
 				req.on('response', function (resp) {
-					blobService.createBlockBlobFromStream('images', blobId.toString(), req, resp.headers['content-length'], { contentType: resp.headers['content-type'] }, function (error) {
+					blobService.createBlockBlobFromStream('images', blobId.toString(), req, resp.headers['content-length'], { contentType: resp.headers['content-type'] }, function (err) {
 						if (err) return console.error(err);
 
 						tableService.insertEntity('images', {

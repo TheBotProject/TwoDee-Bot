@@ -16,5 +16,7 @@
 		"booru",
 		"seen",
 		"azure"
-	]
+	],
+
+	"convertPath": "convert"
 }
