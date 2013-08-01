@@ -32,24 +32,33 @@ module.exports = function (client, channelName) {
 		checkLink(url, function (err, success) {
 			if (err || !success) return;
 
-			var date = new Date();
-			var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
-			var blobId = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).toString();
+			var query = azure.TableQuery
+				.select('RowKey')
+				.from('images')
+				.where('Url eq ?', url);
 
-			var req = request.get({ url: url, headers: { Referer: url } });
+			tableService.queryEntities(query, function (error, entities) {
+				if (error || entities.length) return;
 
-			req.on('response', function (resp) {
-				blobService.createBlockBlobFromStream('images', blobId.toString(), req, resp.headers['content-length'], { contentType: resp.headers['content-type'] }, function (error) {
-					if (err) return console.error(err);
+				var date = new Date();
+				var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
+				var blobId = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).toString();
 
-					tableService.insertEntity('images', {
-						PartitionKey: partKey,
-						RowKey: blobId,
-						Url: url
-					}, function (err) {
+				var req = request.get({ url: url, headers: { Referer: url } });
+
+				req.on('response', function (resp) {
+					blobService.createBlockBlobFromStream('images', blobId.toString(), req, resp.headers['content-length'], { contentType: resp.headers['content-type'] }, function (error) {
 						if (err) return console.error(err);
 
-						client.emit('azure:image', blobId, partKey);
+						tableService.insertEntity('images', {
+							PartitionKey: partKey,
+							RowKey: blobId,
+							Url: url
+						}, function (err) {
+							if (err) return console.error(err);
+
+							client.emit('azure:image', blobId, partKey);
+						});
 					});
 				});
 			});
