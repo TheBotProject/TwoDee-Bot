@@ -17,10 +17,8 @@ module.exports = BufferStream;
 
 BufferStream.prototype._read = function () {
 	if (this._finished) {
-		console.log('finished read');
 		this.push(null);
 	} else {
-		console.log('put data');
 		this.push(this.data);
 		this._finished = true;
 	}
