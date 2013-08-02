@@ -54,7 +54,7 @@ module.exports = function (client, channelName) {
 
 				req.on('response', function (resp) {
 					var imgDeferred = Q.defer();
-					blobService.createBlockBlobFromStream('images', blobId.toString(), req, resp.headers['content-length'], { contentType: resp.headers['content-type'] }, function (err) {
+					blobService.createBlockBlobFromStream('images', blobId.toString(), req, resp.headers['content-length'], { contentType: resp.headers['content-type'], cacheControl: 'max-age=31536000, public' }, function (err) {
 						if (err) {
 							imgDeferred.reject(err);
 						} else {
@@ -71,7 +71,7 @@ module.exports = function (client, channelName) {
 						thumbnail = Buffer.concat([thumbnail, data]);
 					});
 					conv.stdout.on('end', function () {
-						blobService.createBlockBlobFromStream('thumbnails', blobId.toString(), new BufferStream(thumbnail), thumbnail.length, { contentType: 'image/jpeg' }, function (err) {
+						blobService.createBlockBlobFromStream('thumbnails', blobId.toString(), new BufferStream(thumbnail), thumbnail.length, { contentType: 'image/jpeg', cacheControl: 'max-age=31536000, public' }, function (err) {
 							if (err) {
 								thumbDeferred.reject(err);
 							} else {
