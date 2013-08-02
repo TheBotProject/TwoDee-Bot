@@ -102,6 +102,8 @@ module.exports = function (client, channelName) {
 
 			csv().from.string(data).to.array(function (arr) {
 				arr = arr[0];
+				if (arr[4].length === 1) arr[4] = '0' + arr[4];
+
 				saveLink('http://i1.pixiv.net/img' + arr[4] + '/img/' + arr[24] + '/' + arr[0] + '.' + arr[2]);
 			});
 		});
