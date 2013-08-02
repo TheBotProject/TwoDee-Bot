@@ -17,6 +17,7 @@
 		"xml2js": "x",
 		"azure": "x",
 		"express": "x",
-		"socket.io": "x"
+		"socket.io": "x",
+		"q": "x"
 	}
 }
