@@ -2,6 +2,7 @@
 	"name": "TwoDee-Bot",
 	"version": "0.0.1",
 	"private": true,
+	"main": "bot.js",
 	"dependencies": {
 		"redwrap": "x",
 		"irc": "git://github.com/Sebmaster/node-irc.git",
