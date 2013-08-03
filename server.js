@@ -17,23 +17,19 @@ app.get('/', function (req, res) {
 io.set('log level', 1);
 io.on('connection', function (socket) {
 	socket.on('images', function (partKey, fn) {
-		if (pictures[partKey]) {
-			fn(pictures[partKey]);
-		} else {
-			var query = azure.TableQuery
-			.select('RowKey')
-			.from('images')
-			.where('PartitionKey eq ?', partKey);
+		var query = azure.TableQuery
+		.select('RowKey')
+		.from('images')
+		.where('PartitionKey eq ?', partKey);
 
-			tableService.queryEntities(query, function (error, entities) {
-				if (error) return console.error(error);
+		tableService.queryEntities(query, function (error, entities) {
+			if (error) return console.error(error);
 
-				pictures[partKey] = entities.map(function (entity) {
-					return entity.RowKey;
-				});
-				fn(pictures[partKey]);
+			pictures[partKey] = entities.map(function (entity) {
+				return entity.RowKey;
 			});
-		}
+			fn(pictures[partKey]);
+		});
 	});
 });
 
@@ -53,28 +49,10 @@ module.exports = function (client) {
 		tableService = azure.createTableService();
 		tableService.createTableIfNotExists('images', function () { });
 
-		var date = new Date();
-		var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
-
-		var query = azure.TableQuery
-			.select('RowKey')
-			.from('images')
-			.where('PartitionKey eq ?', partKey);
-
-		tableService.queryEntities(query, function (error, entities) {
-			if (error) return console.error(error);
-
-			pictures[partKey] = entities.map(function (entity) {
-				return entity.RowKey;
-			});
-		});
-
 		client.on('azure:image', function (blobId, partKey) {
-			pictures[partKey].push(blobId);
-
 			io.sockets.emit('image', { blob: blobId, part: partKey });
 		});
-	}
 
-	server.listen(process.env.PORT || 80);
+		server.listen(process.env.PORT || 80);
+	}
 };
