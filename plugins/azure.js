@@ -112,11 +112,6 @@ module.exports = function (client, channelName) {
 	function parseLinks(message) {
 		var re, match;
 
-		re = /http:\/\/safebooru\.org\/images\/\S+/gi;
-		while (match = re.exec(message)) {
-			saveLink(match[0]);
-		}
-
 		re = /http:\/\/e-shuushuu.net\/images\/\S+/gi;
 		while (match = re.exec(message)) {
 			saveLink(match[0]);
@@ -135,8 +130,12 @@ module.exports = function (client, channelName) {
 		}
 	}
 
-	client.on('commands:image', function (image) {
+	client.on('commands:message', function (image) {
 		parseLinks(image);
+	});
+
+	client.on('commands:image', function (image) {
+		saveLink(image);
 	});
 
 	return {

@@ -7,7 +7,7 @@ module.exports = function (client, channelName) {
 		return min + Math.floor(Math.random() * ((max - min) + 1));
 	}
 
-	function getBooru(host, tags) {
+	function getBooru(host, tags, broadcast) {
 		requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=0', function (err, res) {
 			if (err) {
 				console.error('Booru error: ' + err);
@@ -24,7 +24,9 @@ module.exports = function (client, channelName) {
 				if (!res.posts.post.length) return;
 
 				client.emit('commands:image', res.posts.post[0].$.file_url);
-				client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? 'NSFW - ' : '') + res.posts.post[0].$.file_url);
+				if (broadcast) {
+					client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? 'NSFW - ' : '') + res.posts.post[0].$.file_url);
+				}
 			});
 		});
 	}
@@ -48,11 +50,25 @@ module.exports = function (client, channelName) {
 			},
 
 			sb: function (from, message) {
-				getBooru('http://safebooru.org', message);
+				getBooru('http://safebooru.org', message, true);
 			},
 
 			gb: function (from, message) {
-				getBooru('http://gelbooru.com', message);
+				getBooru('http://gelbooru.com', message, true);
+			}
+		},
+
+		messageHandler: function (from, message) {
+			var re, match;
+
+			re = /http:\/\/safebooru\.org\/+?images\/\S+/gi;
+			while (match = re.exec(message)) {
+				client.emit('commands:image', match[0]);
+			}
+
+			re = /http:\/\/safebooru.org\/index.php\?page=post&s=view&id=(\d+)/gi;
+			while (match = re.exec(message)) {
+				getBooru('http://safebooru.org', 'id:' + match[1], false);
 			}
 		}
 	};
