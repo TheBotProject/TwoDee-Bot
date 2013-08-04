@@ -24,12 +24,13 @@ app.factory('socket', function ($rootScope) {
 });
 
 app.controller('PictureCtrl', ['$scope', 'socket', function ($scope, socket) {
-	$scope.pictures = [];
+	$scope.pictures = JSON.parse(window.localStorage.getItem('imageCache'));
 
 	var date = new Date();
 	var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
 	socket.emit('images', partKey, function (images) {
 		$scope.pictures = images;
+		window.localStorage.setItem('imageCache', JSON.stringify(images));
 	});
 	socket.on('image', function(image) {
 		$scope.pictures.push(image.blob);
