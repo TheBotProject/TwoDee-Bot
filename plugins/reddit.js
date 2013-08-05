@@ -16,9 +16,12 @@ module.exports = function (client, channelName) {
 			}
 
 			if (data.data.children.length) {
+				var newLastUpdate = lastUpdate;
 				for (var i = 0; i < data.data.children.length; ++i) {
 					var post = data.data.children[i].data;
 					if (post.created_utc <= lastUpdate) break;
+
+					newLastUpdate = post.created_utc;
 
 					console.log('annoucing new link: ' + post.title);
 
@@ -27,7 +30,7 @@ module.exports = function (client, channelName) {
 					client.say(channelName, '[\x03' + color + post.subreddit + '\x03] [' + post.author + '] ' + ent.decode(post.title) + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 || srData.nsfl ? ' [NSFW]' : ''));
 				}
 
-				lastUpdate = data.data.children[0].data.created_utc;
+				lastUpdate = newLastUpdate;
 			}
 		});
 	}
