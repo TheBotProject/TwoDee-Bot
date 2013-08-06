@@ -1,0 +1,13 @@
+﻿.thumbnail-overview {
+    text-align: center;
+}
+
+    .thumbnail-overview > .col-lg-2 {
+        height: 208px;
+        line-height: 200px;
+        margin-bottom: 10px;
+    }
+
+    .thumbnail-overview .thumbnail {
+        display: inline-block;
+    }
