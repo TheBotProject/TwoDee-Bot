@@ -23,7 +23,7 @@ module.exports = function (client, channelName) {
 			requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=1&pid=' + rand, function (err, res) {
 				if (!res.posts.post.length) return;
 
-				client.emit('commands:image', res.posts.post[0].$.file_url);
+				client.emit('commands:image' + channelName, res.posts.post[0].$.file_url);
 				if (broadcast) {
 					client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? 'NSFW - ' : '') + res.posts.post[0].$.file_url);
 				}
@@ -63,7 +63,7 @@ module.exports = function (client, channelName) {
 
 			re = /http:\/\/safebooru\.org\/+?images\/\S+/gi;
 			while (match = re.exec(message)) {
-				client.emit('commands:image', match[0]);
+				client.emit('commands:image' + channelName, match[0]);
 			}
 
 			re = /http:\/\/safebooru.org\/index.php\?page=post&s=view&id=(\d+)/gi;
