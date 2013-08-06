@@ -21,7 +21,9 @@ module.exports = function (client, channelName) {
 					var post = data.data.children[i].data;
 					if (post.created_utc <= lastUpdate) break;
 
-					newLastUpdate = post.created_utc;
+					if (post.created_utc > newLastUpdate) {
+						newLastUpdate = post.created_utc;
+					}
 
 					console.log('annoucing new link: ' + post.title);
 
