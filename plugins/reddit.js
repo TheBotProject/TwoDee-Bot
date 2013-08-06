@@ -19,7 +19,7 @@ module.exports = function (client, channelName) {
 				var newLastUpdate = lastUpdate;
 				for (var i = 0; i < data.data.children.length; ++i) {
 					var post = data.data.children[i].data;
-					if (post.created_utc <= lastUpdate) break;
+					if (post.created_utc <= lastUpdate) continue;
 
 					if (post.created_utc > newLastUpdate) {
 						newLastUpdate = post.created_utc;
@@ -44,12 +44,9 @@ module.exports = function (client, channelName) {
 					console.error('Couldn\'t retrieve last post! Error: ' + (err || data.error));
 					process.exit(1);
 				}
+				lastUpdate = data.data.children.length ? data.data.children[0].data.created_utc : 0;
 
-				if (data.data.children.length) {
-					lastUpdate = data.data.children[0].data.created_utc;
-				}
-
-				console.log('saved last posts');
+				console.log('saved last posts, ts:' + lastUpdate);
 			});
 		}
 
