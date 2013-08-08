@@ -9,8 +9,9 @@ module.exports = function (client, channelName) {
 
 	function getBooru(host, tags, broadcast) {
 		requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=0', function (err, res) {
-			if (err) {
-				console.error('Booru error: ' + err);
+			if (err || !res.posts) {
+				console.error('Booru error: ' + err + ', response');
+				console.log(res);
 				return;
 			}
 
