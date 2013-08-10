@@ -120,10 +120,12 @@ client.on('invite', function (channel, inviteUser) {
 	});
 });
 
-client.on('kick', function (channel) {
-	state[channel].active = false;
+client.on('kick', function (channel, user) {
+	if (user === client.nick && state[channel]) {
+		state[channel].active = false;
 
-	removePlugins(channel);
+		removePlugins(channel);
+	}
 });
 
 client.on('join', function (channel, user) {
