@@ -26,7 +26,7 @@ module.exports = function (client, channelName) {
 
 				client.emit('commands:image' + channelName, res.posts.post[0].$.file_url);
 				if (broadcast) {
-					client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? 'NSFW - ' : '') + res.posts.post[0].$.file_url);
+					client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '\x0304NSFW\x03 - ' : '') + res.posts.post[0].$.file_url);
 				}
 			});
 		});

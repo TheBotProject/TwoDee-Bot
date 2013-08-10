@@ -29,7 +29,7 @@ module.exports = function (client, channelName) {
 
 					var srData = reddits[post.subreddit.toLowerCase()];
 					var color = srData.color ? srData.color : '01,00';
-					client.say(channelName, '[\x03' + color + post.subreddit + '\x03] [' + post.author + '] ' + ent.decode(post.title) + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 || srData.nsfl ? ' [NSFW]' : ''));
+					client.say(channelName, '[\x03' + color + post.subreddit + '\x03] [' + post.author + '] ' + ent.decode(post.title) + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 || srData.nsfl ? ' \x0304[NSFW]\x03' : ''));
 				}
 
 				lastUpdate = newLastUpdate;
