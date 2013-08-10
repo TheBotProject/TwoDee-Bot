@@ -41,7 +41,7 @@ module.exports = function (client) {
 			process.env.AZURE_STORAGE_ACCOUNT = userData.name;
 			process.env.AZURE_STORAGE_ACCESS_KEY = userData.key;
 		} else {
-			console.info('Couldn\'t initialize azure plugin since no userdata was given')
+			console.info('Couldn\'t initialize azure plugin since no userdata was given');
 		}
 	}
 
