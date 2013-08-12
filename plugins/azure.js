@@ -48,7 +48,7 @@ module.exports = function (client, channelName) {
 
 				var date = new Date();
 				var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
-				var blobId = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).toString();
+				var blobId = Date.now();
 
 				var req = request.get({ url: url, headers: { Referer: url } });
 
