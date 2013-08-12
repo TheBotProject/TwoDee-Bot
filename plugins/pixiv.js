@@ -9,7 +9,7 @@ module.exports = function (client, channelName) {
 
 	function searchPixiv(term) {
 		//login disabled for now
-		//var authJar = request.jar();
+		var authJar = request.jar();
 		//request({ url: 'http://spapi.pixiv.net/iphone/login.php?mode=login&pixiv_id=' + PIXIV_ID + '&pass=' + PIXIV_PASSWORD + '&skip=0', jar: authJar }, function (err, r, body) {
 			request({ url: 'http://spapi.pixiv.net/iphone/search.php?s_mode=s_tag&word=' + encodeURIComponent(term) + '&PHPSESSID=0', jar: authJar }, function (err, r, body) {
 				csv().from.string(body).to.array(function (arr) {
