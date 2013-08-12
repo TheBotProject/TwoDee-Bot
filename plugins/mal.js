@@ -13,6 +13,7 @@ module.exports = function (client, channelName) {
 
 			if (!links.length) {
 				client.say(channelName, 'Sorry, no results for: ' + query);
+				return;
 			}
 
 			if (limit === 1) {
@@ -69,4 +70,4 @@ module.exports = function (client, channelName) {
 			}
 		}
 	};
-}
+};
