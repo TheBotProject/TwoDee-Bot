@@ -8,6 +8,25 @@ var BufferStream = require('../BufferStream');
 var config = JSON.parse(fs.readFileSync(__dirname + '/../config.json', { encoding: 'utf8' }));
 var Q = require('q');
 
+function createThumbnail(req) {
+	var conv = spawn(config.convertPath, ['-', '-thumbnail', '200x200', 'jpg:-']);
+	req.pipe(conv.stdin);
+
+	var def = Q.defer();
+	var thumbnail = new Buffer(0);
+	conv.stdout.on('data', function (data) {
+		thumbnail = Buffer.concat([thumbnail, data]);
+	});
+	conv.stdout.on('error', function (err) {
+		def.reject(err);
+	});
+	conv.stdout.on('end', function () {
+		def.resolve(thumbnail);
+	});
+
+	return def.promise;
+}
+
 module.exports = function (client, channelName) {
 
 	if (!process.env.AZURE_STORAGE_ACCOUNT || !process.env.AZURE_STORAGE_ACCESS_KEY) {
@@ -62,22 +81,19 @@ module.exports = function (client, channelName) {
 						}
 					});
 
-					var conv = spawn(config.convertPath, ['-', '-thumbnail', '200x200', 'jpg:-']);
-					req.pipe(conv.stdin);
 
-					var thumbDeferred = Q.defer();
-					var thumbnail = new Buffer(0);
-					conv.stdout.on('data', function (data) {
-						thumbnail = Buffer.concat([thumbnail, data]);
-					});
-					conv.stdout.on('end', function () {
+					var thumbDeferred = createThumbnail(req).then(function (thumbnail) {
+						var def = Q.defer();
+
 						blobService.createBlockBlobFromStream('thumbnails', blobId.toString(), new BufferStream(thumbnail), thumbnail.length, { contentType: 'image/jpeg', cacheControl: 'max-age=31536000, public' }, function (err) {
 							if (err) {
-								thumbDeferred.reject(err);
+								def.reject(err);
 							} else {
-								thumbDeferred.resolve();
+								def.resolve();
 							}
 						});
+
+						return def.promise;
 					});
 
 					Q.all([imgDeferred.promise, thumbDeferred.promise]).then(function () {

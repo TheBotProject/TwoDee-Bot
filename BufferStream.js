@@ -7,7 +7,6 @@ function BufferStream(str, options) {
 
 	Readable.call(this, options);
 
-	this._finished = false;
 	this.data = str;
 }
 
@@ -16,14 +15,6 @@ util.inherits(BufferStream, Readable);
 module.exports = BufferStream;
 
 BufferStream.prototype._read = function () {
-	if (this._finished) {
-		this.push(null);
-	} else {
-		this.push(this.data);
-		this._finished = true;
-	}
-};
-
-BufferStream.prototype.destroy = function () {
-	delete this.data;
+	this.push(this.data);
+	this.data = null;
 };
