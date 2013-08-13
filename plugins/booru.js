@@ -32,6 +32,8 @@ module.exports = function (client, channelName) {
 								client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '\x0304NSFW\x03 - ' : '') + res.posts.post[0].$.file_url);
 							} else if (times) {
 								retry(times - 1);
+							} else {
+								client.say(channelName, 'No valid link after 3 tries :(');
 							}
 						});
 					}
