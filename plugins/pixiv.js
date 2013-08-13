@@ -13,6 +13,11 @@ module.exports = function (client, channelName) {
 		//request({ url: 'http://spapi.pixiv.net/iphone/login.php?mode=login&pixiv_id=' + PIXIV_ID + '&pass=' + PIXIV_PASSWORD + '&skip=0', jar: authJar }, function (err, r, body) {
 			request({ url: 'http://spapi.pixiv.net/iphone/search.php?s_mode=s_tag&word=' + encodeURIComponent(term) + '&PHPSESSID=0', jar: authJar }, function (err, r, body) {
 				csv().from.string(body).to.array(function (arr) {
+					if (!arr.length) {
+						client.say(channelName, 'Sorry, nothing found for ' + term);
+						return;
+					}
+
 					arr = arr[random(0, arr.length - 1)];
 					if (arr[4].length === 1) arr[4] = '0' + arr[4];
 
