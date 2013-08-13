@@ -20,15 +20,26 @@ module.exports = function (client, channelName) {
 				return;
 			}
 
-			var rand = random(0, res.posts.$.count - 1);
-			requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=1&pid=' + rand, function (err, res) {
-				if (!res.posts.post.length) return;
+			function retry(times) {
+				var rand = random(0, res.posts.$.count - 1);
+				requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=1&pid=' + rand, function (err, res) {
+					if (!res.posts.post.length) return;
 
-				client.emit('commands:image' + channelName, res.posts.post[0].$.file_url);
-				if (broadcast) {
-					client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '\x0304NSFW\x03 - ' : '') + res.posts.post[0].$.file_url);
-				}
-			});
+					client.emit('commands:image' + channelName, res.posts.post[0].$.file_url);
+					if (broadcast) {
+						request.head({ url: res.posts.post[0].$.file_url, headers: { Referer: res.posts.post[0].$.file_url } }, function (err, resp) {
+							if (!err && resp.statusCode >= 200 && resp.statusCode < 300) {
+								client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '\x0304NSFW\x03 - ' : '') + res.posts.post[0].$.file_url);
+							} else if (times) {
+								console.log('retrying: ' + times);
+								retry(times-1);
+							}
+						});
+					}
+				});
+			}
+
+			retry(2);
 		});
 	}
 
