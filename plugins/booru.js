@@ -31,8 +31,7 @@ module.exports = function (client, channelName) {
 							if (!err && resp.statusCode >= 200 && resp.statusCode < 300) {
 								client.say(channelName, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '\x0304NSFW\x03 - ' : '') + res.posts.post[0].$.file_url);
 							} else if (times) {
-								console.log('retrying: ' + times);
-								retry(times-1);
+								retry(times - 1);
 							}
 						});
 					}
