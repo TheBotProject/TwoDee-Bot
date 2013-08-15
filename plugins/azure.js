@@ -54,6 +54,10 @@ module.exports = function (client, channelName) {
 	}
 
 	function saveLink(url) {
+		var date = new Date();
+		var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
+		var blobId = Date.now().toString();
+
 		checkLink(url).then(function (resp) {
 			var query = azure.TableQuery
 				.select('RowKey')
@@ -62,11 +66,7 @@ module.exports = function (client, channelName) {
 
 			return Q.ninvoke(tableService, 'queryEntities', query);
 		}).spread(function (entities) {
-			if (entities.length) return;
-
-			var date = new Date();
-			var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
-			var blobId = Date.now().toString();
+			if (entities.length) throw new Error('Entry already exists');
 
 			var req = request.get({ url: url, headers: { Referer: url } });
 
