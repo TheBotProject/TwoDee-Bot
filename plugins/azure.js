@@ -46,67 +46,53 @@ module.exports = function (client, channelName) {
 	blobService.createContainerIfNotExists('thumbnails', { publicAccessLevel: 'blob' }, function () { });
 
 	function checkLink(url, fn) {
-		request.head({ url: url, headers: { Referer: url } }, function (err, resp) {
-			if (err) return fn(err);
+		return Q.ninvoke(request, 'head', { url: url, headers: { Referer: url } }).then(function (resp) {
+			if (resp.statusCode >= 300 || resp.statusCode < 200) throw new Error('Unsuccessful http request');
 
-			fn(null, resp.statusCode === 200);
+			return resp;
 		});
 	}
 
 	function saveLink(url) {
-		checkLink(url, function (err, success) {
-			if (err || !success) return;
-
+		checkLink(url).then(function (resp) {
 			var query = azure.TableQuery
 				.select('RowKey')
 				.from('images')
 				.where('Url eq ?', url);
 
-			tableService.queryEntities(query, function (error, entities) {
-				if (error || entities.length) return;
+			return Q.ninvoke(tableService, 'queryEntities', query);
+		}).spread(function (entities) {
+			if (entities.length) return;
 
-				var date = new Date();
-				var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
-				var blobId = Date.now().toString();
+			var date = new Date();
+			var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
+			var blobId = Date.now().toString();
 
-				var req = request.get({ url: url, headers: { Referer: url } });
+			var req = request.get({ url: url, headers: { Referer: url } });
 
-				req.on('response', function (resp) {
-					var imgDeferred = Q.defer();
-					blobService.createBlockBlobFromStream('images', blobId.toString(), req, resp.headers['content-length'], { contentType: resp.headers['content-type'], cacheControl: 'max-age=31536000, public' }, function (err) {
-						if (err) {
-							imgDeferred.reject(err);
-						} else {
-							imgDeferred.resolve();
-						}
+			req.once('response', function (resp) {
+				var imgDeferred = Q.defer();
+				blobService.createBlockBlobFromStream('images', blobId.toString(), resp, resp.headers['content-length'], { contentType: resp.headers['content-type'], cacheControl: 'max-age=31536000, public' }, function (err) {
+					if (err) {
+						imgDeferred.reject(err);
+					} else {
+						imgDeferred.resolve();
+					}
+				});
+
+
+				var thumbPromise = createThumbnail(req).then(function (thumbnail) {
+					return Q.ninvoke(blobService, 'createBlockBlobFromStream', 'thumbnails', blobId.toString(), new BufferStream(thumbnail), thumbnail.length, { contentType: 'image/jpeg', cacheControl: 'max-age=31536000, public' });
+				});
+
+				Q.all([imgDeferred.promise, thumbPromise]).then(function () {
+					return Q.ninvoke(tableService, 'insertEntity', 'images', {
+						PartitionKey: partKey,
+						RowKey: blobId,
+						Url: url
 					});
-
-
-					var thumbDeferred = createThumbnail(req).then(function (thumbnail) {
-						var def = Q.defer();
-
-						blobService.createBlockBlobFromStream('thumbnails', blobId.toString(), new BufferStream(thumbnail), thumbnail.length, { contentType: 'image/jpeg', cacheControl: 'max-age=31536000, public' }, function (err) {
-							if (err) {
-								def.reject(err);
-							} else {
-								def.resolve();
-							}
-						});
-
-						return def.promise;
-					});
-
-					Q.all([imgDeferred.promise, thumbDeferred.promise]).then(function () {
-						tableService.insertEntity('images', {
-							PartitionKey: partKey,
-							RowKey: blobId,
-							Url: url
-						}, function (err) {
-							if (err) return console.error(err);
-
-							client.emit('azure:image', blobId, partKey);
-						});
-					});
+				}).then(function () {
+					client.emit('azure:image', blobId, partKey);
 				});
 			});
 		});
