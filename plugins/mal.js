@@ -25,7 +25,7 @@ module.exports = function (client, channelName) {
 
 						data = JSON.parse(data);
 						if (data.error) {
-							client.say(channelName, 'Couldn\'t parse anime info, here\'s the link though: http://myanimelist.net/anime/' + data.id);
+							client.say(channelName, 'Couldn\'t parse anime info, here\'s the link though: http://myanimelist.net/anime/' + match[1]);
 						} else {
 							client.say(channelName, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
 						}
