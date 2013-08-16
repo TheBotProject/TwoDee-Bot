@@ -10,9 +10,8 @@ var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', { encoding: 
 var state = JSON.parse(fs.readFileSync(__dirname + '/state.json', { encoding: 'utf8' }));
 
 var saves = [];
-var messageHandlers = {};
-var commands = {};
 var plugins = {};
+var intervals = {};
 
 function registerPlugin(instance, channel) {
 	if (!channel) throw new Error('Invalid plugin registration params');
@@ -21,14 +20,6 @@ function registerPlugin(instance, channel) {
 		instance = instance(client, channel);
 	} else if (typeof instance === 'string') {
 		instance = require(instance)(client, channel);
-	}
-
-	if (instance.messageHandler) {
-		messageHandlers[channel].push(instance.messageHandler);
-	}
-
-	for (var cmd in instance.commands) {
-		commands[channel][cmd] = instance.commands[cmd];
 	}
 
 	if (instance.save) {
@@ -46,18 +37,6 @@ function gracefulExit() {
 	}
 
 	process.exit(0);
-}
-
-function removePlugins(channel) {
-	delete commands[channel];
-	delete messageHandlers[channel];
-
-	for (var i = 0; i < plugins[channel].length; ++i) {
-		if (plugins[channel][i].disable) {
-			plugins[channel][i].disable();
-		}
-	}
-	delete plugins[channel];
 }
 
 function checkAbandonChannel(channel) {
@@ -83,8 +62,6 @@ client.on('quit', function (nick) {
 client.on('part', function (channel, nick) {
 	if (nick === client.nick) {
 		state[channel].active = false;
-
-		removePlugins(channel);
 	} else if (state[channel].active && Object.keys(client.chans[channel].users).length === 2) {
 		checkAbandonChannel(channel);
 	}
@@ -123,8 +100,6 @@ client.on('invite', function (channel, inviteUser) {
 client.on('kick', function (channel, user) {
 	if (user === client.nick && state[channel]) {
 		state[channel].active = false;
-
-		removePlugins(channel);
 	}
 });
 
@@ -132,13 +107,7 @@ client.on('join', function (channel, user) {
 	if (user === client.nick && state[channel]) {
 		console.log('Connected to ' + channel);
 
-		if (!messageHandlers[channel]) messageHandlers[channel] = [];
-		if (!commands[channel]) commands[channel] = {};
-		if (!plugins[channel]) plugins[channel] = [];
-
-		for (var i = 0; i < state[channel].plugins.length; ++i) {
-			registerPlugin('./plugins/' + state[channel].plugins[i], channel);
-		}
+		intervals[channel] = [];
 
 		client.once('names' + channel, function (nicks) {
 			if (Object.keys(nicks).length === 1) {
@@ -148,21 +117,52 @@ client.on('join', function (channel, user) {
 				return;
 			}
 		});
+
+		var activatedPlugins = config.plugins;
+		if (channel[0] === '#') {
+			activatedPlugins = state[channel].plugins;
+		}
+		for (var i = 0; i < activatedPlugins.length; ++i) {
+			var plugin = plugins[activatedPlugins[i]];
+			if (plugin.join) {
+				plugin.join(channel);
+			}
+
+			if (plugin.interval) {
+				intervals[channel].push(setInterval(plugin.interval.bind(plugin, channel), plugin.intervalTimeout));
+			}
+		}
 	}
 });
 
-client.on('message#', function (from, channel, message) {
+client.on('message', function (from, channel, message) {
+	var activatedPlugins = config.plugins;
+	if (channel[0] === '#') {
+		activatedPlugins = state[channel].plugins;
+	}
+
 	if (message[0] === '!') {
 		var cmd = message.split(' ')[0].substring(1);
-		if (commands[channel][cmd]) {
-			commands[channel][cmd](from, message.substring(cmd.length + 2));
+
+		for (var i = 0; i < activatedPlugins.length; ++i) {
+			var plugin = plugins[activatedPlugins[i]];
+			if (plugin.commands && plugin.commands[cmd]) {
+				plugin.commands[cmd](from, channel, message.substring(cmd.length + 2));
+			}
 		}
 	} else {
-		for (var i = 0; i < messageHandlers[channel].length; ++i) {
-			messageHandlers[channel][i](from, message);
+		for (var i = 0; i < activatedPlugins.length; ++i) {
+			var plugin = plugins[activatedPlugins[i]];
+			if (plugin.messageHandler) {
+				plugin.messageHandler(from, channel, message);
+			}
 		}
 	}
 });
+
+for (var i=0; i < config.plugins.length; ++i) {
+	plugins[config.plugins[i]] = (require('./plugins/' + config.plugins[i]))(client);
+}
 
 server(client);
 process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);

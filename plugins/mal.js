@@ -3,16 +3,16 @@ var request = require('request');
 var ent = require('ent');
 var Q = require('q');
 
-module.exports = function (client, channelName) {
+module.exports = function (client) {
 
-	function searchAnime(query, limit) {
+	function searchAnime(query, limit, cb) {
 		google.resultsPerPage = limit;
 
 		google('site:myanimelist.net/anime/ ' + query, function (err, next, links) {
 			if (err) return;
 
 			if (!links.length) {
-				client.say(channelName, 'Sorry, no results for: ' + query);
+				cb(null);
 				return;
 			}
 
@@ -25,9 +25,9 @@ module.exports = function (client, channelName) {
 
 						data = JSON.parse(data);
 						if (data.error) {
-							client.say(channelName, 'Couldn\'t parse anime info, here\'s the link though: http://myanimelist.net/anime/' + match[1]);
+							cb(match[1]);
 						} else {
-							client.say(channelName, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
+							cb(data);
 						}
 					});
 				} else {
@@ -56,7 +56,7 @@ module.exports = function (client, channelName) {
 						var data = datas[i];
 						if (!data) continue;
 
-						client.say(channelName, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
+						cb(data);
 					}
 
 				}).done();
@@ -66,11 +66,27 @@ module.exports = function (client, channelName) {
 
 	return {
 		commands: {
-			mal: function (from, message) {
-				searchAnime(message, 1);
+			mal: function (from, channel, message) {
+				searchAnime(message, 1, function (data) {
+					if (data === null) {
+						client.say(channel, 'Sorry, no results for: ' + message);
+					} else if (typeof data === 'object') {
+						client.say(channel, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
+					} else {
+						client.say(channel, 'Couldn\'t parse anime info, here\'s the link though: http://myanimelist.net/anime/' + data);
+					}
+				});
 			},
-			mal3: function (from, message) {
-				searchAnime(message, 3);
+			mal3: function (from, channel, message) {
+				searchAnime(message, 3, function (data) {
+					if (data === null) {
+						client.say(channel, 'Sorry, no results for: ' + message);
+					} else if (typeof data === 'object') {
+						client.say(channel, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
+					} else {
+						client.say(channel, 'Couldn\'t parse anime info, here\'s the link though: http://myanimelist.net/anime/' + data);
+					}
+				});
 			}
 		}
 	};

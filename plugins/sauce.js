@@ -1,9 +1,9 @@
 ﻿var request = require('request');
 var cheerio = require('cheerio');
 
-module.exports = function (client, channelName) {
+module.exports = function (client) {
 
-	function searchSauceNao(img) {
+	function searchSauceNao(img, cb) {
 		request('http://saucenao.com/search.php?db=999&url=' + encodeURIComponent(img), function (err, r, data) {
 			if (err) return;
 
@@ -22,19 +22,29 @@ module.exports = function (client, channelName) {
 				if (!link) continue;
 
 				found = true;
-				client.say(channelName, title + ' [' + similarity + '%] - ' + link);
+				cb({
+					title: title,
+					similarity: similarity,
+					link: link
+				});
 			}
 
 			if (!found) {
-				client.say(channelName, 'Sorry, no image source found');
+				cb(null);
 			}
 		});
 	}
 
 	return {
 		commands: {
-			sauce: function (from, message) {
-				searchSauceNao(message);
+			sauce: function (from, channel, message) {
+				searchSauceNao(message, function (details) {
+					if (details === null) {
+						client.say(channel, 'Sorry, no image source found');
+					} else {
+						client.say(channel, details.title + ' [' + details.similarity + '%] - ' + details.link);
+					}
+				});
 			}
 		}
 	};

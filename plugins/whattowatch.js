@@ -1,4 +1,4 @@
-﻿module.exports = function (client, channelName) {
+﻿module.exports = function (client) {
 
 	function random(min, max) {
 		return min + Math.floor(Math.random() * ((max - min) + 1));
@@ -29,7 +29,7 @@
 
 	return {
 		commands: {
-			whattowatch: function (from, message) {
+			whattowatch: function (from, channel, message) {
 				var best = bestAnime[random(0, bestAnime.length - 1)];
 				client.say(from, 'Currently best aired anime: ' + best.title + ' - ' + best.description + ' a must watch! - ' + best.url);
 			}

@@ -3,7 +3,7 @@
 	hour = minute * 60,
 	day = hour * 24;
 
-module.exports = function (client, channelName) {
+module.exports = function (client) {
 
 	function ago(date) {
 		var diff = Date.now() - new Date(date).getTime();
@@ -20,8 +20,8 @@ module.exports = function (client, channelName) {
 	}
 
 	var users = {};
-	function refreshUsers() {
-		for (var i in client.chans[channelName].users) {
+	function refreshUsers(channel) {
+		for (var i in client.chans[channel].users) {
 			if (users[i.toLowerCase()]) continue;
 
 			users[i.toLowerCase()] = { joined: null, left: null };
@@ -42,11 +42,10 @@ module.exports = function (client, channelName) {
 		}
 	}
 
-	refreshUsers();
 	client.once('names', refreshUsers);
 
 
-	var userQuit = userLeave.bind(client, channelName);
+	var userQuit = userLeave.bind(client, null);
 	client.on('quit', userQuit);
 
 	var userPart = userLeave;
@@ -56,34 +55,27 @@ module.exports = function (client, channelName) {
 
 	return {
 		commands: {
-			seen: function (from, message) {
+			seen: function (from, channel, message) {
 				var user = users[message.toLowerCase()];
 				if (user) {
 					if (user.joined === null && user.left === null) {
-						client.say(channelName, message + ' is here! I have no idea when he/she came though :(');
+						client.say(channel, message + ' is here! I have no idea when he/she came though :(');
 					} else if (user.joined !== null) {
 						if (user.left !== null && user.joined < user.left) {
-							client.say(channelName, message + ' last joined ' + ago(user.joined) + ', but left ' + ago(user.left));
+							client.say(channel, message + ' last joined ' + ago(user.joined) + ', but left ' + ago(user.left));
 						} else {
-							client.say(channelName, message + ' is here! He/She came ' + ago(user.joined) + '!');
+							client.say(channel, message + ' is here! He/She came ' + ago(user.joined) + '!');
 						}
 					} else if (user.joined === null && user.left !== null) {
-						client.say(channelName, 'I have no idea when ' + message + ' last joined, he/she left ' + ago(user.left) + ' though!');
+						client.say(channel, 'I have no idea when ' + message + ' last joined, he/she left ' + ago(user.left) + ' though!');
 					} else {
-						client.say(channelName, 'Something\'s wrong with me. Fix meeeh, fix meeeee :((((');
+						client.say(channel, 'Something\'s wrong with me. Fix meeeh, fix meeeee :((((');
 						process.exit(1);
 					}
 				} else {
-					client.say(channelName, 'I haven\'t seen ' + message + ' yet :(');
+					client.say(channel, 'I haven\'t seen ' + message + ' yet :(');
 				}
 			}
-		},
-
-		disable: function () {
-			client.removeListener('names', refreshUsers);
-			client.removeListener('quit', userQuit);
-			client.removeListener('part', userPart);
-			client.removeListener('join', userJoin);
 		}
 	};
 };

@@ -6,35 +6,6 @@ try {
 
 	module.exports = function (client, channelName) {
 
-		function postAlbum(details) {
-			client.say(channelName, details.title + ' (' + details.images_count + ' images)' + (details.account_url ? ' [' + details.account_url + ']' : '') + (details.nsfw ? ' [NSFW]' : '') + ' - ' + details.link);
-		}
-
-		function postImage(details) {
-			client.say(channelName, details.title + (details.account_url ? ' [' + details.account_url + ']' : '') + (details.nsfw ? ' [NSFW]' : '') + ' - ' + details.link);
-		}
-
-		function postGallerySearch(query) {
-			request.get({ url: 'https://api.imgur.com/3/gallery/search?q=' + encodeURIComponent(query), headers: { Authorization: 'Client-ID ' + clientId } }, function(err, r, data) {
-				if (err) return;
-
-				data = JSON.parse(data).data;
-				if (!data) return;
-
-				if (!data.length) {
-					client.say(channelName, 'Sorry, no results for: ' + query);
-					return;
-				}
-
-				if (data[0].is_album) {
-					postAlbum(data[0]);
-				} else {
-					client.emit('commands:image' + channelName, data[0].link);
-					postImage(data[0]);
-				}
-			});
-		}
-
 		function postAlbumInfo(id) {
 			request.get({ url: 'https://api.imgur.com/3/album/' + encodeURIComponent(id), headers: { Authorization: 'Client-ID ' + clientId } }, function (err, r, data) {
 				if (err) return;
@@ -47,20 +18,16 @@ try {
 		}
 
 		return {
-			messageHandler: function (from, message) {
+			messageHandler: function (from, channel, message) {
 				var re, match;
 
 				re = /https?:\/\/(www.)?imgur.com\/a\/(.*?)($|[^\w-])/gi;
 				while (match = re.exec(message)) {
 					if (match[2]) {
-						postAlbumInfo(match[2]);
+						postAlbumInfo(match[2], function (details) {
+							client.say(channel, details.title + ' (' + details.images_count + ' images)' + (details.account_url ? ' [' + details.account_url + ']' : '') + (details.nsfw ? ' [NSFW]' : '') + ' - ' + details.link);
+						});
 					}
-				}
-			},
-
-			commands: {
-				imgur: function (from, message) {
-					postGallerySearch(message);
 				}
 			}
 		};

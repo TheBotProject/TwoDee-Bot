@@ -27,7 +27,7 @@ function createThumbnail(req) {
 	return def.promise;
 }
 
-module.exports = function (client, channelName) {
+module.exports = function (client) {
 
 	if (!process.env.AZURE_STORAGE_ACCOUNT || !process.env.AZURE_STORAGE_ACCESS_KEY) {
 		var userData = JSON.parse(fs.readFileSync(__dirname + '/.azure', { encoding: 'utf8' }));
@@ -132,16 +132,16 @@ module.exports = function (client, channelName) {
 		}
 	}
 
-	client.on('commands:message' + channelName, function (image) {
-		parseLinks(image);
+	client.on('commands:message', function (image) {
+		parseLinks(image.message);
 	});
 
-	client.on('commands:image' + channelName, function (image) {
-		saveLink(image);
+	client.on('commands:image', function (image) {
+		saveLink(image.image);
 	});
 
 	return {
-		messageHandler: function (from, message) {
+		messageHandler: function (from, channel, message) {
 			parseLinks(message);
 		}
 	};

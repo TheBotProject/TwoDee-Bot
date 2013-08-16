@@ -2,7 +2,7 @@
 var fs = require('fs');
 var readLine = require("readline");
 
-module.exports = function (client, channelName) {
+module.exports = function (client) {
 
 	var savedPets = JSON.parse(fs.readFileSync(__dirname + '/.pets', { encoding: 'utf8' }));
 
@@ -17,9 +17,9 @@ module.exports = function (client, channelName) {
 
 	return {
 		commands: {
-			pet: function (from, message) {
+			pet: function (from, channel, message) {
 				if (from.toLowerCase() === message.toLowerCase()) {
-					client.say(channelName, 'Only someone else can give me the pet command for you :(');
+					client.say(channel, 'Only someone else can give me the pet command for you :(');
 					return;
 				}
 
@@ -31,14 +31,14 @@ module.exports = function (client, channelName) {
 				}
 
 				savedPets[message.toLowerCase()][rnd] = savedPets[message.toLowerCase()][rnd] ? savedPets[message.toLowerCase()][rnd] + 1 : 1;
-				client.action(channelName, pet + ' ' + message);
+				client.action(channel, pet + ' ' + message);
 			},
 
-			pets: function (from, message) {
+			pets: function (from, channel, message) {
 				if (!message) message = from;
 
 				if (!savedPets[message.toLowerCase()]) {
-					client.say(channelName, message + ' didn\'t get any pets yet :(');
+					client.say(channel, message + ' didn\'t get any pets yet :(');
 					return;
 				}
 
@@ -47,7 +47,7 @@ module.exports = function (client, channelName) {
 					owns[owns.length] = savedPets[message.toLowerCase()][key] + ' ' + pets[key][1];
 				}
 
-				client.say(channelName, message + ' has ' + owns.join(', '));
+				client.say(channel, message + ' has ' + owns.join(', '));
 			}
 		},
 
