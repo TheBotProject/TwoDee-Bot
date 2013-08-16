@@ -24,7 +24,11 @@ module.exports = function (client, channelName) {
 						if (err) return;
 
 						data = JSON.parse(data);
-						client.say(channelName, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
+						if (data.error) {
+							client.say(channelName, 'Couldn\'t parse anime info, here\'s the link though: http://myanimelist.net/anime/' + data.id);
+						} else {
+							client.say(channelName, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
+						}
 					});
 				} else {
 					next();
