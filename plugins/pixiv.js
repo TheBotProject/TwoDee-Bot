@@ -59,7 +59,7 @@ module.exports = function (client) {
 				if (match[4]) {
 					postInfo(match[4], function (arr) {
 						client.emit('commands:image', channel, { image: 'http://i1.pixiv.net/img' + arr[4] + '/img/' + arr[24] + '/' + arr[0] + '.' + arr[2] });
-						client.say(channel, (arr[26] === '1' ? '\x0304NSFW\x03 - ' : '') + arr[3] + ' [' + arr[5] + '] - http://pixiv.net/member_illust.php?mode=medium&illust_id=' + id);
+						client.say(channel, (arr[26] === '1' ? '\x0304NSFW\x03 - ' : '') + arr[3] + ' [' + arr[5] + '] - http://pixiv.net/member_illust.php?mode=medium&illust_id=' + arr[0]);
 					});
 				}
 			}
