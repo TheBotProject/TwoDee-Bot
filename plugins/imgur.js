@@ -6,14 +6,14 @@ try {
 
 	module.exports = function (client, channelName) {
 
-		function postAlbumInfo(id) {
+		function postAlbumInfo(id, cb) {
 			request.get({ url: 'https://api.imgur.com/3/album/' + encodeURIComponent(id), headers: { Authorization: 'Client-ID ' + clientId } }, function (err, r, data) {
 				if (err) return;
 
 				data = JSON.parse(data).data;
 				if (!data) return;
 
-				postAlbum(data);
+				cb(data);
 			});
 		}
 
