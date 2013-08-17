@@ -23,7 +23,11 @@ module.exports = function (client, channelName) {
 			function retry(times) {
 				var rand = random(0, res.posts.$.count - 1);
 				requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=1&pid=' + rand, function (err, res) {
-					if (!res.posts || !res.posts.post.length) return;
+					if (!res.posts || !res.posts.post.length) {
+						console.log(res);
+						client.say(channel, 'Invalid booru reply');
+						return;
+					}
 
 					client.emit('commands:image', channel, { image: res.posts.post[0].$.file_url });
 					if (broadcast) {
