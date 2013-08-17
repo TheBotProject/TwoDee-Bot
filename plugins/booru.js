@@ -1,7 +1,7 @@
 ﻿var xml2js = require('xml2js');
 var request = require('request');
 
-module.exports = function (client, channelName) {
+module.exports = function (client) {
 
 	function random(min, max) {
 		return min + Math.floor(Math.random() * ((max - min) + 1));
