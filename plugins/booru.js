@@ -23,9 +23,9 @@ module.exports = function (client, channelName) {
 			function retry(times) {
 				var rand = random(0, res.posts.$.count - 1);
 				requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=1&pid=' + rand, function (err, res) {
-					if (!res.posts.post.length) return;
+					if (!res.posts || !res.posts.post.length) return;
 
-					client.emit('commands:image', { channel: channel, image: res.posts.post[0].$.file_url });
+					client.emit('commands:image', channel, { image: res.posts.post[0].$.file_url });
 					if (broadcast) {
 						request.head({ url: res.posts.post[0].$.file_url, headers: { Referer: res.posts.post[0].$.file_url } }, function (err, resp) {
 							if (!err && resp.statusCode >= 200 && resp.statusCode < 300) {
@@ -76,7 +76,7 @@ module.exports = function (client, channelName) {
 
 			re = /http:\/\/safebooru\.org\/+?images\/\S+/gi;
 			while (match = re.exec(message)) {
-				client.emit('commands:image', { channel: channel, image: match[0] });
+				client.emit('commands:image', channel, { image: match[0] });
 			}
 
 			re = /http:\/\/safebooru.org\/index.php\?page=post&s=view&id=(\d+)/gi;

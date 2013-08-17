@@ -143,6 +143,14 @@ module.exports = function (client) {
 	return {
 		messageHandler: function (from, channel, message) {
 			parseLinks(message);
+		},
+		customEvents: {
+			'commands:message': function (channel, image) {
+				saveLink(image.image);
+			},
+			'commands:image': function (channel, image) {
+				saveLink(image.image);
+			}
 		}
 	};
 };

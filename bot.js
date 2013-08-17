@@ -160,9 +160,17 @@ client.on('message', function (from, channel, message) {
 	}
 });
 
-for (var i=0; i < config.plugins.length; ++i) {
-	plugins[config.plugins[i]] = (require('./plugins/' + config.plugins[i]))(client);
-}
+config.plugins.forEach(function (plugin) {
+	plugins[plugin] = (require('./plugins/' + plugin))(client);
+
+	for (var evt in plugins[plugin].customEvents) {
+		client.on(evt, function (channel) {
+			if (channel[0] === '#' && state[channel].plugins.indexOf(plugin) === -1) return;
+
+			plugins[plugin].customEvents[evt].apply(plugins[plugin].customEvents, arguments);
+		});
+	}
+});
 
 server(client);
 process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
