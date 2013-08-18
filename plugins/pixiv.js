@@ -32,6 +32,10 @@ module.exports = function (client) {
 			if (err) return;
 
 			csv().from.string(data).to.array(function (arr) {
+				if (arr[0]) {
+					arr[0][0] = id;
+				}
+
 				cb(arr[0]);
 			});
 		});
