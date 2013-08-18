@@ -31,7 +31,7 @@ try {
 				}
 			}
 		};
-	}
+	};
 } catch (e) {
 	console.error('Couldn\'t read imgur client id: ' + e);
 	module.exports = function () { return {}; };
