@@ -41,17 +41,19 @@ module.exports = function (client) {
 		});
 	}
 
+	function postPixiv(channel, term, arr) {
+		if (arr === null && term) {
+			client.say(channel, 'Sorry, nothing found for ' + term);
+		} else {
+			client.emit('commands:image', channel, { image: 'http://i1.pixiv.net/img' + arr[4] + '/img/' + arr[24] + '/' + arr[0] + '.' + arr[2] });
+			client.say(channel, (arr[26] === '1' ? '\x0304NSFW\x03 - ' : '') + arr[3] + ' [' + arr[5] + '] - http://pixiv.net/member_illust.php?mode=medium&illust_id=' + arr[0]);
+		}
+	}
+
 	return {
 		commands: {
 			pixiv: function (from, channel, message) {
-				searchPixiv(message, function (arr) {
-					if (arr === null) {
-						client.say(channel, 'Sorry, nothing found for ' + term);
-					} else {
-						client.emit('commands:image', channel, { image: 'http://i1.pixiv.net/img' + arr[4] + '/img/' + arr[24] + '/' + arr[0] + '.' + arr[2] });
-						client.say(channel, (arr[26] === '1' ? '\x0304NSFW\x03 - ' : '') + arr[3] + ' [' + arr[5] + '] - http://pixiv.net/member_illust.php?mode=medium&illust_id=' + arr[0]);
-					}
-				});
+				searchPixiv(message, postPixiv.bind(null, channel, message));
 			}
 		},
 
@@ -61,10 +63,7 @@ module.exports = function (client) {
 			re = /https?:\/\/(www.)?pixiv.net\/member_illust.php\?((.+)&)?illust_id=([\d]+)/gi;
 			while (match = re.exec(message)) {
 				if (match[4]) {
-					postInfo(match[4], function (arr) {
-						client.emit('commands:image', channel, { image: 'http://i1.pixiv.net/img' + arr[4] + '/img/' + arr[24] + '/' + arr[0] + '.' + arr[2] });
-						client.say(channel, (arr[26] === '1' ? '\x0304NSFW\x03 - ' : '') + arr[3] + ' [' + arr[5] + '] - http://pixiv.net/member_illust.php?mode=medium&illust_id=' + arr[0]);
-					});
+					postInfo(match[4], postPixiv.bind(null, channel, null));
 				}
 			}
 		}
