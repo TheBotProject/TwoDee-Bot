@@ -71,7 +71,7 @@ module.exports = function (client) {
 			},
 
 			gb: function (from, channel, message) {
-				getBooru(channel, 'http://gelbooru.com', message + ' -rating:explicit', true);
+				getBooru(channel, 'http://gelbooru.com', message, true);
 			}
 		},
 
