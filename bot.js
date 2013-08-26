@@ -9,15 +9,16 @@ var reddits = 'all';
 var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', { encoding: 'utf8' }));
 var state = JSON.parse(fs.readFileSync(__dirname + '/state.json', { encoding: 'utf8' }));
 
-var saves = [];
 var plugins = {};
 var intervals = {};
 
 function gracefulExit() {
 	fs.writeFileSync(__dirname + '/state.json', JSON.stringify(state));
 
-	for (var i = 0; i < saves.length; ++i) {
-		saves[i]();
+	for (var i in plugins) {
+		if (plugins[i].save) {
+			plugins[i].save();
+		}
 	}
 
 	process.exit(0);
