@@ -7,7 +7,7 @@
 	var bestAnime = [
 		{
 			title: 'Pico x CoCo x Chico',
-			description: ' A wonderful romance between 3 humans.',
+			description: ' A wonderful romance between 3 people.',
 			url: 'http://myanimelist.net/anime/4866/Pico_x_CoCo_x_Chico'
 		},
 		{
