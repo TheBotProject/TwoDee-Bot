@@ -13,22 +13,6 @@ var saves = [];
 var plugins = {};
 var intervals = {};
 
-function registerPlugin(instance, channel) {
-	if (!channel) throw new Error('Invalid plugin registration params');
-
-	if (instance instanceof Function) {
-		instance = instance(client, channel);
-	} else if (typeof instance === 'string') {
-		instance = require(instance)(client, channel);
-	}
-
-	if (instance.save) {
-		saves[saves.length] = instance.save;
-	}
-
-	plugins[channel].push(instance);
-}
-
 function gracefulExit() {
 	fs.writeFileSync(__dirname + '/state.json', JSON.stringify(state));
 
