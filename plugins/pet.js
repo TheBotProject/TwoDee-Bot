@@ -1,6 +1,4 @@
-﻿var youtube = require('youtube-feeds');
-var fs = require('fs');
-var readLine = require("readline");
+﻿var fs = require('fs');
 
 module.exports = function (client) {
 
