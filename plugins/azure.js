@@ -123,13 +123,6 @@ module.exports = function (client) {
 		while (match = re.exec(message)) {
 			saveLink('http://i.imgur.com/' + match[2] + '.jpg');
 		}
-
-		re = /https?:\/\/(www.)?pixiv.net\/member_illust.php\?((.+)&)?illust_id=([\d]+)/gi;
-		while (match = re.exec(message)) {
-			if (match[4]) {
-				savePixiv(match[4]);
-			}
-		}
 	}
 
 	return {
