@@ -15,7 +15,8 @@
 		"nyaa",
 		"booru",
 		"seen",
-		"azure"
+		"azure",
+		"pat"
 	],
 
 	"convertPath": "convert"
