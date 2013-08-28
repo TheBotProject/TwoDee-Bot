@@ -68,11 +68,11 @@ module.exports = function (client) {
 		}).spread(function (entities) {
 			if (entities.length) throw new Error('Entry already exists');
 
-			var req = request.get({ url: url, headers: { Referer: url } });
+			var req = request.get({ url: url, headers: { Referer: url }, encoding: null }, function (err, resp, body) {
+				if (err) return;
 
-			req.once('response', function (resp) {
 				var imgDeferred = Q.defer();
-				blobService.createBlockBlobFromStream('images', blobId.toString(), resp, resp.headers['content-length'], { contentType: resp.headers['content-type'], cacheControl: 'max-age=31536000, public' }, function (err) {
+				blobService.createBlockBlobFromStream('images', blobId.toString(), new BufferStream(body), resp.headers['content-length'], { contentType: resp.headers['content-type'], cacheControl: 'max-age=31536000, public' }, function (err) {
 					if (err) {
 						imgDeferred.reject(err);
 					} else {
@@ -81,7 +81,7 @@ module.exports = function (client) {
 				});
 
 
-				var thumbPromise = createThumbnail(req).then(function (thumbnail) {
+				var thumbPromise = createThumbnail(new BufferStream(body)).then(function (thumbnail) {
 					return Q.ninvoke(blobService, 'createBlockBlobFromStream', 'thumbnails', blobId.toString(), new BufferStream(thumbnail), thumbnail.length, { contentType: 'image/jpeg', cacheControl: 'max-age=31536000, public' });
 				});
 
