@@ -79,7 +79,7 @@ module.exports = function (client) {
 				else
 					savedPats[target][i] = 1;
 
-				client.action(channel, pat.format(message));
+				client.action(channel, format(pat, message));
 			},
 
 			pats: function (from, channel, message) {
