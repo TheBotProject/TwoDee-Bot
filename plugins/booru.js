@@ -29,17 +29,19 @@ module.exports = function (client) {
 						return;
 					}
 
-					client.emit('commands:image', channel, { image: res.posts.post[0].$.file_url });
 					if (broadcast) {
 						utils.request('HEAD', res.posts.post[0].$.file_url, { Referer: res.posts.post[0].$.file_url }, function (err, resp) {
 							if (!err && resp.statusCode >= 200 && resp.statusCode < 300) {
 								client.say(channel, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '\x0304NSFW\x03 - ' : '') + res.posts.post[0].$.file_url);
+								client.emit('commands:image', channel, { image: res.posts.post[0].$.file_url });
 							} else if (times) {
 								retry(times - 1);
 							} else {
 								client.say(channel, 'No valid link after 3 tries :(');
 							}
 						});
+					} else {
+						client.emit('commands:image', channel, { image: res.posts.post[0].$.file_url });
 					}
 				});
 			}
