@@ -1,5 +1,5 @@
 ﻿var xml2js = require('xml2js');
-var request = require('request');
+var utils = require('../utils');
 
 module.exports = function (client) {
 
@@ -15,7 +15,7 @@ module.exports = function (client) {
 				return;
 			}
 
-			if (res.posts.$.count == 0) {
+			if (res.posts.$.count === '0') {
 				client.say(channel, 'Sorry, nothing found for ' + tags);
 				return;
 			}
@@ -31,7 +31,7 @@ module.exports = function (client) {
 
 					client.emit('commands:image', channel, { image: res.posts.post[0].$.file_url });
 					if (broadcast) {
-						request.head({ url: res.posts.post[0].$.file_url, headers: { Referer: res.posts.post[0].$.file_url } }, function (err, resp) {
+						utils.request('HEAD', res.posts.post[0].$.file_url, { Referer: res.posts.post[0].$.file_url }, function (err, resp) {
 							if (!err && resp.statusCode >= 200 && resp.statusCode < 300) {
 								client.say(channel, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '\x0304NSFW\x03 - ' : '') + res.posts.post[0].$.file_url);
 							} else if (times) {
@@ -49,14 +49,14 @@ module.exports = function (client) {
 	}
 
 	function requestAndParse(url, cb) {
-		request(url, function (err, res, body) {
+		utils.request('GET', url, function (err, res, body) {
 			if (err) {
 				cb(err);
 				return;
 			}
 
 			var parser = new xml2js.Parser();
-			parser.parseString(body, cb);
+			parser.parseString(body.toString('utf8'), cb);
 		});
 	}
 
