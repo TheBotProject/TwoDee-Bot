@@ -5,7 +5,7 @@
 	"main": "bot.js",
 	"dependencies": {
 		"redwrap": "x",
-		"irc": "git://github.com/Sebmaster/node-irc.git",
+		"irc": "git+https://github.com/Sebmaster/node-irc.git",
 		"youtube-feeds": "x",
 		"request": "x",
 		"google": "0.3.x",
