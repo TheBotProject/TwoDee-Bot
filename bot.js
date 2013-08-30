@@ -37,10 +37,16 @@ var client = new irc.Client(config.server, config.nick, {
 	password: config.password,
 });
 
-client.on('quit', function (nick) {
+client.on('quit', function (nick, reason, channels) {
 	if (nick === client.nick) {
 		console.error('IRC disconnected us - stopping');
 		process.exit(1);
+	} else {
+		for (var i = 0; i < channels.length; ++i) {
+			if (state[channels[i]].active && Object.keys(client.chans[channels[i]].users).length === 1) {
+				checkAbandonChannel(channels[i]);
+			}
+		}
 	}
 });
 
@@ -49,14 +55,6 @@ client.on('part', function (channel, nick) {
 		state[channel].active = false;
 	} else if (state[channel].active && Object.keys(client.chans[channel].users).length === 2) {
 		checkAbandonChannel(channel);
-	}
-});
-
-client.on('quit', function (nick, reason, channels) {
-	for (var i = 0; i < channels.length; ++i) {
-		if (state[channels[i]].active && Object.keys(client.chans[channels[i]].users).length === 1) {
-			checkAbandonChannel(channels[i]);
-		}
 	}
 });
 
