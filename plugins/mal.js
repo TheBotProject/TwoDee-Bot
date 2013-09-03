@@ -23,6 +23,11 @@ module.exports = function (client) {
 					request('http://mal-api.com/anime/' + match[1], function (err, r, data) {
 						if (err) return;
 
+						if (r.statusCode < 200 || r.statusCode >= 300) {
+							cb(match[1]);
+							return;
+						}
+
 						data = JSON.parse(data);
 						if (data.error) {
 							cb(match[1]);
