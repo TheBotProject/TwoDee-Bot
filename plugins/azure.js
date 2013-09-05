@@ -53,7 +53,7 @@ module.exports = function (client) {
 		});
 	}
 
-	function saveLink(url) {
+	function saveLink(url, cb) {
 		var date = new Date();
 		var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
 		var blobId = Date.now().toString();
@@ -93,6 +93,7 @@ module.exports = function (client) {
 					});
 				}).then(function () {
 					client.emit('azure:image', blobId, partKey);
+					cb(blobId);
 				});
 			});
 		});
@@ -129,6 +130,15 @@ module.exports = function (client) {
 		messageHandler: function (from, channel, message) {
 			parseLinks(message);
 		},
+
+		commands: {
+			archive: function (from, channel, message) {
+				saveLink(message.trim(), function (blobId) {
+					client.say(channel, from + ': https://moebot.blob.core.windows.net/images/' + blobId);
+				});
+			}
+		},
+
 		customEvents: {
 			'commands:message': function (channel, image) {
 				parseLinks(image.message);
