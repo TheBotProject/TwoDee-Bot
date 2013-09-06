@@ -16,7 +16,8 @@
 		"booru",
 		"seen",
 		"azure",
-		"pat"
+		"pat",
+		"rehost"
 	],
 
 	"convertPath": "convert"
