@@ -66,7 +66,12 @@ module.exports = function (client) {
 
 			return Q.ninvoke(tableService, 'queryEntities', query);
 		}).spread(function (entities) {
-			if (entities.length) throw new Error('Entry already exists');
+			if (entities.length) {
+				if (cb) {
+					cb(entities[0].RowKey);
+				}
+				throw new Error('Entry already exists');
+			}
 
 			var req = request.get({ url: url, headers: { Referer: url }, encoding: null }, function (err, resp, body) {
 				if (err) return;
