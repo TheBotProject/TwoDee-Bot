@@ -98,7 +98,10 @@ module.exports = function (client) {
 					});
 				}).then(function () {
 					client.emit('azure:image', blobId, partKey);
-					cb(blobId);
+
+					if (cb) {
+						cb(blobId);
+					}
 				});
 			});
 		});
