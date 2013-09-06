@@ -69,5 +69,5 @@ try {
 	};
 } catch (e) {
 	console.error('Couldn\'t read imgur client id: ' + e);
-	module.export = function () { return {}; };
+	module.exports = function () { return {}; };
 }
