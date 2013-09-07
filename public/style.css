@@ -1,4 +1,8 @@
-﻿.thumbnail-overview {
+﻿.ng-cloak {
+    display: none;
+}
+
+.thumbnail-overview {
     text-align: center;
 }
 
