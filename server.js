@@ -44,7 +44,7 @@ module.exports = function (client) {
 	}
 
 	if (process.env.AZURE_STORAGE_ACCOUNT && process.env.AZURE_STORAGE_ACCESS_KEY) {
-		tableService = azure.createTableService();
+		var tableService = azure.createTableService();
 		tableService.createTableIfNotExists('images', function () { });
 
 		client.on('azure:image', function (blobId, partKey) {
