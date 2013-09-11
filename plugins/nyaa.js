@@ -13,15 +13,17 @@ module.exports = function (client) {
 		});
 	}
 
+	function postData(channel, data) {
+		client.say(channel, data.name + ' - ' + filesize(data.size) + ' | S: ' + (isNaN(data.seeders) ? '?' : data.seeders) + ' | L: ' + (isNaN(data.leechers) ? '?' : data.leechers) + ' | http://www.nyaa.se/?page=view&tid=' + data.id + ' | http://www.nyaa.se/?page=download&tid=' + data.id);
+	}
+
 	return {
 		messageHandler: function (from, channel, message) {
 			var re = /http:\/\/www\.nyaa\.eu\/\?page=view&tid=(\d+)/gi;
 			var match;
 
 			while (match = re.exec(message)) {
-				getData(match[1], function (data) {
-					client.say(channel, data.name + ' - ' + filesize(data.size) + ' | S: ' + data.seeders + ' | L: ' + data.leechers + ' | http://www.nyaa.eu/?page=download&tid=' + data.id);
-				});
+				getData(match[1], postData.bind(undefined, channel));
 			}
 		}
 	};
