@@ -6,8 +6,6 @@ var io = require('socket.io').listen(server);
 var fs = require('fs');
 var azure = require('azure');
 
-var pictures = {};
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function (req, res) {
@@ -25,10 +23,10 @@ io.on('connection', function (socket) {
 		tableService.queryEntities(query, function (error, entities) {
 			if (error) return console.error(error);
 
-			pictures[partKey] = entities.map(function (entity) {
+			var pictures = entities.map(function (entity) {
 				return entity.RowKey;
 			});
-			fn(pictures[partKey]);
+			fn(pictures);
 		});
 	});
 });
