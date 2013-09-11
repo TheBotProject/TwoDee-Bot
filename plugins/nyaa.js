@@ -5,7 +5,7 @@ module.exports = function (client) {
 
 	var n = new nyaa('http://www.nyaa.eu');
 
-	function post(id, cb) {
+	function getData(id, cb) {
 		n.get(id, function (err, data) {
 			if (err) return;
 
@@ -19,7 +19,7 @@ module.exports = function (client) {
 			var match;
 
 			while (match = re.exec(message)) {
-				post(match[1], function (data) {
+				getData(match[1], function (data) {
 					client.say(channel, data.name + ' - ' + filesize(data.size) + ' | S: ' + data.seeders + ' | L: ' + data.leechers + ' | http://www.nyaa.eu/?page=download&tid=' + data.id);
 				});
 			}
