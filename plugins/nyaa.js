@@ -19,11 +19,11 @@ module.exports = function (client) {
 
 	return {
 		messageHandler: function (from, channel, message) {
-			var re = /http:\/\/www\.nyaa\.eu\/\?page=view&tid=(\d+)/gi;
+			var re = /http:\/\/www\.nyaa\.(eu|se)\/\?page=(view|download)&tid=(\d+)/gi;
 			var match;
 
 			while (match = re.exec(message)) {
-				getData(match[1], postData.bind(undefined, channel));
+				getData(match[3], postData.bind(undefined, channel));
 			}
 		}
 	};
