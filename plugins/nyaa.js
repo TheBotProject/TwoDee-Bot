@@ -3,7 +3,7 @@ var nyaa = require("nyaatorrents");
 
 module.exports = function (client) {
 
-	var n = new nyaa('http://www.nyaa.eu');
+	var n = new nyaa('http://www.nyaa.se');
 
 	function getData(id, cb) {
 		n.get(id, function (err, data) {
