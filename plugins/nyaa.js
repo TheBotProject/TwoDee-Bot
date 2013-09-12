@@ -3,8 +3,8 @@ var nyaa = require("nyaatorrents");
 
 module.exports = function (client) {
 
-	var n = new nyaa('http://www.nyaa.se');
-	var m = new nyaa('http://sukebei.nyaa.se');
+	var nyaaDefault = new nyaa('http://www.nyaa.se');
+	var nyaaSukebei = new nyaa('http://sukebei.nyaa.se');
 
 	function rnd(min, max) {
 		if (max === undefined) {
@@ -37,7 +37,7 @@ module.exports = function (client) {
 	return {
 		commands: {
 			nyaa: function (from, channel, msg) {
-				n.search({cats: '1_37'/* English-translated anime */, term: msg}, function (err, entries) {
+				nyaaDefault.search({cats: '1_37'/* English-translated anime */, term: msg}, function (err, entries) {
 					if (err) return;
 
 					if (entries.length === 0) {
@@ -45,12 +45,12 @@ module.exports = function (client) {
 						return;
 					}
 
-					getData(n, entries[rnd(entries.length)].id, postData.bind(undefined, channel));
+					getData(nyaaDefault, entries[rnd(entries.length)].id, postData.bind(undefined, channel));
 				});
 			},
 
 			nyaall: function (from, channel, msg) {
-				n.search({term: msg}, function (err, entries) {
+				nyaaDefault.search({term: msg}, function (err, entries) {
 					if (err) return;
 
 					if (entries.length === 0) {
@@ -58,12 +58,12 @@ module.exports = function (client) {
 						return;
 					}
 					
-					getData(n, entries[rnd(entries.length)].id, postData.bind(undefined, channel));
+					getData(nyaaDefault, entries[rnd(entries.length)].id, postData.bind(undefined, channel));
 				});
 			},
 
 			nyaan: function (from, channel, msg) {
-				m.search({term: msg}, function (err, entries) {
+				nyaaSukebei.search({term: msg}, function (err, entries) {
 					if (err) return;
 
 					if (entries.length === 0) {
@@ -71,7 +71,7 @@ module.exports = function (client) {
 						return;
 					}
 
-					getData(m, entries[rnd(entries.length)].id, function (data) {
+					getData(nyaaSukebei, entries[rnd(entries.length)].id, function (data) {
 						data.nsfw = true;
 						postData(channel, data);
 					});
@@ -84,7 +84,7 @@ module.exports = function (client) {
 			var match;
 
 			while (match = re.exec(message)) {
-				getData(match[1] === 'sukebei' ? m : n, match[4], function (nsfw, data) {
+				getData(match[1] === 'sukebei' ? nyaaSukebei : nyaaDefault, match[4], function (nsfw, data) {
 					data.nsfw = nsfw;
 					postData(channel, data);
 				}.bind(undefined, match[1] === 'sukebei'));
