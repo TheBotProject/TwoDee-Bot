@@ -10,6 +10,7 @@ module.exports = function (client) {
 			var $ = cheerio.load(data);
 			var results = $('.resulttablecontent');
 			var found = false;
+			var repeatList = [];
 			for (var i = 0; i < results.length && i < 3; ++i) {
 				var result = results.eq(i);
 
@@ -19,8 +20,9 @@ module.exports = function (client) {
 				var title = $('.resulttitle', result).text();
 
 				var link = $('.resultcontentcolumn a', result).eq(0).attr('href');
-				if (!link) continue;
+				if (!link || repeatList.indexOf(link) !== -1) continue;
 
+				repeatList.push(link);
 				found = true;
 				cb({
 					title: title,
