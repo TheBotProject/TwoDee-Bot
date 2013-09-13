@@ -12,6 +12,8 @@ app.get('/', function (req, res) {
 	res.sendfile(path.join(__dirname, 'public', 'index.htm'));
 });
 
+var tableService;
+
 io.set('log level', 1);
 io.on('connection', function (socket) {
 	socket.on('images', function (partKey, fn) {
@@ -44,7 +46,7 @@ module.exports = function (client) {
 	}
 
 	if (process.env.AZURE_STORAGE_ACCOUNT && process.env.AZURE_STORAGE_ACCESS_KEY) {
-		var tableService = azure.createTableService();
+		tableService = azure.createTableService();
 		tableService.createTableIfNotExists('images', function () { });
 
 		client.on('azure:image', function (blobId, partKey) {
