@@ -2,16 +2,45 @@
     display: none;
 }
 
+.offset-after {
+    margin-bottom: 20px;
+}
+
+.nav-left {
+    text-align: center;
+}
+
 .thumbnail-overview {
     text-align: center;
 }
 
-    .thumbnail-overview > .col-lg-2 {
-        height: 208px;
-        line-height: 200px;
-        margin-bottom: 10px;
+    .thumbnail-overview > * {
+        height: 100%;
     }
 
     .thumbnail-overview .thumbnail {
-        display: inline-block;
+    }
+
+    .thumbnail-overview .thumbnail > img {
+        max-height: 100%;
+    }
+
+.quadratic-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+}
+
+    .quadratic-container:after {
+        content: '';
+        display: block;
+        margin-top: 100%;
+    }
+
+    .quadratic-container > * {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }

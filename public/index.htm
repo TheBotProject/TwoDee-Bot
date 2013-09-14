@@ -15,10 +15,14 @@
 <body data-ng-controller="PictureCtrl" class="ng-cloak">
     <div class="container">
         <ul class="list-inline thumbnail-overview row">
-            <li data-ng-repeat="picture in pictures.sort().reverse()" class="col-lg-2">
-                <a href="https://moebot.blob.core.windows.net/images/{{picture}}" class="thumbnail">
-                    <img data-ng-src="https://moebot.blob.core.windows.net/thumbnails/{{picture}}">
-                </a>
+            <li data-ng-repeat="picture in pictures.sort().reverse()" class="col-lg-2 col-md-3 col-sm-4 col-xs-6 offset-after">
+                <div class="quadratic-container">
+                    <a href="https://moebot.blob.core.windows.net/images/{{picture}}">
+                        <div class="thumbnail">
+                            <img data-ng-src="https://moebot.blob.core.windows.net/thumbnails/{{picture}}">
+                        </div>
+                    </a>
+                </div>
             </li>
         </ul>
     </div>
