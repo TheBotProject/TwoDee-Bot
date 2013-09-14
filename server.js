@@ -8,6 +8,11 @@ var azure = require('azure');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.configure('production', function () {
+	io.set('browser client minification', true);
+	io.set('browser client etag', true);
+});
+
 app.get('/', function (req, res) {
 	res.sendfile(path.join(__dirname, 'public', 'index.htm'));
 });
