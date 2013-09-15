@@ -34,5 +34,6 @@ app.controller('PictureCtrl', ['$scope', 'socket', function ($scope, socket) {
 	});
 	socket.on('image', function(image) {
 		$scope.pictures.push(image.blob);
+		window.localStorage.setItem('imageCache', angular.toJson(images));
 	});
 }]);
