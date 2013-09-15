@@ -144,6 +144,17 @@ module.exports = function (client) {
 				saveLink(message.trim(), function (blobId) {
 					client.say(channel, from + ': https://moebot.blob.core.windows.net/images/' + blobId);
 				});
+			},
+
+			archiverm: function (from, channel, message) {
+				var rowKey = parseInt(message);
+				var date = new Date(rowKey);
+				if (isNaN(date)) return;
+
+				var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
+				tableService.deleteEntity('images', { PartitionKey: partKey, RowKey: rowKey.toString() }, function (err) { });
+				blobService.deleteBlob('images', rowKey.toString(), function (err) { });
+				blobService.deleteBlob('thumbnails', rowKey.toString(), function (err) { });
 			}
 		},
 
