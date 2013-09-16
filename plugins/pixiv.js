@@ -1,11 +1,10 @@
 ﻿var request = require('request');
 var csvs = require('csv');
+var utils = require('../utils');
 
 module.exports = function (client) {
 
-	function random(min, max) {
-		return min + Math.floor(Math.random() * ((max - min) + 1));
-	}
+	var random = utils.random;
 
 	function searchPixiv(term, cb) {
 		//login disabled for now
@@ -18,7 +17,7 @@ module.exports = function (client) {
 					return;
 				}
 
-				arr = arr[random(0, arr.length - 1)];
+				arr = arr[random(arr.length)];
 				if (arr[4].length === 1) arr[4] = '0' + arr[4];
 
 				cb(arr);

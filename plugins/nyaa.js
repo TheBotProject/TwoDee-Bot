@@ -1,19 +1,13 @@
 ﻿var filesize = require('filesize');
 var nyaa = require("nyaatorrents");
+var utils = require('../utils');
 
 module.exports = function (client) {
 
 	var nyaaDefault = new nyaa('http://www.nyaa.se');
 	var nyaaSukebei = new nyaa('http://sukebei.nyaa.se');
 
-	function rnd(min, max) {
-		if (max === undefined) {
-			max = min;
-			min = 0;
-		}
-
-		return min + Math.floor(Math.random() * (max - min));
-	}
+	var random = utils.random;
 
 	function getData(nyu, id, cb) {
 		nyu.get(id, function (err, data) {
@@ -45,7 +39,7 @@ module.exports = function (client) {
 						return;
 					}
 
-					getData(nyaaDefault, entries[rnd(entries.length)].id, postData.bind(undefined, channel));
+					getData(nyaaDefault, entries[random(entries.length)].id, postData.bind(undefined, channel));
 				});
 			},
 
@@ -58,7 +52,7 @@ module.exports = function (client) {
 						return;
 					}
 					
-					getData(nyaaDefault, entries[rnd(entries.length)].id, postData.bind(undefined, channel));
+					getData(nyaaDefault, entries[random(entries.length)].id, postData.bind(undefined, channel));
 				});
 			},
 
@@ -71,7 +65,7 @@ module.exports = function (client) {
 						return;
 					}
 
-					getData(nyaaSukebei, entries[rnd(entries.length)].id, function (data) {
+					getData(nyaaSukebei, entries[random(entries.length)].id, function (data) {
 						data.nsfw = true;
 						postData(channel, data);
 					});
