@@ -3,9 +3,7 @@ var utils = require('../utils');
 
 module.exports = function (client) {
 
-	function random(min, max) {
-		return min + Math.floor(Math.random() * ((max - min) + 1));
-	}
+	var random = utils.random;
 
 	function getBooru(channel, host, tags, broadcast) {
 		requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=0', function (err, res) {
@@ -21,7 +19,7 @@ module.exports = function (client) {
 			}
 
 			function retry(times) {
-				var rand = random(0, res.posts.$.count - 1);
+				var rand = random(res.posts.$.count);
 				requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=1&pid=' + rand, function (err, res) {
 					if (!res.posts || !res.posts.post.length) {
 						console.log(res);

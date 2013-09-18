@@ -1,8 +1,8 @@
+var utils = require('../utils');
+
 ﻿module.exports = function (client) {
 
-	function random(min, max) {
-		return min + Math.floor(Math.random() * ((max - min) + 1));
-	}
+	var random = utils.random;
 
 	var bestAnime = [
 		{
@@ -30,7 +30,7 @@
 	return {
 		commands: {
 			whattowatch: function (from, channel, message) {
-				var best = bestAnime[random(0, bestAnime.length - 1)];
+				var best = bestAnime[random(bestAnime.length)];
 				client.say(from, 'Currently best aired anime: ' + best.title + ' - ' + best.description + ' a must watch! - ' + best.url);
 			}
 		}
