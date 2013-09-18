@@ -1,17 +1,16 @@
 ﻿var fs = require('fs');
+var utils = require('../utils');
 
 module.exports = function (client) {
 
 	var savedPets = JSON.parse(fs.readFileSync(__dirname + '/.pets', { encoding: 'utf8' }));
 
-	function random(min, max) {
-		return min + Math.floor(Math.random() * ((max - min) + 1));
-	}
-
 	var pets = [
 		['pets', 'pets'],
 		['gives a catgirl to', 'catgirls']
 	];
+
+	var random = utils.random;
 
 	return {
 		commands: {
@@ -24,7 +23,7 @@ module.exports = function (client) {
 					return;
 				}
 
-				var rnd = random(0, pets.length - 1);
+				var rnd = random(pets.length);
 				var pet = pets[rnd][0];
 
 				if (!savedPets[message.toLowerCase()]) {

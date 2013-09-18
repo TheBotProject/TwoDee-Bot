@@ -1,4 +1,5 @@
 var fs = require('fs');
+var utils = require('../utils');
 
 module.exports = function (client) {
 
@@ -16,24 +17,8 @@ module.exports = function (client) {
 		[ 1, 'gropes {0}\'s firm buttocks.', 'grope']
 	];
 
-
-	// adapted from http://stackoverflow.com/a/4673436/297766
-	// v----------------------------v
-	function format (msg) {
-		var args = Array.prototype.slice.call(arguments, 1);
-		return msg.replace(/{(\d+)}/g, function(match, number) {
-			return typeof args[number] != 'undefined' ? args[number] : match;
-		});
-	}
-	// ^----------------------------^
-
-
-	function random(min, max) {
-		// min and max are integers
-		// output is a random integer in the [min, max) range
-
-		return min + Math.floor(Math.random() * ((max - min) + 1));
-	}
+	var format = utils.format;
+	var random = utils.random;
 
 	function isValidName(msg) {
 		// msg is a string and expected to be the name of the target of the pat
@@ -65,7 +50,7 @@ module.exports = function (client) {
 
 				var target = message.toLowerCase();
 
-				var rnd = random(0, totalWeight - 1);
+				var rnd = random(totalWeight);
 				for (i = 0; rnd >= pats[i][0]; i++)
 					rnd -= pats[i][0];
 
