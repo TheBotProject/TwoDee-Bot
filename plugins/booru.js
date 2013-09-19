@@ -28,7 +28,7 @@ module.exports = function (client) {
 					}
 
 					if (broadcast) {
-						utils.request('HEAD', res.posts.post[0].$.file_url, { Referer: res.posts.post[0].$.file_url }, function (err, resp) {
+						request.head({ url: res.posts.post[0].$.file_url, headers: { Referer: res.posts.post[0].$.file_url } }, function (err, resp) {
 							if (!err && resp.statusCode >= 200 && resp.statusCode < 300) {
 								client.say(channel, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '\x0304NSFW\x03 - ' : '') + res.posts.post[0].$.file_url);
 								client.emit('commands:image', channel, { image: res.posts.post[0].$.file_url });
@@ -49,7 +49,7 @@ module.exports = function (client) {
 	}
 
 	function requestAndParse(url, cb) {
-		utils.request('GET', url, function (err, res, body) {
+		request.get(url, function (err, res, body) {
 			if (err) {
 				cb(err);
 				return;
