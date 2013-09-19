@@ -1,5 +1,4 @@
 var request = require('request');
-var utils = require('../utils');
 var fs = require('fs');
 
 try {
@@ -21,45 +20,40 @@ try {
 			};
 
 			request.post(options, function (e, r, b) {
-				cb(e, r, JSON.parse(b));
+				cb(e, r, b && JSON.parse(b) || undefined);
 			});
 		}
 
 		return {
 			commands: {
 				imgur: function (from, to, message) {
-					//console.log(from + ' wants to imgur ' + message);
-
 					// if we're asked in a PM respond in a PM
 					if (to === client.nick)
 						to = from;
 
-					utils.request('HEAD', message, { Referer: message }, function (err, resp) {
+					request.head({ url: message, headers: { Referer: message }}, function (err, resp) {
+
 						if (!err && resp.statusCode >= 200 && resp.statusCode < 300) {
 							if (resp.headers['content-type'] === 'image/gif' && resp.headers['content-length'] > 2048000) {
 								client.say(to, 'Size limit for gifs is 2 MB, ' + from + '. Try http://awwni.me.');
 								return;
 							}
 						} else {
-							client.say(to, message + '? That doesn\'t seem right.');
+							client.say(to, '"' + message + '"? That doesn\'t seem right.');
 							return;
 						}
 
 						upload(message, function (e, r, b) {
 							if (e) {
-								console.error(e);
-								client.say(to, 'Sorry, ' + from + ', something went wrong.');
+								console.error('Error uploading to imgur: ' + e);
+								client.say(to, 'Sorry, ' + from + ', something went wrong. Try http://awwni.me.');
 
-							} else if (r.statusCode >= 200 && r.statusCode < 300) {
-								//console.log(b);
-
-								if (b.success) {
-									client.say(to, from + ': ' + b.data.link);
-								} else if (b.data && b.data.error) {
-									client.say(to, 'I don\'t see anything wrong, but imgur says: ' + b.data.error);
-								}
+							} else if (resp.statusCode >= 300 && resp.statusCode < 400 && b && b.success) {
+								client.say(to, from + ': ' + b.data.link);
+							} else if (b && b.data && b.data.error) {
+								client.say(to, 'I don\'t see anything wrong, but imgur says: ' + b.data.error);
 							} else {
-								client.say(to, 'It seems like imgur is down. Try http://awwni.me.');
+								client.say(to, 'Something I don\'t know what went wrong. Try http://awwni.me.');
 							}
 						});
 					});
