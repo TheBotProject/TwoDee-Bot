@@ -64,7 +64,7 @@ module.exports = function (client) {
 	return {
 		commands: {
 			catgirl: function (from, channel, message) {
-				this.sb(from, channel, 'cat_tail');
+				this.sb(from, channel, 'cat_tail ' + message);
 			},
 
 			sb: function (from, channel, message) {
