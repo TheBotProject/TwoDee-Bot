@@ -48,7 +48,7 @@ try {
 								console.error('Error uploading to imgur: ' + e);
 								client.say(to, 'Sorry, ' + from + ', something went wrong. Try http://awwni.me.');
 
-							} else if (resp.statusCode >= 300 && resp.statusCode < 400 && b && b.success) {
+							} else if (resp.statusCode >= 200 && resp.statusCode < 300 && b && b.success) {
 								client.say(to, from + ': ' + b.data.link);
 							} else if (b && b.data && b.data.error) {
 								client.say(to, 'I don\'t see anything wrong, but imgur says: ' + b.data.error);
