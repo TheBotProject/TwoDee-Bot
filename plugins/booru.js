@@ -1,5 +1,6 @@
 ﻿var xml2js = require('xml2js');
 var utils = require('../utils');
+var request = require('request');
 
 module.exports = function (client) {
 
