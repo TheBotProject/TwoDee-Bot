@@ -147,14 +147,34 @@ module.exports = function (client) {
 			},
 
 			archiverm: function (from, channel, message) {
-				var rowKey = parseInt(message);
-				var date = new Date(rowKey);
-				if (isNaN(date)) return;
+				var parts = message.split(' ');
+				var query = azure.TableQuery
+					.select('PartitionKey', 'RowKey', 'Url')
+					.from('images')
+					.where('RowKey eq ?', parts[0]);
 
-				var partKey = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()).toString();
-				tableService.deleteEntity('images', { PartitionKey: partKey, RowKey: rowKey.toString() }, function (err) { });
-				blobService.deleteBlob('images', rowKey.toString(), function (err) { });
-				blobService.deleteBlob('thumbnails', rowKey.toString(), function (err) { });
+				for (var i = 1; i < parts.length; ++i) {
+					query.or('RowKey eq ?', parts[i]);
+				}
+
+				tableService.queryEntities(query, function (err, res) {
+					if (res.length === 0) {
+						client.say(channel, from + ': Nothing with these ids exists');
+						return;
+					}
+
+					var removed = [];
+
+					for (var i = 0; i < res.length; ++i) {
+						tableService.deleteEntity('images', { PartitionKey: res[i].PartitionKey, RowKey: res[i].RowKey }, function (err) { });
+						blobService.deleteBlob('images', res[i].RowKey, function (err) { });
+						blobService.deleteBlob('thumbnails', res[i].RowKey, function (err) { });
+
+						removed.push(res[i].Url);
+					}
+
+					client.say(channel, from + ': Removed ' + removed.join(' '));
+				});
 			}
 		},
 
