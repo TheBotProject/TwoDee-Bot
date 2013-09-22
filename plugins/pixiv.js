@@ -52,7 +52,7 @@ module.exports = function (client) {
 	return {
 		commands: {
 			pixiv: function (from, channel, message) {
-				if (message.trim() === '') return;
+				if (!message) return;
 				searchPixiv(message, postPixiv.bind(null, channel, message));
 			}
 		},

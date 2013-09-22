@@ -130,7 +130,7 @@ client.on('message', function (from, channel, message) {
 		for (var i = 0; i < activatedPlugins.length; ++i) {
 			var plugin = plugins[activatedPlugins[i]];
 			if (plugin.commands && plugin.commands[cmd]) {
-				plugin.commands[cmd](from, channel, message.substring(cmd.length + 2));
+				plugin.commands[cmd](from, channel, message.substring(cmd.length + 2).trim());
 			}
 		}
 	} else {

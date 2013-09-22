@@ -8,7 +8,7 @@ module.exports = function (client) {
 	return {
 		commands: {
 			choice: function (from, channel, message) {
-				if (!message || !message.trim()) return;
+				if (!message) return;
 
 				csv().from.string(message, { delimiter: ' ' }).to.array(function (data) {
 					data = data[0];
