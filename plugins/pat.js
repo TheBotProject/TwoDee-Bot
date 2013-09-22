@@ -35,7 +35,6 @@ module.exports = function (client) {
 	return {
 		commands: {
 			pat: function (from, channel, message) {
-				message = message.trim();
 				if (!message) {
 					client.say(channel, 'Pat who?');
 					return;
@@ -68,8 +67,6 @@ module.exports = function (client) {
 			},
 
 			pats: function (from, channel, message) {
-				message = message.trim();
-
 				if (!message) message = from;
 
 				if (!isValidName(message)) {

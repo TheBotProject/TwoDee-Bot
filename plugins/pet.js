@@ -15,7 +15,6 @@ module.exports = function (client) {
 	return {
 		commands: {
 			pet: function (from, channel, message) {
-				message = message.trim();
 				if (!message) return;
 
 				if (from.toLowerCase() === message.toLowerCase()) {
@@ -36,8 +35,6 @@ module.exports = function (client) {
 
 			pets: function (from, channel, message) {
 				if (!message) message = from;
-
-				message = message.trim();
 
 				if (!savedPets[message.toLowerCase()]) {
 					client.say(channel, message + ' didn\'t get any pets yet :(');
