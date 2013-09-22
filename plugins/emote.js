@@ -11,6 +11,7 @@ module.exports = function (client) {
 		//  can contain '{0}' - the target of the emote
 		//  and '{1}' - the initiator
 		// the third column is the text for the count report command
+		//  omit it or give it a value that evaluates to false to not record it
 
 		pat: [
 			[20, 'pats {0}\'s head.', 'regular pat(s)'],
@@ -21,6 +22,17 @@ module.exports = function (client) {
 		pet: [
 			[1, 'pets {0}.', 'pet(s)'],
 			[1, 'gives a catgirl to {0}.', 'catgirl(s)']
+		],
+
+		hug: [
+			[50, 'hugs {0}.', 'hug(s)'],
+			[ 1, 'hugs {0} and tries to cop a feel.'],
+		],
+
+		thank: [
+			[1, 'thanks {0} on behalf of {1}.', 'thanks'],
+			// Refactor so that we can get custom messages?
+			// For example: "{0} has been thanked {1} times."
 		],
 	};
 
@@ -67,17 +79,19 @@ module.exports = function (client) {
 					rnd -= emotes[p][i][0];
 				}
 
-				var tar = message.toLowerCase();
-
-				if (!savedEmotes[p][tar])
-					savedEmotes[p][tar] = {};
-
-				if (savedEmotes[p][tar][i])
-					savedEmotes[p][tar][i]++;
-				else
-					savedEmotes[p][tar][i] = 1;
-
 				var emote = emotes[p][i];
+				if (emote[2]) {
+					var tar = message.toLowerCase();
+
+					if (!savedEmotes[p][tar])
+						savedEmotes[p][tar] = {};
+
+					if (savedEmotes[p][tar][i])
+						savedEmotes[p][tar][i]++;
+					else
+						savedEmotes[p][tar][i] = 1;
+				}
+
 				client.action(channel, format(emote[1], message, from));
 			};
 		})(p),
