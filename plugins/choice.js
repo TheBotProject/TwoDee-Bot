@@ -9,6 +9,12 @@ module.exports = function (client, channelName) {
 	return {
 		commands: {
 			choice: function (from, message) {
+				
+				if(!message) {
+					client.say(channel, "Nothing to choose from :(");
+					return;
+				}
+				
 				csv().from.string(message, { delimiter: ' ' }).to.array(function (data) {
 					data = data[0];
 
