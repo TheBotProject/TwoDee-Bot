@@ -56,6 +56,8 @@ module.exports = function (client) {
 	return {
 		commands: {
 			seen: function (from, channel, message) {
+				if (!message || !message.trim()) return;
+				
 				var user = users[message.toLowerCase()];
 				if (user) {
 					if (user.joined === null && user.left === null) {
