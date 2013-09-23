@@ -10,14 +10,13 @@
 		"pixiv",
 		"sauce",
 		"whattowatch",
-		"pet",
 		"choice",
 		"nyaa",
 		"booru",
 		"seen",
 		"azure",
-		"pat",
-		"rehost"
+		"rehost",
+		"emote"
 	],
 
 	"convertPath": "convert"

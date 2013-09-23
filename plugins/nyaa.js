@@ -65,8 +65,6 @@ module.exports = function (client) {
 					channel = from;
 				}
 
-				msg = msg.trim();
-
 				requestAndParse(defaultBaseURL + '?page=rss&cats=1_37&term=' + encodeURIComponent(msg), function (err, data) {
 					if (err) {
 						client.say(channel, 'No response. Please try again.');
@@ -105,8 +103,6 @@ module.exports = function (client) {
 			},
 
 			nyaall: function (from, channel, msg) {
-				msg = msg.trim();
-
 				requestAndParse(defaultBaseURL + '?page=rss&term=' + encodeURIComponent(msg), function (err, data) {
 					if (err) {
 						client.say(channel, 'No response. Please try again.');
@@ -145,8 +141,6 @@ module.exports = function (client) {
 			},
 
 			nyaan: function (from, channel, msg) {
-				msg = msg.trim();
-
 				requestAndParse(sukebeiBaseURL + '?page=rss&term=' + encodeURIComponent(msg), function (err, data) {
 					if (err) {
 						client.say(channel, 'No response. Please try again.');

@@ -141,7 +141,7 @@ module.exports = function (client) {
 
 		commands: {
 			archive: function (from, channel, message) {
-				saveLink(message.trim(), function (blobId) {
+				saveLink(message, function (blobId) {
 					client.say(channel, from + ': https://moebot.blob.core.windows.net/images/' + blobId);
 				});
 			},
