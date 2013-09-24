@@ -14,18 +14,18 @@ module.exports = function (client) {
 		//  omit it or give it a value that evaluates to false to not record it
 
 		pat: [
-			[20, 'pats {0}\'s head.', 'regular pat(s)'],
-			[10, 'gently pats {0}.', 'gentle pat(s)'],
-			[ 4, 'sensually pats {0}.', 'sensual pat(s)'],
-			[ 1, 'gropes {0}\'s firm buttocks.', 'grope(s)']
+			[20, 'pats {0}\'s head.', 'regular pats'],
+			[10, 'gently pats {0}.', 'gentle pats'],
+			[ 4, 'sensually pats {0}.', 'sensual pats'],
+			[ 1, 'gropes {0}\'s firm buttocks.', 'gropes']
 		],
 		pet: [
-			[1, 'pets {0}.', 'pet(s)'],
-			[1, 'gives a catgirl to {0}.', 'catgirl(s)']
+			[1, 'pets {0}.', 'pets'],
+			[1, 'gives a catgirl to {0}.', 'catgirls']
 		],
 
 		hug: [
-			[50, 'hugs {0}.', 'hug(s)'],
+			[50, 'hugs {0}.', 'hugs'],
 			[ 1, 'hugs {0} and tries to cop a feel.'],
 		],
 
@@ -33,6 +33,12 @@ module.exports = function (client) {
 			[1, 'thanks {0} on behalf of {1}.', 'thanks'],
 			// Refactor so that we can get custom messages?
 			// For example: "{0} has been thanked {1} times."
+		],
+
+		highfive: [
+			[400, 'highfives {0}!', 'highfives'],
+			[ 20, 'swings her hand energetically and decks {0} squarely in the face! (It was an accident!)', 'slaps'],
+			[  1, 'jumps in the air, does a triple fucking somersault and sticks the landing, highfiving both {0} and {1} in the process!', 'higherfives'],
 		],
 	};
 
