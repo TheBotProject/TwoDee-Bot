@@ -197,6 +197,8 @@ module.exports = function (client) {
 					var dataString = (nsfw ? '\x0304[NSFW]\x03 ' : '') + formatData({
 						title: data.name,
 						size: filesize(data.size),
+						seeders: isNaN(data.seeders) ? '?' : data.seeders,
+						leechers: isNaN(data.leechers) ? '?' : data.leechers,
 						guid: (nsfw ? sukebeiBaseURL : defaultBaseURL) + '?page=view&tid=' + data.id,
 						link: (nsfw ? sukebeiBaseURL : defaultBaseURL) + '?page=download&tid=' + data.id,
 					});
