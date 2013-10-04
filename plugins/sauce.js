@@ -47,6 +47,9 @@ module.exports = function (client) {
 						client.say(channel, details.title + ' [' + details.similarity + '%] - ' + details.link);
 					}
 				});
+			},
+			source: function (from, channel, message) {
+				this.sauce(from, channel, message);
 			}
 		}
 	};
