@@ -9,8 +9,9 @@ module.exports = function (client) {
 
 			var $ = cheerio.load(data);
 			var results = $('.resulttablecontent');
-			var found = false;
 			var repeatList = [];
+			var matchList =[];
+
 			for (var i = 0; i < results.length && i < 3; ++i) {
 				var result = results.eq(i);
 
@@ -23,28 +24,33 @@ module.exports = function (client) {
 				if (!link || repeatList.indexOf(link) !== -1) continue;
 
 				repeatList.push(link);
-				found = true;
-				cb({
+				matchList.push({
 					title: title,
 					similarity: similarity,
 					link: link
 				});
 			}
 
-			if (!found) {
-				cb(null);
-			}
+			cb(matchList);
 		});
 	}
 
+	if (!client) {
+		// we're importing from another plugin
+		return { search: searchSauceNao };
+	}
+	// else
 	return {
 		commands: {
 			sauce: function (from, channel, message) {
-				searchSauceNao(message, function (details) {
-					if (details === null) {
-						client.say(channel, 'Sorry, no image source found');
+				searchSauceNao(message, function (results) {
+					if (results.length === 0) {
+						client.say(channel, 'Sorry, ' + from + ', no image source found.');
 					} else {
-						client.say(channel, details.title + ' [' + details.similarity + '%] - ' + details.link);
+						for (var i = 0; i < results.length; i++) {
+							var details = results[i];
+							client.say(channel, details.title + ' [' + details.similarity + '%] - ' + details.link);
+						}
 					}
 				});
 			},
