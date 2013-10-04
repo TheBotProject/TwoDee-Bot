@@ -1,8 +1,38 @@
 ﻿var youtube = require('youtube-feeds');
 
 module.exports = function (client) {
+	function durationToString(time) {
+		// time is given in seconds
+		var s = time % 60;
+		time = Math.floor(time / 60);
+		var m = time % 60;
+		time = Math.floor(time / 60);
+		var h = time % 60;
+
+		var str = '';
+
+		if (h > 0) {
+			// if hours - [h]h:mm:ss
+			// otherwise - just [m]m:ss
+			str = h + ':';
+			if (m < 10) {
+				str += '0';
+			}
+		}
+
+		str += m + ':';
+
+		if (s < 10) {
+			str += '0';
+		}
+
+		str += s;
+
+		return str;
+	}
+
 	function postDetails(channel, details) {
-		client.say(channel, details.title + ' [' + Math.floor(details.duration / 60) + ':' + ((details.duration % 60 < 10 ? '0' : '') + (details.duration % 60)) + '] - https://youtu.be/' + details.id);
+		client.say(channel, details.title + ' [' + durationToString(details.duration) + '] - https://youtu.be/' + details.id);
 	}
 
 	function postVideo(id, cb) {
