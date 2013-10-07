@@ -44,16 +44,13 @@ module.exports = function (client) {
 
 	client.once('names', refreshUsers);
 
-
-	var userQuit = userLeave.bind(client, null);
-	client.on('quit', userQuit);
-
-	var userPart = userLeave;
-	client.on('part', userPart);
-
-	client.on('join', userJoin);
-
 	return {
+		customEvents: {
+			join: userJoin,
+			part: userLeave,
+			quit: userLeave.bind(client, null)
+		},
+
 		commands: {
 			seen: function (from, channel, message) {
 				if (!message) return;

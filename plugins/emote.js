@@ -135,7 +135,7 @@ module.exports = function (client) {
 
 	return {
 		commands: commands,
-		save: function () {
+		disable: function () {
 			fs.writeFileSync(__dirname + '/.emotes', JSON.stringify(savedEmotes));
 		}
 	};

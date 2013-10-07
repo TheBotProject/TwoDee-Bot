@@ -1,5 +1,6 @@
 ﻿var irc = require('irc');
 var fs = require('fs');
+var module = require('module');
 
 var server = require('./server');
 /*
@@ -10,14 +11,13 @@ var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', { encoding: 
 var state = JSON.parse(fs.readFileSync(__dirname + '/state.json', { encoding: 'utf8' }));
 
 var plugins = {};
-var intervals = {};
 
 function gracefulExit() {
 	fs.writeFileSync(__dirname + '/state.json', JSON.stringify(state));
 
 	for (var i in plugins) {
-		if (plugins[i].save) {
-			plugins[i].save();
+		if (plugins[i].disable) {
+			plugins[i].disable();
 		}
 	}
 
@@ -27,6 +27,27 @@ function gracefulExit() {
 function checkAbandonChannel(channel) {
 	if (client.chans[channel]) { // we're still connected
 		client.part(channel);
+	}
+}
+
+function activatePlugin(plugin) {
+	plugins[plugin] = (require('./plugins/' + plugin))(client);
+	if (plugins[plugin].enable) {
+		plugins[plugin].enable();
+	}
+
+	for (var evt in plugins[plugin].customEvents) {
+		client.on(evt, function (channel) {
+			if (channel[0] === '#' && state[channel].plugins.indexOf(plugin) === -1) return;
+
+			plugins[plugin].customEvents[evt].apply(plugins[plugin].customEvents, arguments);
+		});
+	}
+
+	if (plugins[plugin].join) {
+		for (var chan in client.chans) { // if we're already connected but the plugin got reloaded, refresh it
+			plugins[plugin].join(chan);
+		}
 	}
 }
 
@@ -53,6 +74,12 @@ client.on('quit', function (nick, reason, channels) {
 client.on('part', function (channel, nick) {
 	if (nick === client.nick) {
 		state[channel].active = false;
+
+		for (var i in plugins) {
+			if (plugins[i].part) {
+				plugins[i].part(channel);
+			}
+		}
 	} else if (state[channel].active && Object.keys(client.chans[channel].users).length === 2) {
 		checkAbandonChannel(channel);
 	}
@@ -90,8 +117,6 @@ client.on('join', function (channel, user) {
 	if (user === client.nick && state[channel]) {
 		console.log('Connected to ' + channel);
 
-		intervals[channel] = [];
-
 		client.once('names' + channel, function (nicks) {
 			if (Object.keys(nicks).length === 1) {
 				setTimeout(function () { // irc lib still sends stuff
@@ -110,10 +135,14 @@ client.on('join', function (channel, user) {
 			if (plugin.join) {
 				plugin.join(channel);
 			}
+		}
+	}
+});
 
-			if (plugin.interval) {
-				intervals[channel].push(setInterval(plugin.interval.bind(plugin, channel), plugin.intervalTimeout));
-			}
+client.on('part', function (channel, user) {
+	for (var i in plugins) {
+		if (plugins[i].part) {
+			plugins[i].part(channel);
 		}
 	}
 });
@@ -144,16 +173,49 @@ client.on('message', function (from, channel, message) {
 });
 
 config.plugins.forEach(function (plugin) {
-	plugins[plugin] = (require('./plugins/' + plugin))(client);
+	activatePlugin(plugin);
 
-	for (var evt in plugins[plugin].customEvents) {
-		client.on(evt, function (channel) {
-			if (channel[0] === '#' && state[channel].plugins.indexOf(plugin) === -1) return;
+	var watchTimeout = null;
 
-			plugins[plugin].customEvents[evt].apply(plugins[plugin].customEvents, arguments);
-		});
-	}
+	fs.watch('./plugins/' + plugin + '.js', { persistent: false }, function (evt) {
+		if (watchTimeout !== null) return;
+
+		console.log('changed ' + plugin);
+		if (plugins[plugin].disable) {
+			plugins[plugin].disable();
+		}
+
+		delete require.cache[module._resolveFilename('./plugins/' + plugin)];
+
+		watchTimeout = setTimeout(function () {
+			activatePlugin(plugin);
+			watchTimeout = null;
+		}, 500);
+	});
 });
+
+(function () {
+	var watchTimeout = null;
+
+	fs.watch(__dirname + '/config.json', function () {
+		if (watchTimeout !== null) return;
+
+		console.log('changed');
+		watchTimeout = setTimeout(function () {
+			fs.readFile(__dirname + '/config.json', { encoding: 'utf8' }, function (err, data) {
+				console.log('read');
+				config = JSON.parse(data);
+				for (var i = 0; i < config.plugins.length; ++i) {
+					if (!plugins[config.plugins[i]]) {
+						activatePlugin(config.plugins[i]);
+						console.log('activated ' + config.plugins[i]);
+					}
+				}
+				watchTimeout = null;
+			});
+		}, 500);
+	});
+})();
 
 server(client);
 process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
