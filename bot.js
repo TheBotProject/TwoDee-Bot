@@ -2,7 +2,7 @@
 var fs = require('fs');
 var module = require('module');
 
-var server = require('./server');
+var server = require(__dirname + '/server');
 /*
 var channelName = '#TwoDeeTest';
 var reddits = 'all';
@@ -31,7 +31,7 @@ function checkAbandonChannel(channel) {
 }
 
 function activatePlugin(plugin) {
-	plugins[plugin] = (require('./plugins/' + plugin))(client);
+	plugins[plugin] = (require(__dirname + '/plugins/' + plugin))(client);
 	if (plugins[plugin].enable) {
 		plugins[plugin].enable();
 	}
@@ -177,7 +177,7 @@ config.plugins.forEach(function (plugin) {
 
 	var watchTimeout = null;
 
-	fs.watch(__dirname+ '/plugins/' + plugin + '.js', { persistent: false }, function (evt) {
+	fs.watch(__dirname + '/plugins/' + plugin + '.js', { persistent: false }, function (evt) {
 		if (watchTimeout !== null) return;
 
 		console.log('changed ' + plugin);
@@ -185,7 +185,7 @@ config.plugins.forEach(function (plugin) {
 			plugins[plugin].disable();
 		}
 
-		delete require.cache[module._resolveFilename('./plugins/' + plugin)];
+		delete require.cache[module._resolveFilename(__dirname + '/plugins/' + plugin)];
 
 		watchTimeout = setTimeout(function () {
 			activatePlugin(plugin);
