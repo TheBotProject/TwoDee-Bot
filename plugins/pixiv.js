@@ -60,7 +60,7 @@ module.exports = function (client) {
 		messageHandler: function (from, channel, message) {
 			var re, match;
 
-			re = /https?:\/\/(www.)?pixiv.net\/member_illust.php\?((.+)&)?illust_id=([\d]+)/gi;
+			re = /https?:\/\/(www.)?pixiv.net\/member_illust.php\?(([^&]+)&)?illust_id=([\d]+)/gi;
 			while (match = re.exec(message)) {
 				if (match[4]) {
 					postInfo(match[4], postPixiv.bind(null, channel, null));
