@@ -177,7 +177,7 @@ config.plugins.forEach(function (plugin) {
 
 	var watchTimeout = null;
 
-	fs.watch('./plugins/' + plugin + '.js', { persistent: false }, function (evt) {
+	fs.watch(__dirname+ '/plugins/' + plugin + '.js', { persistent: false }, function (evt) {
 		if (watchTimeout !== null) return;
 
 		console.log('changed ' + plugin);
