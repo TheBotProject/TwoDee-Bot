@@ -139,14 +139,6 @@ client.on('join', function (channel, user) {
 	}
 });
 
-client.on('part', function (channel, user) {
-	for (var i in plugins) {
-		if (plugins[i].part) {
-			plugins[i].part(channel);
-		}
-	}
-});
-
 client.on('message', function (from, channel, message) {
 	var activatedPlugins = config.plugins;
 	if (channel[0] === '#') {
