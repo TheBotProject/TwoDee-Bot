@@ -79,6 +79,11 @@ module.exports = function (client) {
 					return;
 				}
 
+				if (message === from) {
+					client.say(channel, 'You can\'t pet yourself, doesn\'t it feel much better if someone else does it?');
+					return;
+				}
+
 				var rnd = random(totalWeight[p]);
 				var i;
 				for (i = 0; rnd >= emotes[p][i][0]; i++) {
