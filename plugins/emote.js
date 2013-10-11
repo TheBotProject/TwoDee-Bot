@@ -71,6 +71,7 @@ module.exports = function (client) {
 		commands[p] = (function (p) {
 			return function (from, channel, message) {
 				if (channel === client.nick) return; // don't care about PMs
+				if (message === client.nick) return; // don't let the bot touch herself (at least not until we refactor the system and make it possible to have these messages make sense in English.)
 
 				if (!message) return;
 
@@ -80,7 +81,7 @@ module.exports = function (client) {
 				}
 
 				if (message === from) {
-					client.say(channel, 'You can\'t pet yourself, doesn\'t it feel much better if someone else does it?');
+					client.say(channel, format('W-Who\'d want to {0} you!? Baka {1}!', p, from));
 					return;
 				}
 
