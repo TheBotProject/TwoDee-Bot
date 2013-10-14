@@ -53,7 +53,7 @@ module.exports = function (client) {
 							sauce(post.url, function (err, results) {
 								var best;
 
-								if (!err && best = results[0]) {
+								if (!err && (best = results[0])) {
 									waaai(best.link, function(err, url) {
 										if (url) {
 											msg += ' [S: ' + url + ' ]';
