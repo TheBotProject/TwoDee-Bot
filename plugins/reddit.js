@@ -1,6 +1,8 @@
 ﻿var redwrap = require('redwrap');
 var ent = require('ent');
 var fs = require('fs');
+var sauce = require('./sauce')().search;
+var waaai = require('../utils').waaai;
 
 module.exports = function (client) {
 
@@ -45,7 +47,25 @@ module.exports = function (client) {
 
 							var srData = reddits[channel][post.subreddit.toLowerCase()];
 							var color = srData.color ? srData.color : '01,00';
-							client.say(channel, '[\x03' + color + post.subreddit + '\x03] [' + post.author + '] ' + ent.decode(post.title) + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 || srData.nsfl ? ' \x0304[NSFW]\x03' : ''));
+
+							var msg = '[\x03' + color + post.subreddit + '\x03] [' + post.author + '] ' + ent.decode(post.title) + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + (post.over_18 || srData.nsfl ? '\x0304[NSFW]\x03' : '') + post.url + ' ]' : '');
+
+							sauce(post.url, function (err, results) {
+								var best;
+
+								if (!err && best = results[0]) {
+									waaai(best.link, function(err, url) {
+										if (url) {
+											msg += ' [S: ' + url + ' ]';
+										} // else msg stays as is
+
+										client.say(channel, msg);
+									});
+								} else {
+									client.say(channel, msg);
+								}
+							});
+
 						}
 
 						lastUpdate = newLastUpdate;
