@@ -5,7 +5,10 @@ module.exports = function (client) {
 
 	function searchSauceNao(img, cb) {
 		request('http://saucenao.com/search.php?db=999&url=' + encodeURIComponent(img), function (err, r, data) {
-			if (err) return;
+			if (err) {
+				cb(err, null);
+				return;
+			}
 
 			var $ = cheerio.load(data);
 			var results = $('.resulttablecontent');
@@ -31,7 +34,7 @@ module.exports = function (client) {
 				});
 			}
 
-			cb(matchList);
+			cb(null, matchList);
 		});
 	}
 
@@ -43,8 +46,10 @@ module.exports = function (client) {
 	return {
 		commands: {
 			sauce: function (from, channel, message) {
-				searchSauceNao(message, function (results) {
-					if (results.length === 0) {
+				searchSauceNao(message, function (err, results) {
+					if (err) {
+						client.say(channel, 'There was an error while fetching source, ' + from + '.');
+					} else if (results.length === 0) {
 						client.say(channel, 'Sorry, ' + from + ', no image source found.');
 					} else {
 						for (var i = 0; i < results.length; i++) {
