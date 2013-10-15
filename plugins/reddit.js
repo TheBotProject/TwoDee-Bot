@@ -56,7 +56,7 @@ module.exports = function (client) {
 								if (!err && (best = results[0])) {
 									waaai(best.link, function(err, url) {
 										if (url) {
-											msg += ' [S: ' + url + ' ]';
+											msg += ' [\x0309S:\x03 ' + url + ' ]';
 										} // else msg stays as is
 
 										client.say(channel, msg);
