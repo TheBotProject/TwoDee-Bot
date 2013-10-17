@@ -37,7 +37,7 @@ module.exports = function (client) {
 						var newLastUpdate = lastUpdate;
 						data.data.children.forEach(function(value) {
 							var post = value.data;
-							if (post.created_utc <= lastUpdate) continue;
+							if (post.created_utc <= lastUpdate) return;
 
 							if (post.created_utc > newLastUpdate) {
 								newLastUpdate = post.created_utc;
