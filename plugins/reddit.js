@@ -35,8 +35,8 @@ module.exports = function (client) {
 
 					if (data.data.children.length) {
 						var newLastUpdate = lastUpdate;
-						for (var i = 0; i < data.data.children.length; ++i) {
-							var post = data.data.children[i].data;
+						data.data.children.forEach(function(value) {
+							var post = value.data;
 							if (post.created_utc <= lastUpdate) continue;
 
 							if (post.created_utc > newLastUpdate) {
@@ -66,7 +66,7 @@ module.exports = function (client) {
 								}
 							});
 
-						}
+						});
 
 						lastUpdate = newLastUpdate;
 					}
