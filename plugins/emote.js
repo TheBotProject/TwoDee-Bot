@@ -40,6 +40,9 @@ module.exports = function (client) {
 			[ 20, 'swings her hand energetically and decks {0} squarely in the face! (It was an accident!)', 'slaps'],
 			[  1, 'jumps in the air, does a triple fucking somersault and sticks the landing, highfiving both {0} and {1} in the process!', 'higherfives'],
 		],
+		scarf: [
+			[1, 'shares her scarf with {0}.', 'scarf snuggles'],
+		],
 	};
 
 	for (var p in emotes) {
