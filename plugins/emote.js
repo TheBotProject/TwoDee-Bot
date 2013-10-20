@@ -26,6 +26,7 @@ module.exports = function (client) {
 
 		hug: [
 			[50, 'hugs {0}.', 'hugs'],
+			[10, 'glomps {0} with victorious "Nyaaa!".', 'glomps'],
 			[ 1, 'hugs {0} and tries to cop a feel.'],
 		],
 
@@ -42,6 +43,11 @@ module.exports = function (client) {
 		],
 		scarf: [
 			[1, 'shares her scarf with {0}.', 'scarf snuggles'],
+		],
+        
+		nuzzle: [
+			[20, 'nuzzles {0}.', 'nuzzles'],
+			[10, 'gently nuzzles {0} and softly purrs into {0}\'s ear', 'gentle nuzzles'],
 		],
 	};
 
