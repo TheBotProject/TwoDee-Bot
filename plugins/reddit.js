@@ -12,6 +12,7 @@ module.exports = function (client) {
 
 	return {
 		join: function (channel) {
+			channel = channel.toLowerCase();
 			if (!reddits[channel]) return;
 
 			redwrap.r(Object.keys(reddits[channel]).join('+')).new(function (err, data, res) {
@@ -83,6 +84,35 @@ module.exports = function (client) {
 			for (var i in intervals) {
 				clearInterval(intervals[i]);
 				delete intervals[i];
+			}
+		},
+
+		commands: {
+			// outputs a list of the subreddits that get checked
+			reddit: function (from, to, message) {
+				if (to === client.nick) {
+					to = from;
+				}
+
+				if (!message) {
+					message = to;
+				}
+
+				message = message.toLowerCase();
+
+				if (!reddits[message]) {
+					client.say(to, 'I don\'t report anything posted on reddit ' + (to === message ? 'here' : 'in ' + message) + '.');
+					return;
+				}
+
+				var msg = 'I report ' + (to === message ? 'here' : 'in ' + message) + ' everything posted to the following subreddits: ';
+				var subs = Object.keys(reddits[message]);
+
+				msg += subs.map(function (a) { return '/r/' + a; }).join(', ');
+
+				msg += '.';
+
+				client.say(to, msg);
 			}
 		}
 	};
