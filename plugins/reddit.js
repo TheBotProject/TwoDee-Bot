@@ -98,6 +98,7 @@ module.exports = function (client) {
 					message = to;
 				}
 
+				to = to.toLowerCase();
 				message = message.toLowerCase();
 
 				if (!reddits[message]) {
