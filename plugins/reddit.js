@@ -57,7 +57,13 @@ module.exports = function (client) {
 								post.title = '\x0304' + post.title + '\x04';
 							}
 
-							var msg = '[\x03' + color + post.subreddit + '\x03] [' + post.author + '] ' + ent.decode(post.title) + (post.link_flair_text ? (' [' + ent.decode(post.link_flair_text) + ']') : '') + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 || srData.nsfl ? ' \x0304[NSFW]\x03' : '');
+							msg = (post.over_18 || srData.nsfl ? '[\x0304NSFW\x03] ' : '')
+							+ '[\x03' + color + post.subreddit + '\x03]'
+							+ ' [' + post.author + '] '
+							+ ent.decode(post.title)
+							+ (post.link_flair_text ? (' [' + ent.decode(post.link_flair_text) + ']') : '')
+							+ ' [ http://redd.it/' + post.id + ' ]'
+							+ (!post.is_self ? ' [ ' + post.url + ' ]' : '');
 
 							sauce(post.url, function (err, results) {
 								var best;
