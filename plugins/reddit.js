@@ -49,7 +49,15 @@ module.exports = function (client) {
 							var srData = reddits[channel][post.subreddit.toLowerCase()];
 							var color = srData.color ? srData.color : '01,00';
 
-							var msg = '[\x03' + color + post.subreddit + '\x03] [' + post.author + '] ' + ent.decode(post.title) + ' [ http://redd.it/' + post.id + ' ]' + (post.over_18 || srData.nsfl ? ' \x0304[NSFW]\x03' : '') + (!post.is_self ? ' [ ' + post.url + ' ]' : '');
+							if (post.distinguished === 'moderator') {
+								post.author = '\x0303' + post.author + '\x03 [\x0303M\x03]';
+								post.title = '\x0303' + post.title + '\x03';
+							} else if (post.distinguished === 'admin') {
+								post.author = '\x0304' + post.author + '\x04 [\x0304A\x03]';
+								post.title = '\x0304' + post.title + '\x04';
+							}
+
+							var msg = '[\x03' + color + post.subreddit + '\x03] [' + post.author + '] ' + ent.decode(post.title) + (post.link_flair_text ? (' [' + ent.decode(post.link_flair_text) + ']') : '') + ' [ http://redd.it/' + post.id + ' ]' + (!post.is_self ? ' [ ' + post.url + ' ]' : '') + (post.over_18 || srData.nsfl ? ' \x0304[NSFW]\x03' : '');
 
 							sauce(post.url, function (err, results) {
 								var best;
