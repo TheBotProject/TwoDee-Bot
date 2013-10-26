@@ -50,7 +50,7 @@ module.exports = function (client) {
 			[10, 'gently nuzzles {0} and softly purrs into {0}\'s ear', 'gentle nuzzles'],
 		],
 
-		applaud [
+		applaud: [
 			[5,  'gives a standing ovation for {0}!', 'standing ovations'],
 			[20, 'enthusiastically applauds {0}.', 'applause'],
 			[1,  'moves her left hand in a clapping motion as she yawns into the other.', 'golfclaps'],
