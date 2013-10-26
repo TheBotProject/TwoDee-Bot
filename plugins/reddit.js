@@ -57,7 +57,7 @@ module.exports = function (client) {
 								post.title = '\x0304' + post.title + '\x04';
 							}
 
-							msg = (post.over_18 || srData.nsfl ? '[\x0304NSFW\x03] ' : '')
+							var msg = (post.over_18 || srData.nsfl ? '[\x0304NSFW\x03] ' : '')
 							+ '[\x03' + color + post.subreddit + '\x03]'
 							+ ' [' + post.author + '] '
 							+ ent.decode(post.title)
