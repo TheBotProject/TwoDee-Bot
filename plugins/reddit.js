@@ -65,22 +65,25 @@ module.exports = function (client) {
 							+ ' [ http://redd.it/' + post.id + ' ]'
 							+ (!post.is_self ? ' [ ' + post.url + ' ]' : '');
 
-							sauce(post.url, function (err, results) {
-								var best;
+							if (!post.is_self) {
+								sauce(post.url, function (err, results) {
+									var best;
 
-								if (!err && (best = results[0])) {
-									waaai(best.link, function(err, url) {
-										if (url) {
-											msg += ' [S: ' + url + ' ]';
-										} // else msg stays as is
+									if (!err && (best = results[0])) {
+										waaai(best.link, function(err, url) {
+											if (url) {
+												msg += ' [S: ' + url + ' ]';
+											} // else msg stays as is
 
+											client.say(channel, msg);
+										});
+									} else {
 										client.say(channel, msg);
-									});
-								} else {
-									client.say(channel, msg);
-								}
-							});
-
+									}
+								});
+							} else {
+								client.say(channel, msg);
+							}
 						});
 
 						lastUpdate = newLastUpdate;
