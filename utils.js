@@ -55,6 +55,14 @@ var request = require('request');
 					return;
 				}
 
+				if (!body.match(/^http:\/\/waa\.ai\/\w+$/)) {
+					if (times) {
+						retry(times);
+					} else {
+						cb(new Error('Bad response from waa.ai. Not a URL.'), null);
+					}
+				}
+
 				cb(null, body);
 			});
 		}
