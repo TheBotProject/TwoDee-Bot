@@ -22,15 +22,17 @@ var request = require('request');
 		});
 	},
 
-	waaai: function (u, cb) {
+	// a URL shortener function, using google's goo.gl service
+	// see https://developers.google.com/url-shortener/v1/getting_started
+	shortenURL: function (url, cb) {
 		function retry(times) {
 			times--;
 
-			// decode url first to be safe
-			var url = decodeURIComponent(u);
-			url = encodeURIComponent(url);
-
-			request.get({ url: 'http://api.waa.ai/?url=' + url }, function (err, resp, body) {
+			request.post({
+				url: 'https://www.googleapis.com/urlshortener/v1/url',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ longUrl: url })
+			}, function (err, resp, body) {
 				if (err) {
 					console.error('Couldn\'t shorten url! (' + (times || 'no') + ' more retries) Error: ' + err);
 
@@ -44,26 +46,18 @@ var request = require('request');
 				}
 
 				if (resp.statusCode < 200 || resp.statusCode >= 300) {
-					console.error('Error: waa.ai responded with a ' + resp.statusCode + ' status code. (' + (times || 'no') + ' more retries)');
+					console.error('Error: Google responded with a ' + resp.statusCode + ' status code. (' + (times || 'no') + ' more retries)');
 
 					if (times) {
 						retry(times);
 					} else {
-						cb(new Error('Failed to shorten URL: waa.ai responded with a ' + resp.statusCode + ' status code.'), null);
+						cb(new Error('Failed to shorten URL: Google responded with a ' + resp.statusCode + ' status code.'), null);
 					}
 
 					return;
 				}
 
-				if (!body.match(/^http:\/\/waa\.ai\/\w+$/)) {
-					if (times) {
-						retry(times);
-					} else {
-						cb(new Error('Bad response from waa.ai. Not a URL.'), null);
-					}
-				}
-
-				cb(null, body);
+				cb(null, JSON.parse(body).id);
 			});
 		}
 

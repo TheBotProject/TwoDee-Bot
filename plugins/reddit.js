@@ -2,7 +2,7 @@
 var ent = require('ent');
 var fs = require('fs');
 var sauce = require('./sauce')().search;
-var waaai = require('../utils').waaai;
+var shortenURL = require('../utils').shortenURL;
 
 module.exports = function (client) {
 
@@ -70,7 +70,7 @@ module.exports = function (client) {
 									var best;
 
 									if (!err && (best = results[0])) {
-										waaai(best.link, function(err, url) {
+										shortenURL(best.link, function(err, url) {
 											if (url) {
 												msg += ' [S: ' + url + ' ]';
 											} // else msg stays as is
