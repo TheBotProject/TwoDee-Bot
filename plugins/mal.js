@@ -35,8 +35,10 @@ module.exports = function (client) {
 							cb(data);
 						}
 					});
-				} else {
+				} else if (next) {
 					next();
+				} else {
+					cb(null);
 				}
 			} else {
 				Q.all(
