@@ -50,7 +50,10 @@ module.exports = function (client) {
 								if (err) {
 									deferred.reject(err);
 								} else {
-									deferred.resolve(JSON.parse(data));
+									var data = JSON.parse(data);
+									data.id = match[1];
+
+									deferred.resolve(data);
 								}
 							});
 						} else {
@@ -63,7 +66,11 @@ module.exports = function (client) {
 						var data = datas[i];
 						if (!data) continue;
 
-						cb(data);
+						if (data.error) {
+							cb(data.id);
+						} else {
+							cb(data);
+						}
 					}
 
 				}).done();
