@@ -42,9 +42,10 @@ module.exports = function (client) {
 
 	function getBest(entries) {
 		var seedersWeight = 1;
+		var leechersWeight = .5;
 		var ageWeight = -1 / 1000 / 60 / 60;
-		// score is # of seeders - age in hours
-		var bestScore = entries[0].seeders * seedersWeight + entries[0].age * ageWeight;
+		// score is # of seeders + half of # leechers - age in hours
+		var bestScore = entries[0].seeders * seedersWeight + entries[0].leechers * leechersWeight + entries[0].age * ageWeight;
 		var bestEntry = entries[0];
 
 		for (var i = 1; i < entries.length; i++) {
