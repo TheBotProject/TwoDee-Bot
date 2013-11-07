@@ -22,7 +22,7 @@ module.exports = function (client) {
 			function retry(times) {
 				var rand = random(res.posts.$.count);
 				requestAndParse(host + '/index.php?page=dapi&s=post&q=index&tags=' + encodeURIComponent(tags) + '&limit=1&pid=' + rand, function (err, res) {
-					if (!res.posts || !res.posts.post.length) {
+					if (!res.posts || !res.posts.post || !res.posts.post.length) {
 						console.log(res);
 						client.say(channel, 'Invalid booru reply');
 						return;
