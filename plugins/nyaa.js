@@ -104,6 +104,10 @@ module.exports = function (client) {
 			},
 
 			nyaall: function (from, channel, msg) {
+				if (channel === client.nick) { // if PM
+					channel = from;
+				}
+
 				requestAndParse(defaultBaseURL + '?page=rss&term=' + encodeURIComponent(msg), function (err, data) {
 					if (err) {
 						client.say(channel, 'No response. Please try again.');
@@ -142,6 +146,10 @@ module.exports = function (client) {
 			},
 
 			nyaan: function (from, channel, msg) {
+				if (channel === client.nick) { // if PM
+					channel = from;
+				}
+
 				requestAndParse(sukebeiBaseURL + '?page=rss&term=' + encodeURIComponent(msg), function (err, data) {
 					if (err) {
 						client.say(channel, 'No response. Please try again.');
