@@ -98,12 +98,13 @@ client.on('invite', function (channel, inviteUser) {
 
 		if (!state[channel]) {
 			state[channel] = {};
+
+			state[channel].plugins = [];
+			for (var i = 0; i < config.plugins.length; ++i) {
+				state[channel].plugins.push(config.plugins[i]);
+			}
 		}
 
-		state[channel].plugins = [];
-		for (var i = 0; i < config.plugins.length; ++i) {
-			state[channel].plugins.push(config.plugins[i]);
-		}
 		client.join(channel);
 	});
 });
