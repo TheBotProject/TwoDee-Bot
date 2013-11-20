@@ -46,7 +46,9 @@ function activatePlugin(plugin) {
 
 	if (plugins[plugin].join) {
 		for (var chan in client.chans) { // if we're already connected but the plugin got reloaded, refresh it
-			plugins[plugin].join(chan);
+			if (state[chan].plugins.indexOf(plugin) !== -1) {
+				plugins[plugin].join(chan);
+			}
 		}
 	}
 }
@@ -75,7 +77,7 @@ client.on('part', function (channel, nick) {
 	if (nick === client.nick) {
 		state[channel].active = false;
 
-		for (var i in plugins) {
+		for (var i in state[channel].plugins) {
 			if (plugins[i].part) {
 				plugins[i].part(channel);
 			}
@@ -96,13 +98,13 @@ client.on('invite', function (channel, inviteUser) {
 
 		if (!state[channel]) {
 			state[channel] = {};
+
+			state[channel].plugins = [];
+			for (var i = 0; i < config.plugins.length; ++i) {
+				state[channel].plugins.push(config.plugins[i]);
+			}
 		}
 
-		state[channel].active = true;
-		state[channel].plugins = [];
-		for (var i = 0; i < config.plugins.length; ++i) {
-			state[channel].plugins.push(config.plugins[i]);
-		}
 		client.join(channel);
 	});
 });
@@ -116,6 +118,8 @@ client.on('kick', function (channel, user) {
 client.on('join', function (channel, user) {
 	if (user === client.nick && state[channel]) {
 		console.log('Connected to ' + channel);
+
+		state[channel].active = true;
 
 		client.once('names' + channel, function (nicks) {
 			if (Object.keys(nicks).length === 1) {
