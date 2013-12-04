@@ -16,7 +16,8 @@
 		"seen",
 		"azure",
 		"rehost",
-		"emote"
+		"emote",
+		"wikipedia"
 	],
 
 	"convertPath": "convert"
