@@ -24,9 +24,9 @@ function queryGoogle(query, cb) {
 
 		var link = links[0].link;
 		var match;
-		if (match = link.match(/en\.wikipedia\.org\/wiki\/(.*)/)) {
+		if (match = link.match(/en\.wikipedia\.org\/wiki\/([^?\s]*)/)) {
 			cb(null, decodeURIComponent(match[1]));
-		} else if (match = link.match(/en\.wikipedia\.org\/\?.*?title=([^&]*)/)) {
+		} else if (match = link.match(/en\.wikipedia\.org\/(?:\/w\/index\.php)?\?(?:[^&\s]*\&)*title=([^&\s]*)/)) {
 			cb(null, decodeURIComponent(match[1]));
 		} else if (next) {
 			next();
@@ -45,8 +45,6 @@ function queryWikipedia(title, cb) {
 		+ 'exsentences=1&'
 		+ 'redirects=1&'
 		+ 'titles=' + encodeURIComponent(title);
-
-	console.log(url);
 
 	request.get(url, function(err, resp, body) {
 		if (err) {
