@@ -18,7 +18,8 @@
 		"rehost",
 		"emote",
 		"wikipedia",
-		"isup"
+		"isup",
+		"soundcloud"
 	],
 
 	"convertPath": "convert"
