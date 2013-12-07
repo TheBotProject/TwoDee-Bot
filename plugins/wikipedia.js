@@ -93,6 +93,36 @@ function queryWikipedia(title, cb) {
 	});
 }
 
+function format(data) {
+	var pages = data.query.pages;
+	var id = Object.keys(pages)[0];
+	var title = pages[id].title;
+	var extract = (pages[id].extract || '').trim();
+
+	// if we have a page without (plain) text or without a lead section do nothing
+	if (extract.length === 0 || extract.match(/^==.+==$/)) {
+		return '\x0312' + title + '\x03';
+	}
+
+	// if the title is contained within the extract, we want to color it
+
+	// drop any disambiguation (e.g. "Bleach (manga)" -> "Bleach")
+	var reStr = title.replace(/\s\([^\)]+\)$/, '');
+
+	// escape special characters
+	reStr = reStr.replace(/([\.\\\+\*\?\[\^\]\$\(\)])/g, '\\$1');
+
+	var re = new RegExp('\\b(' + reStr + ')\\b', 'gi');
+	var msg = extract.replace(re, '\x0312\$1\x03');
+
+	// if we didn't color anything just prepend the title
+	if (msg === extract) {
+		msg = '\x0312' + title + '\x03: ' + extract;
+	}
+
+	return msg;
+}
+
 module.exports = function (client) {
 	return {
 		commands: {
@@ -120,33 +150,7 @@ module.exports = function (client) {
 
 						// just in the case we get json we didn't account for
 						try {
-							var pages = result.query.pages;
-							var id = Object.keys(pages)[0];
-							var title = pages[id].title;
-							var extract = (pages[id].extract || '').trim();
-
-							// if we have a page without (plain) text or without a lead section just post the link
-							if (extract.length === 0 || extract.match(/^==.+==$/)) {
-								client.say(to, '\x0312' + title + '\x03: ' + link);
-							} else {
-								// if the title is contained within the extract, we want to color it
-
-								// drop any disambiguation (e.g. "Bleach (manga)" -> "Bleach")
-								var reStr = title.replace(/\s\([^\)]+\)$/, '');
-
-								// escape special characters
-								reStr = reStr.replace(/([\.\\\+\*\?\[\^\]\$\(\)])/g, '\\$1');
-
-								var re = new RegExp('\\b(' + reStr + ')\\b', 'gi');
-								var msg = extract.replace(re, '\x0312\$1\x03');
-
-								// if we didn't color anything just prepend the title
-								if (msg === extract) {
-									msg = '\x0312' + title + '\x03: ' + extract;
-								}
-
-								client.say(to, msg + ' ( ' + link + ' )');
-							}
+							client.say(to, format(result) + ' ( ' + link + ' )');
 						} catch (e) {
 							console.error(e.stack);
 
