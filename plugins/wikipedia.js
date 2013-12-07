@@ -2,6 +2,33 @@
 var google = require('google');
 var http = require('http');
 
+var wikipediaRegex = /(?:^|\s)(?:https?:\/\/)?en\.wikipedia\.org\/(.*)/gi;
+
+function getTitle(url) {
+	var match, re = wikipediaRegex;
+
+	if (match = re.exec(url)) {
+		re.lastIndex = 0;
+
+		var arr = match[0].split('?');
+		var path = arr[0];
+		var query = arr[1];
+
+		if (match = path.match(/wiki\/(.*)/i)) {
+			return match[1];
+		} else if (path === '' || path === 'w/index.php') {
+			arr = query.split('&');
+			for (var i in arr) {
+				if (match = arr[i].match(/title=(.*)/i)) {
+					return match[1];
+				}
+			}
+		}
+	}
+
+	
+}
+
 function queryGoogle(query, cb) {
 	google.resultsPerPage = 1;
 
@@ -22,12 +49,10 @@ function queryGoogle(query, cb) {
 			return;
 		}
 
-		var link = links[0].link;
-		var match;
-		if (match = link.match(/en\.wikipedia\.org\/wiki\/([^?\s]*)/)) {
-			cb(null, decodeURIComponent(match[1]));
-		} else if (match = link.match(/en\.wikipedia\.org\/(?:\/w\/index\.php)?\?(?:[^&\s]*\&)*title=([^&\s]*)/)) {
-			cb(null, decodeURIComponent(match[1]));
+		var title = getTitle(links[0].link);
+
+		if (title) {
+			cb(null, title);
 		} else if (next) {
 			next();
 		} else {
