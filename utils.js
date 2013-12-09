@@ -63,4 +63,35 @@ var request = require('request');
 
 		retry(3);
 	},
+
+	// converts a positive integer in seconds to a HH:MM:SS format string
+	// (HH: omitted if < 1 hour; leading zero in seconds and minutes (if >= 1 h))
+	durationFormat: function (time) {
+		var s = time % 60;
+		time = Math.floor(time / 60);
+		var m = time % 60;
+		time = Math.floor(time / 60);
+		var h = time % 60;
+
+		var str = '';
+		if (h > 0) {
+			// if hours - [h]h:mm:ss
+			// otherwise - just [m]m:ss
+			str = h + ':';
+			if (m < 10) {
+				str += 0;
+			}
+		}
+
+		str += m + ':';
+
+		if (s < 10) {
+			str += '0';
+		}
+
+		str += s;
+
+		return str;
+	}
 };
+
