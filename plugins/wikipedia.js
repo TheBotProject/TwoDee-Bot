@@ -2,6 +2,32 @@
 var google = require('google');
 var http = require('http');
 
+var wikipediaRegex = /(?:^|\s)(?:https?:\/\/)?en\.wikipedia\.org\/(\S*)/gi;
+
+function parseLinks(str) {
+	var match, re = wikipediaRegex;
+	var matches = [];
+	while (match = re.exec(str)) {
+		var link = match[0].trim();
+		var arr = match[1].split('?');
+		var path = arr[0];
+		var query = arr[1];
+
+		if (match = path.match(/wiki\/(.*)/i)) {
+			matches.push([ link, decodeURIComponent(match[1]) ]);
+		} else if (path === '' || path === 'w/index.php') {
+			arr = query.split('&');
+			for (var i in arr) {
+				if (match = arr[i].match(/title=(.*)/i)) {
+					matches.push([ link, decodeURIComponent(match[1]) ]);
+				}
+			}
+		}
+	}
+
+	return matches;
+}
+
 function queryGoogle(query, cb) {
 	google.resultsPerPage = 1;
 
@@ -22,12 +48,10 @@ function queryGoogle(query, cb) {
 			return;
 		}
 
-		var link = links[0].link;
-		var match;
-		if (match = link.match(/en\.wikipedia\.org\/wiki\/([^?\s]*)/)) {
-			cb(null, decodeURIComponent(match[1]));
-		} else if (match = link.match(/en\.wikipedia\.org\/(?:\/w\/index\.php)?\?(?:[^&\s]*\&)*title=([^&\s]*)/)) {
-			cb(null, decodeURIComponent(match[1]));
+		var match = parseLinks(links[0].link)[0];
+
+		if (match && match[1]) {
+			cb(null, match[1]);
 		} else if (next) {
 			next();
 		} else {
@@ -68,8 +92,59 @@ function queryWikipedia(title, cb) {
 	});
 }
 
+function format(data, titleIfEmpty) {
+	var pages = data.query.pages;
+	var id = Object.keys(pages)[0];
+	var title = pages[id].title;
+	var extract = (pages[id].extract || '').trim();
+
+	// if we have a page without (plain) text or without a lead section do nothing
+	if (extract.length === 0 || extract.match(/^==.+==$/)) {
+		return titleIfEmpty ? '\x0312' + title + '\x03' : '';
+	}
+
+	// if the title is contained within the extract, we want to color it
+
+	// drop any disambiguation (e.g. "Bleach (manga)" -> "Bleach")
+	var reStr = title.replace(/\s\([^\)]+\)$/, '');
+
+	// escape special characters
+	reStr = reStr.replace(/([\.\\\+\*\?\[\^\]\$\(\)])/g, '\\$1');
+
+	var re = new RegExp('\\b(' + reStr + ')\\b', 'gi');
+	var msg = extract.replace(re, '\x0312\$1\x03');
+
+	// if we didn't color anything just prepend the title
+	if (msg === extract) {
+		msg = '\x0312' + title + '\x03: ' + extract;
+	}
+
+	return msg;
+}
+
 module.exports = function (client) {
 	return {
+		messageHandler: function (from, to, msg) {
+			if (to === client.nick) {
+				return;
+			}
+
+			parseLinks(msg).forEach(function (val) {
+				var link = val[0];
+				var title = val[1];
+				queryWikipedia(title, function (err, result) {
+					if (err) {
+						return;
+					}
+
+					var msg = format(result, false);
+					if (msg) {
+						client.say(to, msg + ' ( ' + link + ' )');
+					}
+				});
+			});
+		},
+
 		commands: {
 			wikipedia: function (from, to, msg) {
 				if (to === client.nick) {
@@ -95,33 +170,7 @@ module.exports = function (client) {
 
 						// just in the case we get json we didn't account for
 						try {
-							var pages = result.query.pages;
-							var id = Object.keys(pages)[0];
-							var title = pages[id].title;
-							var extract = (pages[id].extract || '').trim();
-
-							// if we have a page without (plain) text or without a lead section just post the link
-							if (extract.length === 0 || extract.match(/^==.+==$/)) {
-								client.say(to, '\x0312' + title + '\x03: ' + link);
-							} else {
-								// if the title is contained within the extract, we want to color it
-
-								// drop any disambiguation (e.g. "Bleach (manga)" -> "Bleach")
-								var reStr = title.replace(/\s\([^\)]+\)$/, '');
-
-								// escape special characters
-								reStr = reStr.replace(/([\.\\\+\*\?\[\^\]\$\(\)])/g, '\\$1');
-
-								var re = new RegExp('\\b(' + reStr + ')\\b', 'gi');
-								var msg = extract.replace(re, '\x0312\$1\x03');
-
-								// if we didn't color anything just prepend the title
-								if (msg === extract) {
-									msg = '\x0312' + title + '\x03: ' + extract;
-								}
-
-								client.say(to, msg + ' ( ' + link + ' )');
-							}
+							client.say(to, format(result, true) + ' ( ' + link + ' )');
 						} catch (e) {
 							console.error(e.stack);
 
