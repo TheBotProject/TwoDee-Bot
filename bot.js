@@ -77,9 +77,9 @@ client.on('part', function (channel, nick) {
 	if (nick === client.nick) {
 		state[channel].active = false;
 
-		for (var i in state[channel].plugins) {
-			if (plugins[i].part) {
-				plugins[i].part(channel);
+		for (var i=0; i < state[channel].plugins.length; ++i) {
+			if (plugins[state[channel].plugins[i]].part) {
+				plugins[state[channel].plugins[i]].part(channel);
 			}
 		}
 	} else if (state[channel].active && Object.keys(client.chans[channel].users).length === 2) {
