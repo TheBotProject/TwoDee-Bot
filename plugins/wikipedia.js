@@ -2,7 +2,7 @@
 var google = require('google');
 var http = require('http');
 
-var wikipediaRegex = /(?:^|\s)(?:https?:\/\/)?en\.wikipedia\.org\/(\S*)/gi;
+var wikipediaRegex = /(?:^|\s)(?:https?:\/\/)?en\.wikipedia\.org\/(\S+)/gi;
 
 function parseLinks(str) {
 	var match, re = wikipediaRegex;
@@ -15,7 +15,7 @@ function parseLinks(str) {
 
 		if (match = path.match(/wiki\/(.*)/i)) {
 			matches.push([ link, decodeURIComponent(match[1]) ]);
-		} else if (path === '' || path === 'w/index.php') {
+		} else if (query && (path === '' || path === 'w/index.php')) {
 			arr = query.split('&');
 			for (var i in arr) {
 				if (match = arr[i].match(/title=(.*)/i)) {
@@ -36,7 +36,7 @@ function queryGoogle(query, cb) {
 			if (err.status) {
 				cb(new Error('Something went wrong while searching on Google: ' + err.status + ': ' + http['STATUS_CODES'][status]), null);
 			} else {
-				cb(new Error('Something went wrong while searching on Google (' + (err.code || '-') + ''), null);
+				cb(new Error('Something went wrong while searching on Google (' + (err.code || '-') + ')'), null);
 			}
 
 			return;
