@@ -48,7 +48,11 @@ module.exports = function (client) {
 		customEvents: {
 			join: userJoin,
 			part: userLeave,
-			quit: userLeave.bind(client, null)
+			quit: userLeave.bind(client, null),
+			nick: function (oldNick, newNick) {
+				userLeave(null, oldNick);
+				userJoin(null, newNick);
+			}
 		},
 
 		commands: {
