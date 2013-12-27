@@ -13,7 +13,7 @@
 		"csv": "0.2.x",
 		"cheerio": "x",
 		"q": "x",
-		"nyaatorrents": "x",
+		"nyaatorrents": "git+https://github.com/Sebmaster/node-nyaatorrents.git",
 		"humanize": "x",
 		"xml2js": "x",
 		"azure": "x",
