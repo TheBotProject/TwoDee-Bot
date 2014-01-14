@@ -8,22 +8,25 @@ module.exports = function (client) {
 		google.resultsPerPage = 1;
 
 		google('site:myanimelist.net/anime/ ' + query, function (err, next, links) {
-			if (err) return;
+			if (err) {
+				cb(new Error('Attempt to google "' + query + '" failed with error: ' + (err.errno || err.message) + '.'), null);
+				return;
+			}
 
 			if (!links.length) {
-				cb(null);
+				cb(new Error('Sorry, no results for "' + query + '".'), null);
 				return;
 			}
 
 			var link = links[0];
 			var match = link.link.match(/^https?:\/\/myanimelist\.net\/anime\/(\d+)/);
 			if (match) {
-				cb(match[1]);
+				cb(null, match[1]);
 				// TODO: parse html or something similar to get data
 			} else if (next) {
 				next();
 			} else {
-				cb(null);
+				cb(new Error('Sorry, no results for "' + query + '".'), null);
 			}
 		});
 	}
@@ -31,9 +34,13 @@ module.exports = function (client) {
 	return {
 		commands: {
 			mal: function (from, channel, message) {
-				searchAnime(message, function (data) {
-					if (data === null) {
-						client.say(channel, 'Sorry, no results for: ' + message);
+				if (channel === client.nick) {
+					channel = from;
+				}
+
+				searchAnime(message, function (err, data) {
+					if (err) {
+						client.say(channel, err);
 					} else if (typeof data === 'object') {
 						client.say(channel, ent.decode(data.title) + ' (' + (data.episodes ? data.episodes : '?') + ' episodes) - http://myanimelist.net/anime/' + data.id);
 					} else {
