@@ -1,5 +1,6 @@
 ﻿var google = require('google');
 var request = require('request');
+var url = require('url');
 var ent = require('ent');
 var Q = require('q');
 
@@ -20,8 +21,15 @@ module.exports = function (client) {
 				var link = links[0];
 				var match = link.link.match(/^https?:\/\/myanimelist\.net\/anime\/(\d+)/);
 				if (match) {
-					request('http://mal-api.com/anime/' + match[1], function (err, r, data) {
-						if (err) return;
+					var options = { uri: url.parse('http://mal-api.com/anime/' + match[1]) };
+
+					options.timeout = 1000;
+
+					request(options, function (err, r, data) {
+						if (err) {
+							cb(match[1]);
+							return;
+						}
 
 						if (r.statusCode < 200 || r.statusCode >= 300) {
 							cb(match[1]);
