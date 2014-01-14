@@ -1,6 +1,5 @@
 ﻿var google = require('google');
 var request = require('request');
-var url = require('url');
 var ent = require('ent');
 
 module.exports = function (client) {
@@ -19,28 +18,8 @@ module.exports = function (client) {
 			var link = links[0];
 			var match = link.link.match(/^https?:\/\/myanimelist\.net\/anime\/(\d+)/);
 			if (match) {
-				var options = { uri: url.parse('http://mal-api.com/anime/' + match[1]) };
-
-				options.timeout = 1000;
-
-				request(options, function (err, r, data) {
-					if (err) {
-						cb(match[1]);
-						return;
-					}
-
-					if (r.statusCode < 200 || r.statusCode >= 300) {
-						cb(match[1]);
-						return;
-					}
-
-					data = JSON.parse(data);
-					if (data.error) {
-						cb(match[1]);
-					} else {
-						cb(data);
-					}
-				});
+				cb(match[1]);
+				// TODO: parse html or something similar to get data
 			} else if (next) {
 				next();
 			} else {
