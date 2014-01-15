@@ -20,7 +20,7 @@ module.exports = function (client) {
 				'max-results': 1
 			},
 			function (err, videos) {
-				if (err || !videos.items.length) return;
+				if (err || !videos.items || !videos.items.length) return;
 
 				cb(videos.items[0]);
 			}
