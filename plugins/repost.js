@@ -9,7 +9,7 @@ module.exports = function (client) {
 
 				request.get('http://redditbooru.com/images/?imageUri=' + encodeURIComponent(message), function (err, res) {
 					if (err || res.statusCode >= 400) {
-						client.say('Error while retrieving repost information.');
+						client.say(channel, 'Error while retrieving repost information.');
 						return;
 					}
 					try {
