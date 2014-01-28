@@ -2,6 +2,8 @@
 
 module.exports = function (client) {
 
+	var reddits = JSON.parse(fs.readFileSync(__dirname + '/.reddit', { encoding: 'utf8' }));
+
 	return {
 		commands: {
 			repost: function (from, channel, message) {
@@ -27,10 +29,13 @@ module.exports = function (client) {
 							}
 
 							if (found) {
+								var srData = reddits[channel][post.subreddit.toLowerCase()];
+								var color = srData.color ? srData.color : '01,00';
+
 								client.say(channel,
 									(found.nsfw ? '[\x0304NSFW\x03] ' : '') +
 									'Repost found: [' + found.userName + '] ' +
-									'[' + found.sourceName + '] ' +
+									'[\x03' + color + found.sourceName + '\x03] ' +
 									found.title + ' [ http://redd.it/' + found.externalId + ' ]');
 							} else {
 								client.say(channel, 'No reposts found.');
