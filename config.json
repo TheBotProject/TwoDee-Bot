@@ -19,7 +19,8 @@
 		"emote",
 		"wikipedia",
 		"isup",
-		"soundcloud"
+		"soundcloud",
+		"repost"
 	],
 
 	"convertPath": "convert"
