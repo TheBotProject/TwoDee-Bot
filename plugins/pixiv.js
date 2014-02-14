@@ -66,6 +66,13 @@ module.exports = function (client) {
 					postInfo(match[4], postPixiv.bind(null, channel, null));
 				}
 			}
+			
+			re = /https?:\/\/(www.)?pixiv\.com\/works\/(\d+)/gi;
+			while (match = re.exec(message)) {
+				if (match[2]) {
+					postInfo(match[2], postPixiv.bind(null, channel, null));
+				}
+			}
 		}
 	};
 };
