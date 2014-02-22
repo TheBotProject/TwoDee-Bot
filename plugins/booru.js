@@ -11,6 +11,7 @@ module.exports = function (client) {
 			if (err || !res.posts) {
 				console.error('Booru error: ' + err + ', response');
 				console.log(res);
+				client.say(channel, 'Error while parsing booru response.');
 				return;
 			}
 
@@ -62,7 +63,11 @@ module.exports = function (client) {
 			}
 
 			var parser = new xml2js.Parser();
-			parser.parseString(body.toString('utf8'), cb);
+			try {
+				parser.parseString(body.toString('utf8'), cb);
+			} catch (e) {
+				cb(e);
+			}
 		});
 	}
 
