@@ -62,7 +62,7 @@ module.exports = function (client) {
 							+ ' [' + post.author + '] '
 							+ ent.decode(post.title)
 							+ (post.link_flair_text ? (' [' + ent.decode(post.link_flair_text) + ']') : '')
-							+ ' [ http://redd.it/' + post.id + ' ]'
+							+ ' [ http://reddit.com/' + post.id + ' ]'
 							+ (!post.is_self ? ' [ ' + post.url + ' ]' : '');
 
 							if (!post.is_self) {
@@ -93,6 +93,7 @@ module.exports = function (client) {
 		},
 
 		part: function (channel) {
+			channel = channel.toLowerCase();
 			clearInterval(intervals[channel]);
 			delete intervals[channel];
 		},
