@@ -93,6 +93,7 @@ module.exports = function (client) {
 		},
 
 		part: function (channel) {
+			channel = channel.toLowerCase();
 			clearInterval(intervals[channel]);
 			delete intervals[channel];
 		},
