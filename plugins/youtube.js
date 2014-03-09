@@ -3,14 +3,21 @@ var youtube = require('youtube-feeds');
 
 module.exports = function (client) {
 	function postDetails(channel, details) {
-		client.say(channel, details.title + ' [' + durationFormat(details.duration) + '] - https://youtu.be/' + details.id);
+		client.say(channel, details.title + ' [' + durationFormat(details.duration) + '] - https://youtu.be/' + details.id); 
 	}
 
 	function postVideo(id, cb) {
 		youtube.video(id, function (err, details) {
-			if (err) return;
-
-			cb(details);
+			if (err) {
+				try {
+					var msg = err.details.message;
+					cb('Error while trying to look up https://youtu.be/' + id + ' : ' + msg, null);
+				} catch (e) {
+					cb('Unknown error ocurred while trying to look up https://youtu.be/' + id, null);
+				}
+			} else {
+				cb(null, details);
+			}
 		});
 	}
 
@@ -20,9 +27,13 @@ module.exports = function (client) {
 				'max-results': 1
 			},
 			function (err, videos) {
-				if (err || !videos.items || !videos.items.length) return;
-
-				cb(videos.items[0]);
+				if (err && err.toString() === 'Error: not found' || !videos.items.length) {
+					cb('No results for "' + term + '".', null);
+				} else if (err) {
+					cb('Error while trying to look up "' + term + '": ' + err, null);
+				} else {
+					cb(null, videos.items[0]);
+				}
 			}
 		);
 	}
@@ -31,27 +42,47 @@ module.exports = function (client) {
 		messageHandler: function (from, channel, message) {
 			var re = /https?:\/\/(www.)?youtube.com\/watch\?((.+)&)?v=(.*?)($|[^\w-])/gi;
 			var match;
+			
+			var post = function (channel, err, details) {
+				if (err) {
+					// keep quiet because this is a requested response;
+					return;
+				} else {
+					postDetails(channel, details);
+				}
+			};
 
 			while (match = re.exec(message)) {
 				if (match[4]) {
-					postVideo(match[4], postDetails.bind(undefined, channel));
+					postVideo(match[4], post.bind(undefined, channel));
 				}
 			}
 
 			re = /https?:\/\/(www.)?youtu.be\/(.*?)($|[^\w-])/gi;
 			while (match = re.exec(message)) {
 				if (match[2]) {
-					postVideo(match[2], postDetails.bind(undefined, channel));
+					postVideo(match[2], post.bind(undefined, channel));
 				}
 			}
 		},
 
 		commands: {
 			yt: function (from, channel, message) {
-				searchYoutube(message, postDetails.bind(undefined, channel));
+				if (channel === client.nick) {
+					channel = from;
+				}
+				
+				searchYoutube(message, function (err, details) {
+					if (err) {
+						client.say(channel, err);
+					} else {
+						postDetails(channel, details);
+					}
+				});
 			},
+			
 			youtube: function (from, channel, message) {
-				searchYoutube(message, postDetails.bind(undefined, channel));
+				this.yt(from, channel, message);
 			}
 		}
 	};
