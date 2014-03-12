@@ -7,7 +7,7 @@ var shortenURL = require('../utils').shortenURL;
 module.exports = function (client) {
 
 	var reddits = JSON.parse(fs.readFileSync(__dirname + '/.reddit', { encoding: 'utf8' }));
-	var lastUpdate = null;
+	var lastUpdate = {};
 	var intervals = {};
 
 	return {
@@ -20,9 +20,9 @@ module.exports = function (client) {
 					console.error('Couldn\'t retrieve last post! Error: ' + (err || data.error));
 					process.exit(1);
 				}
-				lastUpdate = data.data.children.length ? data.data.children[0].data.created_utc : 0;
+				lastUpdate[channel] = data.data.children.length ? data.data.children[0].data.created_utc : 0;
 
-				console.log('saved last posts, ts:' + lastUpdate);
+				console.log('saved last posts for ' + channel + ', ts:' + lastUpdate[channel]);
 			});
 
 			intervals[channel] = setInterval(function () {
@@ -35,10 +35,10 @@ module.exports = function (client) {
 					}
 
 					if (data.data.children.length) {
-						var newLastUpdate = lastUpdate;
+						var newLastUpdate = lastUpdate[channel];
 						data.data.children.forEach(function(value) {
 							var post = value.data;
-							if (post.created_utc <= lastUpdate) return;
+							if (post.created_utc <= lastUpdate[channel]) return;
 
 							if (post.created_utc > newLastUpdate) {
 								newLastUpdate = post.created_utc;
@@ -86,7 +86,7 @@ module.exports = function (client) {
 							}
 						});
 
-						lastUpdate = newLastUpdate;
+						lastUpdate[channel] = newLastUpdate;
 					}
 				});
 			}, 30 * 1000);
