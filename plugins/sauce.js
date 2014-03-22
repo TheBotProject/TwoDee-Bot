@@ -1,6 +1,15 @@
 ﻿var request = require('request');
 var cheerio = require('cheerio');
 var http = require('http');
+var fs = require('fs');
+
+var api_key;
+try {
+	api_key = fs.readFileSync(__dirname + '/.sauce', { encoding: 'utf8' });
+} catch (e) {
+	console.error('Couldn\'t read saucenao api key: ' + e + '. Proceeding with anonymous account.');
+	api_key = '';
+}
 
 module.exports = function (client) {
 
@@ -14,9 +23,14 @@ module.exports = function (client) {
 			} else if (!resp.headers['content-type'].match(/^image\//)) {
 				cb(img + ' doesn\'t appear to be an image.', null);
 			} else {
-				request('http://saucenao.com/search.php?db=999&url=' + encodeURIComponent(img), function (err, r, data) {
+				request('http://saucenao.com/search.php?db=999&url=' + encodeURIComponent(img) + '&api_key=' + api_key, function (err, r, data) {
 					if (err) {
 						cb('Error while fetching source: ' + err, null);
+						return;
+					}
+										
+					if (data.match('Search Rate Too High.') || data.match('Daily Search Limit Exceeded.')) {
+						cb('Error: too many requests to saucenao.com.', null);
 						return;
 					}
 
