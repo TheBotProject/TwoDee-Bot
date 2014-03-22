@@ -1,40 +1,52 @@
 ﻿var request = require('request');
 var cheerio = require('cheerio');
+var http = require('http');
 
 module.exports = function (client) {
 
 	function searchSauceNao(img, cb) {
-		request('http://saucenao.com/search.php?db=999&url=' + encodeURIComponent(img), function (err, r, data) {
+		// check before querying saucenao
+		request.head({ url: img, headers: { Referer: img }}, function (err, resp) {
 			if (err) {
 				cb(err, null);
-				return;
-			}
+			} else if (resp.statusCode < 200 || resp.statusCode >= 300) {
+				cb(img + ' responded with ' + resp.statusCode + ': ' + http['STATUS_CODES'][resp.statusCode], null);
+			} else if (!resp.headers['content-type'].match(/^image\//)) {
+				cb(img + ' doesn\'t appear to be an image.', null);
+			} else {
+				request('http://saucenao.com/search.php?db=999&url=' + encodeURIComponent(img), function (err, r, data) {
+					if (err) {
+						cb('Error while fetching source: ' + err, null);
+						return;
+					}
 
-			var $ = cheerio.load(data);
-			var results = $('.resulttablecontent');
-			var repeatList = [];
-			var matchList =[];
+					var $ = cheerio.load(data);
+					var results = $('.resulttablecontent');
+					var repeatList = [];
+					var matchList =[];
 
-			for (var i = 0; i < results.length && i < 3; ++i) {
-				var result = results.eq(i);
+					for (var i = 0; i < results.length && i < 3; ++i) {
+						var result = results.eq(i);
 
-				var similarity = parseInt($('.resultsimilarityinfo', result).text(), 10);
-				if (similarity < 80) continue;
+						var similarity = parseInt($('.resultsimilarityinfo', result).text(), 10);
+						if (similarity < 80) continue;
 
-				var title = $('.resulttitle', result).text();
+						var title = $('.resulttitle', result).text();
 
-				var link = $('.resultcontentcolumn a', result).eq(0).attr('href');
-				if (!link || repeatList.indexOf(link) !== -1) continue;
+						var link = $('.resultcontentcolumn a', result).eq(0).attr('href');
+						if (!link || repeatList.indexOf(link) !== -1) continue;
 
-				repeatList.push(link);
-				matchList.push({
-					title: title,
-					similarity: similarity,
-					link: link
+						repeatList.push(link);
+						matchList.push({
+							title: title,
+							similarity: similarity,
+							link: link
+						});
+					}
+
+					cb(null, matchList);
 				});
 			}
-
-			cb(null, matchList);
 		});
 	}
 
@@ -46,9 +58,13 @@ module.exports = function (client) {
 	return {
 		commands: {
 			sauce: function (from, channel, message) {
+				if (channel === client.nick) {
+					channel = from;
+				}
+								
 				searchSauceNao(message, function (err, results) {
 					if (err) {
-						client.say(channel, 'There was an error while fetching source, ' + from + '.');
+						client.say(channel, err);
 					} else if (results.length === 0) {
 						client.say(channel, 'Sorry, ' + from + ', no image source found.');
 					} else {
