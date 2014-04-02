@@ -61,14 +61,17 @@ function queryGoogle(query, cb) {
 }
 
 function queryWikipedia(title, cb) {
+	// see https://en.wikipedia.org/w/api.php for detailed usage information
 	var url = 'https://en.wikipedia.org/w/api.php?'
-		+ 'format=json&'
-		+ 'action=query&'
-		+ 'prop=extracts&'
-		+ 'explaintext=1&'
-		+ 'exsentences=1&'
-		+ 'redirects=1&'
-		+ 'titles=' + encodeURIComponent(title);
+		+ 'format=json&'							// The format of the output
+		+ 'action=query&'							// What action you would like to perform
+		+ 'prop=extracts&'							// Which properties to get for the titles/revisions/pageids
+		+ 'redirects=1&'							// Automatically resolve redirects
+		+ 'exintro=1&'								// Return only content before the first section (get just the lead)
+		+ 'explaintext=1&'							// Return extracts as plaintext instead of limited HTML
+		+ 'titles=' + encodeURIComponent(title);	// A list of titles to work on; Separate values with '|'
+
+	console.log('Querying ' + url);
 
 	request.get(url, function(err, resp, body) {
 		if (err) {
@@ -106,6 +109,15 @@ function format(data, titleIfEmpty) {
 	// if we have a page without (plain) text or without a lead section do nothing
 	if (extract.length === 0 || extract.match(/^==.+==$/)) {
 		return titleIfEmpty ? '\x0312' + title + '\x03' : '';
+	}
+	
+	// replace newlines with `; `, unless preceded by punctuation
+	extract = extract.replace(/([^.,;:!?])\n+/g, '$1; ');
+	extract = extract.replace(/\n+/g, ' ');
+
+	// if over 200 characters, truncate and add elipsis
+	if (extract.length > 200) {
+		extract = extract.substring(0, 200) + '...';
 	}
 
 	// if the title is contained within the extract, we want to color it
