@@ -30,13 +30,13 @@ function parseLinks(str) {
 
 function queryGoogle(query, cb) {
 	google.resultsPerPage = 1;
-
-	google('site:en.wikipedia.org ' + query, function (err, next, links) {
+	var url='site:en.wikipedia.org ' + query;
+	google(url, function (err, next, links) {
 		if (err) {
 			if (err.status) {
 				cb(new Error('Something went wrong while searching on Google: ' + err.status + ': ' + http['STATUS_CODES'][status]), null);
 			} else {
-				cb(new Error('Something went wrong while searching on Google (' + (err.code || '-') + ')'), null);
+				cb(new Error('Something went wrong while searching on Google: ' + err.message), null);
 			}
 
 			return;
