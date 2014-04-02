@@ -93,6 +93,11 @@ function queryWikipedia(title, cb) {
 }
 
 function format(data, titleIfEmpty) {
+	var iw = data.query.interwiki;
+	if (iw !== undefined) {
+		return titleIfEmpty ? '\x0312' + iw[0].title + '\x03' : '';
+	}
+
 	var pages = data.query.pages;
 	var id = Object.keys(pages)[0];
 	var title = pages[id].title;
