@@ -67,7 +67,7 @@ module.exports = function (client) {
 				}
 
 				requestAndParse(defaultBaseURL + '?page=rss&cats=1_37&term=' + encodeURIComponent(msg), function (err, data) {
-					if (err) {
+					if (err || !data.rss) {
 						client.say(channel, 'No response. Please try again.');
 						return console.error('Error getting data: ' + err);
 					}
