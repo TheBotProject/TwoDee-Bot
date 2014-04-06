@@ -112,7 +112,7 @@ function format(data, titleIfEmpty) {
 	}
 	
 	// replace newlines with `; `, unless preceded by punctuation
-	extract = extract.replace(/([^.,;:!?])\n+/g, '$1; ');
+	extract = extract.replace(/([^.,;:!?\n])\n+/g, '$1; ');
 	extract = extract.replace(/\n+/g, ' ');
 
 	// if over 200 characters, truncate and add elipsis
