@@ -55,6 +55,16 @@ module.exports = function (client) {
 			[20, 'enthusiastically applauds {0}.', 'applause'],
 			[1,  'moves her left hand in a clapping motion as she yawns into the other.', 'golfclaps'],
 		],
+		
+		backpat: [
+			[20, 'gives {0} a pat on the back.', 'regular pats'],
+			[5, 'rubs {0}\' on the back, causing {0} to burst into treats', 'regular pats'],
+		],
+		
+		karatechop: [
+			[20, 'karate chops {0} for'+(Math.floor(Math.random()*100)+1)+' damage!', 'karatechops'],
+			[5, 'karate chops {0} in half! {0} takes '+(Math.floor(Math.random()*100)+100)+' damage!!!', 'karatechops'],
+		],
 	};
 
 	for (var p in emotes) {
