@@ -132,6 +132,10 @@ module.exports = function (client) {
 				msg += '.';
 
 				client.say(to, msg);
+			},
+			
+			reddits: function (from, to, msg) {
+				this.reddit(from, to, msg);
 			}
 		}
 	};
