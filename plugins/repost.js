@@ -20,7 +20,7 @@ module.exports = function (client) {
 
 							for (var i = 0; i < parsed.length; ++i) {
 								var distance = parseFloat(parsed[i].distance);
-								if (Math.round(distance * 100) === 0) {
+								if (Math.round(distance * 1000) <= 8) {
 									found = parsed[i];
 									break;
 								}
