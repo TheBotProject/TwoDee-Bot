@@ -78,7 +78,7 @@ module.exports = function (client) {
 			},
 
 			sb: function (from, channel, message) {
-				getBooru(channel, 'http://safebooru.org', message, true);
+				getBooru(channel, 'http://safebooru.org', 'rating:safe ' + message, true);
 			},
 
 			gb: function (from, channel, message) {
