@@ -28,9 +28,10 @@ module.exports = function (client) {
 
 							if (found) {
 								client.say(channel,
+									'Repost found: ' +
 									(found.nsfw ? '[\x0304NSFW\x03] ' : '') +
-									'Repost found: [' + found.userName + '] ' +
 									'[' + found.sourceName + '] ' +
+									'[' + found.userName + '] ' +
 									found.title + ' [ http://redd.it/' + found.externalId + ' ]');
 							} else {
 								client.say(channel, 'No reposts found.');
