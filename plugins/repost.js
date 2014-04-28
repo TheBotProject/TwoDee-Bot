@@ -31,9 +31,9 @@ module.exports = function (client) {
 									'[ http://redd.it/' + parsed[i].externalId + ' ] ' +
 									(i < parsed.length - 1 ? '| ' : '');
 								}
-							}
-
-							if (found) {
+							} else if (parsed.length === 1) {
+								var found = parsed[0];
+								
 								client.say(channel,
 									'Repost found: ' +
 									(found.nsfw ? '[\x0304NSFW\x03] ' : '') +
