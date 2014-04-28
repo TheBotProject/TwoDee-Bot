@@ -17,20 +17,28 @@ module.exports = function (client) {
 						if (parsed.length !== 0) {
 							var found = null;
 							parsed = parsed.sort(function (a, b) { a.age - b.age; });
-
-							for (var i = 0; i < parsed.length; ++i) {
-								var distance = parseFloat(parsed[i].distance);
-								if (Math.round(distance * 1000) <= 8) {
-									found = parsed[i];
-									break;
+							parsed = parsed.filter(function (v) {
+								var distance = parseFloat(v.distance);
+								return Math.round(distance * 1000) <= 8;
+							});
+														
+							if (parsed.length > 1) {
+								var msg = parsed.length + ' reposts found: ';
+								
+								for (var i = 0; i < parsed.length; i++) {
+									msg += (parsed[i].nsfw ? '[\x0304NSFW\x03] ' : '') +
+									'[' + parsed[i].sourceName + '] ' +
+									'[ http://redd.it/' + parsed[i].externalId + ' ] ' +
+									(i < parsed.length - 1 ? '| ' : '');
 								}
 							}
 
 							if (found) {
 								client.say(channel,
+									'Repost found: ' +
 									(found.nsfw ? '[\x0304NSFW\x03] ' : '') +
-									'Repost found: [' + found.userName + '] ' +
 									'[' + found.sourceName + '] ' +
+									'[' + found.userName + '] ' +
 									found.title + ' [ http://redd.it/' + found.externalId + ' ]');
 							} else {
 								client.say(channel, 'No reposts found.');
