@@ -15,7 +15,6 @@ module.exports = function (client) {
 					try {
 						var parsed = JSON.parse(res.body);
 						if (parsed.length !== 0) {
-							var found = null;
 							parsed = parsed.sort(function (a, b) { a.age - b.age; });
 							parsed = parsed.filter(function (v) {
 								var distance = parseFloat(v.distance);
@@ -28,18 +27,18 @@ module.exports = function (client) {
 								for (var i = 0; i < parsed.length; i++) {
 									msg += (parsed[i].nsfw ? '[\x0304NSFW\x03] ' : '') +
 									'[' + parsed[i].sourceName + '] ' +
-									'[ http://redd.it/' + parsed[i].externalId + ' ] ' +
+									'[ http://reddit.com/' + parsed[i].externalId + ' ] ' +
 									(i < parsed.length - 1 ? '| ' : '');
 								}
-							}
-
-							if (found) {
+							} else if (parsed.length === 1) {
+								var found = parsed[0];
+								
 								client.say(channel,
 									'Repost found: ' +
 									(found.nsfw ? '[\x0304NSFW\x03] ' : '') +
 									'[' + found.sourceName + '] ' +
 									'[' + found.userName + '] ' +
-									found.title + ' [ http://redd.it/' + found.externalId + ' ]');
+									found.title + ' [ http://reddit.com/' + found.externalId + ' ]');
 							} else {
 								client.say(channel, 'No reposts found.');
 							}
