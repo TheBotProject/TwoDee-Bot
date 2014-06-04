@@ -14,12 +14,16 @@ function parseLinks(str) {
 		var query = arr[1];
 
 		if (match = path.match(/wiki\/(.*)/i)) {
-			matches.push([ link, decodeURIComponent(match[1]) ]);
+			try {
+				matches.push([ link, decodeURIComponent(match[1]) ]);
+			} catch (e) {}
 		} else if (query && (path === '' || path === 'w/index.php')) {
 			arr = query.split('&');
 			for (var i in arr) {
 				if (match = arr[i].match(/title=(.*)/i)) {
-					matches.push([ link, decodeURIComponent(match[1]) ]);
+					try {
+						matches.push([ link, decodeURIComponent(match[1]) ]);
+					} catch (e) {}
 				}
 			}
 		}
