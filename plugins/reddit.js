@@ -62,7 +62,7 @@ module.exports = function (client) {
 							+ ' [' + post.author + '] '
 							+ ent.decode(post.title)
 							+ (post.link_flair_text ? (' [' + ent.decode(post.link_flair_text) + ']') : '')
-							+ ' [ http://reddit.com/' + post.id + ' ]'
+							+ ' [ https://reddit.com/' + post.id + ' ]'
 							+ (!post.is_self ? ' [ ' + post.url + ' ]' : '');
 
 							if (!post.is_self) {
