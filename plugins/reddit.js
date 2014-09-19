@@ -53,8 +53,8 @@ module.exports = function (client) {
 								post.author = '\x0303' + post.author + '\x03 [\x0303M\x03]';
 								post.title = '\x0303' + post.title + '\x03';
 							} else if (post.distinguished === 'admin') {
-								post.author = '\x0304' + post.author + '\x04 [\x0304A\x03]';
-								post.title = '\x0304' + post.title + '\x04';
+								post.author = '\x0304' + post.author + '\x03 [\x0304A\x03]';
+								post.title = '\x0304' + post.title + '\x03';
 							}
 
 							var msg = (post.over_18 || srData.nsfl ? '[\x0304NSFW\x03] ' : '')
