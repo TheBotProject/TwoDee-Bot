@@ -13,7 +13,7 @@ module.exports = function (client) {
 						return;
 					}
 					try {
-						var parsed = JSON.parse(res.body);
+						var parsed = JSON.parse(res.body).results;
 						if (parsed.length !== 0) {
 							parsed = parsed.sort(function (a, b) { a.age - b.age; });
 							parsed = parsed.filter(function (v) {
