@@ -30,6 +30,7 @@ module.exports = function (client) {
 									'[ http://reddit.com/' + parsed[i].externalId + ' ] ' +
 									(i < parsed.length - 1 ? '| ' : '');
 								}
+								client.say(channel, msg);
 							} else if (parsed.length === 1) {
 								var found = parsed[0];
 								
