@@ -10,6 +10,7 @@
 		"request": "x",
 		"google": "git+https://github.com/wearefractal/node-google.git",
 		"ent": "x",
+		"csv": "0.2.x",
 		"cheerio": "x",
 		"q": "1.x",
 		"nyaatorrents": "git+https://github.com/Sebmaster/node-nyaatorrents.git",
