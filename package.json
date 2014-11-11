@@ -4,6 +4,7 @@
 	"private": true,
 	"main": "bot.js",
 	"dependencies": {
+		"async": "x",
 		"redwrap": "x",
 		"irc": "git+https://github.com/Sebmaster/node-irc.git",
 		"youtube-feeds": "x",

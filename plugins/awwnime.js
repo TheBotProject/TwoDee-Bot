@@ -1,7 +1,8 @@
 var request = require('request');
+var async = require('async');
 
 module.exports = function (client) { 
-	function uploadAlbum(albumTitle, imageIds, callback) { 
+	function uploadAlbum(albumTitle, imageIds, channel, from) { 
 		var uploadRequest = {
 			url: 'http://redditbooru.com/images/',
 			headers: {
@@ -11,10 +12,46 @@ module.exports = function (client) {
 			},
 			body: getBody(albumTitle, imageIds)
 			
-		}
+		};
 
-		return request.post(uploadRequest, callback); 
-	};
+		request.post(uploadRequest, function(error, response, body) {
+			var jsonResponse;
+			try {								
+				jsonResponse = JSON.parse(body);								
+			} catch (e) {
+				console.log('Failed parsing response: ' + response + '\n error: ' + e);
+			}
+
+			if (jsonResponse && (jsonResponse.redirect || jsonResponse.route)) {
+				//if it's a single image, redirect is used. Otherwise it uses route
+				client.say(channel, from + ', ' + (jsonResponse.redirect || ('http://redditbooru.com' +  jsonResponse.route)));
+			} else {
+				client.say(channel, from + ', something went wrong while trying to upload your image(s)');
+			}
+			
+		}); 
+	}
+
+	function uploadImage(imageUrl, callback) {
+		// We use force=true because otherwise redditbooru doesn't return with a proper imageId to upload.
+		var uri = 'http://redditbooru.com/upload/?action=upload&force=true&imageUrl=' + encodeURIComponent(imageUrl);
+		request.post(uri, function(error, response, body) {
+			var jsonResponse;
+			try{
+				jsonResponse = JSON.parse(body);
+			} catch (e) {
+				callback('failure parsing the json', null);
+				return;
+			}
+
+			if (jsonResponse.error || !jsonResponse.imageId) {
+				callback(imageUrl, null);	
+			} else {
+				callback(null, jsonResponse.imageId);
+			}
+		});	
+		
+	}
 
 	//We construct the body ourselves because the json in the request form doesn't fancy non-unique keys, which is what's being used in dxprog's http requests
 	function getBody(title, images) {
@@ -65,47 +102,20 @@ module.exports = function (client) {
 
 				if (uploads.length >= 12) {
 					client.say(channel, from + ', stop trying to break me with that many images. Also, most subreddits don\'t allow more than 12 images per album');
-					return
+					return;
 				}
 
-				var imageIds = [];
-				var index, completed = 0;
+				async.times(uploads.length, function (n, nextcb) {
+					uploadImage(uploads[n], nextcb);
+				}, function (err, results) {
+					if (err) {
+						client.say(channel, from + ', one or more images could not be uploaded');	
+						return;
+					}
 
-				for (index = 0; index < uploads.length; index++) {	
-					// We use force=true because otherwise redditbooru doesn't return with a proper imageId to upload.
-					var uri = 'http://redditbooru.com/upload/?action=upload&force=true&imageUrl=' + encodeURIComponent(uploads[index]);
-					request.post(uri, function(error, response, body) {
-						var jsonResponse = JSON.parse(body);
-						if (jsonResponse.error) {
-							client.say(channel, from + ', ' + jsonResponse.uploadId + ' is not a valid image.');
-							return;
-						}
-					
-						imageIds.push(jsonResponse.imageId);
-						
-						completed++;
-						if (completed === uploads.length) {
-							uploadAlbum(albumTitle, imageIds, function(error, response, body) { 
-								var jsonResponse;
-								try {								
-									jsonResponse = JSON.parse(body);								
-								}
-								catch (e) {
-									console.log('Failed parsing response: ' + response + '\n error: ' + e);
-								}
-
-								if (jsonResponse && (jsonResponse.redirect || jsonResponse.route)) {
-									//if it's a single image, redirect is used. Otherwise it uses route
-									client.say(channel, from + ', ' + (jsonResponse.redirect || ('http://redditbooru.com' +  jsonResponse.route)));
-								} else {
-									client.say(channel, from + ', something went wrong while trying to upload your image(s)');
-								}
-							});
-
-						}
-					});	
-				}
+					uploadAlbum(albumTitle, results, channel, from);
+				});
 			}
 		}
-	}
-}
+	};
+};
