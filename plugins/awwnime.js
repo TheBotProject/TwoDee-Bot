@@ -1,6 +1,6 @@
-var pixiv = require('./pixivUtil');
+var pixiv = require('pixiv-api');
 var q = require('q');
-var request = q.denodeify(require('request'));
+var postRequest = q.denodeify(require('request').post);
 
 module.exports = function (client) {
 	function uploadAlbum(albumTitle, imageIds) {
@@ -12,10 +12,9 @@ module.exports = function (client) {
 				'Content-type': 'application/x-www-form-urlencoded'
 			},
 			body: getBody(albumTitle, imageIds),
-			method: 'POST'
 		};
 
-		return request(uploadRequest)
+		return postRequest(uploadRequest)
 			.then(function (response) {
 				var jsonResponse = JSON.parse(response[0].body);
 
@@ -29,11 +28,9 @@ module.exports = function (client) {
 
 	function uploadImage(imageUrl) {
 		// We use force=true because otherwise redditbooru doesn't return with a proper imageId to upload.
-		var uri = {
-			url: 'http://redditbooru.com/upload/?action=upload&force=true&imageUrl=' + encodeURIComponent(imageUrl),
-			method: 'POST'
-		};
-		return request(uri)
+		var uri = 'http://redditbooru.com/upload/?action=upload&force=true&imageUrl=' + encodeURIComponent(imageUrl);
+
+		return postRequest(uri)
 			.then(function (response) {
 				var jsonResponse = JSON.parse(response[0].body);
 
@@ -52,10 +49,9 @@ module.exports = function (client) {
 			body = 'albumTitle=' + title + '&';
 		}
 
-		var imageUris = [], index;
-		for (index = 0; index < images.length; index++) {
-			imageUris.push(encodeURIComponent('imageId[]') + '=' + images[index]);
-		}
+		var imageUris = images.map(function (image) {
+			return encodeURIComponent('imageId[]') + '=' + image;
+		});
 
 		body += imageUris.join('&');
 
