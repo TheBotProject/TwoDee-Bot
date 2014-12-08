@@ -18,7 +18,8 @@
 		"azure": "x",
 		"express": "3.x",
 		"socket.io": "x",
-		"q": "x"
+		"q": "x",
+		"pixiv-api": "x"
 	},
 	"engines" : { "node" : ">=0.10" }
 }

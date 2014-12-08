@@ -1,4 +1,4 @@
-var pixiv = require('./pixivUtil');
+var pixiv = require('pixiv-api');
 var q = require('q');
 var request = q.denodeify(require('request'));
 
@@ -52,17 +52,16 @@ module.exports = function (client) {
 			body = 'albumTitle=' + title + '&';
 		}
 
-		var imageUris = [], index;
-		for (index = 0; index < images.length; index++) {
-			imageUris.push(encodeURIComponent('imageId[]') + '=' + images[index]);
-		}
+		var imageUris = images.map(function(image) {
+			return encodeURIComponent('imageId[]') + '=' + image;
+		});
 		
 		body += imageUris.join('&');
 
 		return body;
 	}
 
-	function retrievePixivImages (images) {
+	function retrievePixivImages(images) {
 		var pixivPromises = [];
 		images.forEach(function (item) {
 			var match = pixiv.pixivNetRe.exec(item);
@@ -82,7 +81,7 @@ module.exports = function (client) {
 		return q.all(pixivPromises);
 	}
 	
-	function split (arr, condition) {		
+	function split(arr, condition) {		
 		var res = [];
 		res[0] = [];
 		res[1] = [];
@@ -96,7 +95,7 @@ module.exports = function (client) {
 		return res;
 	}
 
-	function checkTitle (message, items) {
+	function checkTitle(message, items) {
 		if (items > 1) {
 			// we match on either single or double quote titles
 			var titleMatches = message.match(/"([^"]+)"|'([^']+)'/);
@@ -157,6 +156,8 @@ module.exports = function (client) {
 						
 						return uploads;	
 					}, function (error) {
+						console.log(error);
+
 						// Because mentioning missing image count makes zero sense for users
 						if (error === pixiv.errors.missingImageCount) {
 							error = 'something went wrong while trying to get your images from Pixiv';
