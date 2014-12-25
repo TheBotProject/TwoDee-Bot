@@ -56,6 +56,39 @@ module.exports = function (client) {
 			[1,  'moves her left hand in a clapping motion as she yawns into the other.', 'golfclaps'],
 		],
 	};
+	
+	// Christmas mode
+	var today = new Date();
+	var month = today.getUTCMonth();
+	var day = today.getUTCDate();
+	// only do if date is between Dec 24 and Jan 2
+	if ((month === 11 && day >= 24) || (month === 0 && today.getUTCDate() < 2)) {
+		emotes.pat = [
+			[20, 'pats {0}\'s head.', 'regular pats'],
+			[10, 'festively pats {0}.', 'festive pats'],
+			[ 4, 'gives {0} a pat of Christmas cheer.', 'Christmas pats'],
+			[ 1, 'pinches {0}\'s cheeks.', 'pinches']
+		];
+		
+		emotes.pet = [
+			[2, 'pets {0}.', 'pets'],
+			[1, 'gives a pet reindeer to {0}.', 'reindeer'],
+			[1, 'gives a pet polar bear to {0}.', 'polar bears']
+		];
+		
+		emotes.hug = [
+			[5, 'hugs {0}.', 'hugs'],
+			[1, 'glomps {0} with victorious "Nyaaa!".', 'glomps'],
+			[2, 'hugs {0} and hands them a Christmas present.', 'Christmas presents'],
+		];
+		
+		emotes.highfive = [
+			[400, 'highfives {0}!', 'highfives'],
+			[ 20, 'highfives {0} with the force of a thousand Santas!', 'Santa fives'],
+			[  1, 'jumps on the roof, does a triple fucking somersault and slides down the chimney, highfiving {0} and handing them a Christmas present in the process!', 'Christmas fives'],
+		];
+	}
+
 
 	for (var p in emotes) {
 		savedEmotes[p] = savedEmotes[p] || {};
