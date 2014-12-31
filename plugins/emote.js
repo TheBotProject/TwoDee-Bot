@@ -20,8 +20,9 @@ module.exports = function (client) {
 			[ 1, 'gropes {0}\'s firm buttocks.', 'gropes']
 		],
 		pet: [
-			[1, 'pets {0}.', 'pets'],
-			[1, 'gives a catgirl to {0}.', 'catgirls']
+			[2, 'pets {0}.', 'pets'],
+			[1, 'gives a catgirl to {0}.', 'catgirls'],
+			[1, 'gives a doggirl to {0}.', 'doggirls']
 		],
 
 		hug: [
