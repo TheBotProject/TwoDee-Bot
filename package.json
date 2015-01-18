@@ -19,7 +19,7 @@
 		"express": "3.x",
 		"socket.io": "x",
 		"q": "x",
-		"pixiv-api": "x"
+		"pixiv-api": ">=1.0.4"
 	},
 	"engines" : { "node" : ">=0.10" }
 }
