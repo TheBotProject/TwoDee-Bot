@@ -19,8 +19,8 @@
 		"azure": "x",
 		"express": "3.x",
 		"socket.io": "x",
-		"q": "x",
-		"pixiv-api": ">=1.0.4"
+		"q": "^2.0.0",
+		"pixiv-api": "^1.0.4"
 	},
 	"engines" : { "node" : ">=0.10" }
 }

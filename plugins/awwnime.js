@@ -16,7 +16,7 @@ module.exports = function (client) {
 
 		return postRequest(uploadRequest)
 			.then(function (response) {
-				var jsonResponse = JSON.parse(response[0].body);
+				var jsonResponse = JSON.parse(response.body);
 
 				if (jsonResponse && (jsonResponse.redirect || jsonResponse.route)) {
 					return jsonResponse.redirect || 'http://redditbooru.com' + jsonResponse.route;
@@ -32,7 +32,7 @@ module.exports = function (client) {
 
 		return postRequest(uri)
 			.then(function (response) {
-				var jsonResponse = JSON.parse(response[0].body);
+				var jsonResponse = JSON.parse(response.body);
 
 				if (jsonResponse.error || !jsonResponse.imageId) {
 					throw 'something went wrong while trying to upload your image(s)';
@@ -172,7 +172,7 @@ module.exports = function (client) {
 					.then(function (albumUrl) {
 						client.say(channel, from + ', ' + albumUrl);
 					})
-					.fail(function (error) {
+					.catch(function (error) {
 						client.say(channel, from + ', ' + error);
 					});
 			}
