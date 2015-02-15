@@ -98,6 +98,12 @@ module.exports = function (client) {
 			while (match = re.exec(message)) {
 				getBooru(channel, 'http://safebooru.org', 'id:' + match[1], false);
 			}
+		},
+
+		help: {
+			catgirl: 'return a random catgirl (tagged \'cat_ears\') from safebooru.org. Extra tags are optional. Usage: !catgirl [TAGS...]',
+			sb: 'return a random image from safebooru.org. Extra tags are optional. Usage: !sb [TAGS...]',
+			gb: 'return a random image from gelbooru.com. Extra tags are optional. Usage: !gb [TAGS...]'
 		}
 	};
 };

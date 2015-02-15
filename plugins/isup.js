@@ -60,6 +60,9 @@ module.exports = function (client) {
 					client.say(to, url + ' is up.');
 				});
 			}
+		},
+		help: {
+			isup: 'Returns whether the given site could be accessed. Usage !isup URL'
 		}
 	};
 };

@@ -192,10 +192,28 @@ module.exports = function (client) {
 	commands['clap'] = commands['applaud'];
 	commands['claps'] = commands['applauds'];
 
+	var help = {
+		pat: 'Gives the other user a gentle pat on the head. Usage: !pat USER',			
+		pet: 'Gives an animal girl to the other user. Usage: !pet USER',
+		hug: 'Hugs the other user. Usage: !hug USER',
+		nuzzle: 'Nuzzles the other user. Usage: !nuzzle USER',
+		thank: 'Thanks the other user on your behalf. Usage: !thank USER',
+		highfive: 'Highfives the other user. Usage: !highfive USER',
+		applaud: 'Give the other user an applause. Usage: !applaud USER',
+		scarf: 'Shares a scarf with the other user for some warmth. Usage: !scarf USER'
+	}
+
+	help.clap = help.applaud;
+
+	for (var entry in help) {
+		help[entry + 's'] = 'Number of !' + entry + ' you or another user have received. Usage: !' + entry + 's [USER]';
+	}
+
 	return {
 		commands: commands,
 		disable: function () {
 			fs.writeFileSync(__dirname + '/.emotes', JSON.stringify(savedEmotes));
-		}
+		},
+		help: help 
 	};
 };

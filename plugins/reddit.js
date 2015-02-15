@@ -137,6 +137,9 @@ module.exports = function (client) {
 			reddits: function (from, to, msg) {
 				this.reddit(from, to, msg);
 			}
+		},
+		help: {
+			reddit: 'Returns a list of subreddits that are monitored for new posts. Usage: !reddit'
 		}
 	};
 };

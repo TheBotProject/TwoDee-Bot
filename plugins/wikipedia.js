@@ -1,6 +1,7 @@
 ﻿var request = require('request');
 var google = require('google');
 var http = require('http');
+var util = require('util');
 
 var wikipediaRegex = /(?:^|\s)(?:https?:\/\/)?en\.wikipedia\.org\/(\S+)/gi;
 
@@ -143,6 +144,12 @@ function format(data, titleIfEmpty) {
 	return msg;
 }
 
+var wikipedia = 'Returns the wikipedia.org article for the given terms. Usage: !%s SEARCH';
+var help = {};
+help.wp = util.format(wikipedia, 'wp');
+help.wiki = util.format(wikipedia, 'wiki');
+help.wikipedia = util.format(wikipedia, 'wikipedia');
+
 module.exports = function (client) {
 	return {
 		messageHandler: function (from, to, msg) {
@@ -212,6 +219,7 @@ module.exports = function (client) {
 			wp: function (from, to, msg) {
 				this.wikipedia(from, to, msg);
 			}
-		}
+		},
+		help: help
 	};
 };
