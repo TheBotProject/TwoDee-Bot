@@ -145,28 +145,92 @@ client.on('join', function (channel, user) {
 
 client.on('message', function (from, channel, message) {
 	var activatedPlugins = config.plugins;
+
 	if (channel[0] === '#') {
 		activatedPlugins = state[channel].plugins;
 	}
 
-	if (message[0] === '!') {
+	if (message.trim() === '!commands') {
+		sendCommandsNotice(activatedPlugins, from);
+	} else if (message[0] === '!') {
 		var cmd = message.split(' ')[0].substring(1).toLowerCase();
+		var cmdMessage = message.substring(cmd.length + 2).trim();
 
-		for (var i = 0; i < activatedPlugins.length; ++i) {
-			var plugin = plugins[activatedPlugins[i]];
-			if (plugin.commands && plugin.commands[cmd]) {
-				plugin.commands[cmd](from, channel, message.substring(cmd.length + 2).trim());
-			}
+		if (cmd === 'man') {
+			sendManualEntryNotice(activatedPlugins, from, cmdMessage);
+		} else {
+			executeCommand(activatedPlugins, from, channel, cmd, cmdMessage);
 		}
 	} else {
-		for (var i = 0; i < activatedPlugins.length; ++i) {
-			var plugin = plugins[activatedPlugins[i]];
-			if (plugin.messageHandler) {
-				plugin.messageHandler(from, channel, message);
+		handleMessage(activatedPlugins, from, channel, message);
+	}
+});
+
+function sendCommandsNotice(activatedPlugins, from) {
+	var commandNames = ['man'];
+	for (var i = 0; i < activatedPlugins.length; i++) {
+		var plugin = plugins[activatedPlugins[i]];
+		if (plugin.commands) {
+			for (var commandKey in plugin.commands) {
+				commandNames.push(commandKey);
 			}
 		}
 	}
-});
+
+	commandNames.sort();
+
+	commandNames = commandNames.map(function(cmd) {
+		return '!' + cmd;
+	});
+
+	client.notice(from, 'I support the following commands: ' + commandNames.join(', '));
+	client.notice(from, 'Use !man with a specific command to get more information about it.');
+}
+
+function sendManualEntryNotice(activatedPlugins, from, command) {
+	if(command.length === 0) {
+		client.notice(from, '!man: missing command operand. Try !man man for more help.');
+		return;
+	}
+
+	if (command[0] === '!') {
+		command = command.substring(1);
+	}
+	
+	if (command === 'man') {
+		client.notice(from, 'Returns a notice with more information about the given command. Usage: !man COMMAND');
+		return;
+	}
+	
+
+	for (var i = 0; i < activatedPlugins.length; ++i) {
+		var plugin = plugins[activatedPlugins[i]];
+		if (plugin.help && plugin.help[command]) {
+			client.notice(from, plugin.help[command]);
+			return;
+		}
+	}
+
+	client.notice(from, 'No entry found for !' + command);
+}
+
+function executeCommand(activatedPlugins, from, channel, cmd, commandMessage) {
+	for (var i = 0; i < activatedPlugins.length; ++i) {
+		var plugin = plugins[activatedPlugins[i]];
+		if (plugin.commands && plugin.commands[cmd]) {
+			plugin.commands[cmd](from, channel, commandMessage);
+		}
+	}
+}
+
+function handleMessage(activatedPlugins, from, channel, message) {
+	for (var i = 0; i < activatedPlugins.length; ++i) {
+		var plugin = plugins[activatedPlugins[i]];
+		if (plugin.messageHandler) {
+			plugin.messageHandler(from, channel, message);
+		}
+	}
+}
 
 config.plugins.forEach(function (plugin) {
 	activatePlugin(plugin);

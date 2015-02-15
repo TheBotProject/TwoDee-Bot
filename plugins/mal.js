@@ -48,6 +48,9 @@ module.exports = function (client) {
 					}
 				});
 			}
+		},
+		help: {
+			mal: 'Returns the myanimelist.net page for the requested show. Usage: !mal SHOW'
 		}
 	};
 };

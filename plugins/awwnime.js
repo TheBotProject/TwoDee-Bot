@@ -176,6 +176,9 @@ module.exports = function (client) {
 						client.say(channel, from + ', ' + error);
 					});
 			}
+		},
+		help: {
+			rb: 'Accepts images and pixiv links and uploads them to redditbooru.com. Using multiple images requires a title between quotes. Usage: !rb [TITLE] IMAGE...'
 		}
 	};
 };

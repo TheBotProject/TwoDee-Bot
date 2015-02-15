@@ -215,6 +215,11 @@ module.exports = function (client) {
 					client.say(channel, dataString);
 				}.bind(undefined, match[1] === 'sukebei'));
 			}
+		},
+		help: {
+			nyaa: 'Returns a torrent link for the given name from nyaa.se for english-translated anime. Usage: !nyaa ANIME',
+			nyaall: 'Returns a torrent link for the given name from nyaa.se. Usage !nyaall NAME',
+			nyaan: 'Returns a torrent link for the given name from sukebei.nyaa.se. Usage !nyaan NAME'
 		}
 	};
 };

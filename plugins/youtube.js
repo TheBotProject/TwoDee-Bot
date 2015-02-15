@@ -1,5 +1,12 @@
-﻿var durationFormat = require('../utils.js').durationFormat;
+﻿var util = require('util');
+
+var durationFormat = require('../utils.js').durationFormat;
 var youtube = require('youtube-feeds');
+
+var ytText = 'Searches youtube for the specified terms and returns a video. Usage: !%s SEARCH';
+var help = {};
+help.yt = util.format(ytText, 'yt');
+help.youtube = util.format(ytText, 'youtube');
 
 module.exports = function (client) {
 	function postDetails(channel, details) {
@@ -84,6 +91,7 @@ module.exports = function (client) {
 			youtube: function (from, channel, message) {
 				this.yt(from, channel, message);
 			}
-		}
+		},
+		help: help
 	};
 };
