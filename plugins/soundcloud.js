@@ -1,4 +1,5 @@
 ﻿var durationFormat = require('../utils.js').durationFormat;
+var google = require('google');
 var request = require('request');
 var http = require('http');
 var fs = require('fs');
@@ -47,8 +48,40 @@ function parseLinks(str) {
 	return matches;
 }
 
+function queryGoogle(query, cb) {
+	google.resultsPerPage = 1;
+	var url = 'site:soundcloud.com ' + query;
+	google(url, function (err, next, links) {
+		if (err) {
+			if (err.status) {
+				cb(new Error('Something went wrong while searching on Google: ' + err.status + ': ' + http['STATUS_CODES'][err.status]), null);
+			} else {
+				cb(new Error('Something went wrong while searching on Google: ' + err.message), null);
+			}
+
+			return;
+		}
+		
+		if (links.length === 0) {
+			cb(new Error('No results for: "' + query + '".'), null);
+
+			return;
+		}
+
+		var matchArr = parseLinks(links[0].link);
+		
+		if (matchArr.length > 0) {
+			cb(null, matchArr[0]);
+		} else if (next) {
+			next();
+		} else {
+			cb(new Error('No results for: "' + query + '".'), null);
+		}
+	});
+}
 
 function querySoundcloud(url, cb) {
+
 	request.get(url, function(err, resp, body) {
 		if (err) {
 			cb(new Error('Something went wrong while querying Soundcloud: ' + err.message), null);
@@ -79,7 +112,10 @@ function format(data) {
 	var genre = data.genre;
 	var title = data.title;
 	var artist = data.user.username;
-	var link = data.permalink_url;
+	
+	// for some reason the permalink_url they give us is the only link with http
+	// we prefer https though
+	var link = data.permalink_url.replace(/^http:\/\//, 'https://');
 	var count = data.track_count;
 
 	return '[' + artist + '] ' + title + (genre ? ' \x0302#' + genre + '\x03' : '') + (count ? ' (' + count + ' tracks)' : '') + ' [' + durationFormat(Math.ceil(duration / 1000)) + '] [ ' + link + ' ]';
@@ -87,6 +123,51 @@ function format(data) {
 
 module.exports = function (client) {
 	return {
+		commands: {
+			soundcloud: function (from, to, msg) {
+				if (to === client.nick) {
+					to = from;
+				}
+				
+				queryGoogle(msg, function (err, result) {
+					if (err) {
+						client.say(to, err.message);
+						
+						return;
+					}
+					
+					var requestURL = 'https://api.soundcloud.com/resolve.json?'
+							+ 'client_id=' + clientId + '&'
+							+ 'url=' + encodeURIComponent(result.url);
+					
+					querySoundcloud(requestURL, function (err, result) {
+						if (err) {
+							console.error('Error while processing ' + requestURL);
+							console.error(err);
+							
+							client.say(to, err.message);
+
+							return;
+						} else if (result.errors) {
+							console.error('Error while processing ' + requestURL);
+							console.error(JSON.stringify(result.errors));
+							
+							client.say(to, 'Soundcloud reported an error: "' + JSON.stringify(result.errors) + '".');
+							
+							return;
+						} else  {
+							var msg = format(result);
+							client.say(to, msg);
+						}
+					});
+				});
+			},
+			
+			sc: function (from, to, msg) {
+				this.soundcloud(from, to, msg);
+			}
+		},
+		
 		messageHandler: function (from, to, msg) {
 			if (to === client.nick) {
 				return;
