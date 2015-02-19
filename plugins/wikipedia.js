@@ -38,7 +38,7 @@ function queryGoogle(query, cb) {
 	google(url, function (err, next, links) {
 		if (err) {
 			if (err.status) {
-				cb(new Error('Something went wrong while searching on Google: ' + err.status + ': ' + http['STATUS_CODES'][status]), null);
+				cb(new Error('Something went wrong while searching on Google: ' + err.status + ': ' + http['STATUS_CODES'][err.status]), null);
 			} else {
 				cb(new Error('Something went wrong while searching on Google: ' + err.message), null);
 			}
