@@ -194,7 +194,7 @@ module.exports = function (client) {
 			var re = /http:\/\/(sukebei|www)\.nyaa\.(eu|se)\/\?page=(view|download)&tid=(\d+)/gi;
 			var match;
 			var getData = function(nyu, id, cb) {
-				new nyaa(nyu).get(id, function (err, data) {
+				new nyaa({ baseUrl: nyu }).get(id, function (err, data) {
 					if (err) return;
 
 					cb(data);
