@@ -13,7 +13,7 @@ module.exports = function (client) {
 				
 				request.get('http://redditbooru.com/images/?imageUri=' + encodeURIComponent(msg), function (err, res) {
 					if (err || res.statusCode >= 400) {
-						client.say(to, 'Error while retrieving repost information.');
+						client.say(to, 'Error while retrieving repost information for ' + msg);
 						return;
 					}
 					try {
@@ -45,14 +45,14 @@ module.exports = function (client) {
 									'[' + found.userName + '] ' +
 									found.title + ' [ http://reddit.com/' + found.externalId + ' ]');
 							} else {
-								client.say(to, 'No reposts found.');
+								client.say(to, 'No reposts found for ' + msg);
 							}
 						} else {
-							client.say(to, 'No reposts found.');
+							client.say(to, 'No reposts found for ' + msg);
 						}
 					} catch (e) {
 						console.log(e);
-						client.say(to, 'Error while parsing repost data.');
+						client.say(to, 'Error while parsing repost data for ' + msg);
 					}
 				});
 			}
