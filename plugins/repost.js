@@ -6,7 +6,11 @@ module.exports = function (client) {
 		commands: {
 			repost: function (from, to, msg) {
 				if (!msg) return;
-
+				
+				if (to === client.nick) {
+					to = from;
+				}
+				
 				request.get('http://redditbooru.com/images/?imageUri=' + encodeURIComponent(msg), function (err, res) {
 					if (err || res.statusCode >= 400) {
 						client.say(to, 'Error while retrieving repost information.');
