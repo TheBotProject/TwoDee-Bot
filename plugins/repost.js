@@ -19,12 +19,12 @@ module.exports = function (client) {
 					try {
 						var parsed = JSON.parse(res.body).results;
 						if (parsed.length !== 0) {
-							parsed = parsed.sort(function (a, b) { a.age - b.age; });
+							parsed = parsed.sort(function (a, b) { return a.age - b.age; });
 							parsed = parsed.filter(function (v) {
 								var distance = parseFloat(v.distance);
 								return Math.round(distance * 1000) <= 8;
 							});
-														
+							
 							if (parsed.length > 1) {
 								var responseMsg = parsed.length + ' reposts found: ';
 								
