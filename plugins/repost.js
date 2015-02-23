@@ -4,12 +4,12 @@ module.exports = function (client) {
 
 	return {
 		commands: {
-			repost: function (from, channel, message) {
-				if (!message) return;
+			repost: function (from, to, msg) {
+				if (!msg) return;
 
-				request.get('http://redditbooru.com/images/?imageUri=' + encodeURIComponent(message), function (err, res) {
+				request.get('http://redditbooru.com/images/?imageUri=' + encodeURIComponent(msg), function (err, res) {
 					if (err || res.statusCode >= 400) {
-						client.say(channel, 'Error while retrieving repost information.');
+						client.say(to, 'Error while retrieving repost information.');
 						return;
 					}
 					try {
@@ -22,33 +22,33 @@ module.exports = function (client) {
 							});
 														
 							if (parsed.length > 1) {
-								var msg = parsed.length + ' reposts found: ';
+								var responseMsg = parsed.length + ' reposts found: ';
 								
 								for (var i = 0; i < parsed.length; i++) {
-									msg += (parsed[i].nsfw ? '[\x0304NSFW\x03] ' : '') +
+									responseMsg += (parsed[i].nsfw ? '[\x0304NSFW\x03] ' : '') +
 									'[' + parsed[i].sourceName + '] ' +
 									'[ http://reddit.com/' + parsed[i].externalId + ' ] ' +
 									(i < parsed.length - 1 ? '| ' : '');
 								}
-								client.say(channel, msg);
+								client.say(to, responseMsg);
 							} else if (parsed.length === 1) {
 								var found = parsed[0];
 								
-								client.say(channel,
+								client.say(to,
 									'Repost found: ' +
 									(found.nsfw ? '[\x0304NSFW\x03] ' : '') +
 									'[' + found.sourceName + '] ' +
 									'[' + found.userName + '] ' +
 									found.title + ' [ http://reddit.com/' + found.externalId + ' ]');
 							} else {
-								client.say(channel, 'No reposts found.');
+								client.say(to, 'No reposts found.');
 							}
 						} else {
-							client.say(channel, 'No reposts found.');
+							client.say(to, 'No reposts found.');
 						}
 					} catch (e) {
 						console.log(e);
-						client.say(channel, 'Error while parsing repost data.');
+						client.say(to, 'Error while parsing repost data.');
 					}
 				});
 			}
