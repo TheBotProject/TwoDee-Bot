@@ -1,5 +1,35 @@
 ﻿var request = require("request");
 
+function humanize(age) {
+	// redditbooru gives age in seconds
+	if (age < 60) {
+		return 'posted just now';
+	}
+	
+	var minutes = Math.floor(age / 60);
+	if (minutes < 60) {
+		return minutes + (minutes === 1 ? ' minute' : ' minutes') + ' old';
+	}
+	
+	var hours = Math.floor(minutes / 60);
+	if (hours < 24) {
+		return hours + (hours === 1 ? ' hour' : ' hours') + ' old';
+	}
+	
+	var days = Math.floor(hours / 24);
+	if (days < 30) {
+		return days + (days === 1 ? ' day' : ' days') + ' old';
+	}
+	
+	var months = Math.floor(days / 30.42);
+	if (months < 12) {
+		return months + (months === 1 ? ' month' : ' months') + ' old';
+	}
+	
+	var years = Math.floor(months / 12);
+	return years + (years === 1 ? ' year' : ' years') + ' old';
+}
+
 module.exports = function (client) {
 
 	return {
@@ -26,12 +56,13 @@ module.exports = function (client) {
 							});
 							
 							if (parsed.length > 1) {
-								var responseMsg = parsed.length + ' reposts found: ';
+								var responseMsg = parsed.length + ' posts found: ';
 								
 								for (var i = 0; i < parsed.length; i++) {
 									responseMsg += (parsed[i].nsfw ? '[\x0304NSFW\x03] ' : '') +
 									'[' + parsed[i].sourceName + '] ' +
 									'[ http://reddit.com/' + parsed[i].externalId + ' ] ' +
+									'(' + humanize(parsed[i].age) + ') ' +
 									(i < parsed.length - 1 ? '| ' : '');
 								}
 								client.say(to, responseMsg);
@@ -39,11 +70,12 @@ module.exports = function (client) {
 								var found = parsed[0];
 								
 								client.say(to,
-									'Repost found: ' +
+									'Post found: ' +
 									(found.nsfw ? '[\x0304NSFW\x03] ' : '') +
 									'[' + found.sourceName + '] ' +
 									'[' + found.userName + '] ' +
-									found.title + ' [ http://reddit.com/' + found.externalId + ' ]');
+									found.title + ' [ http://reddit.com/' + found.externalId + ' ] ' +
+									'(' + humanize(found.age) + ') ');
 							} else {
 								client.say(to, 'No reposts found for ' + msg);
 							}
