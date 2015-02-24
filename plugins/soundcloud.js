@@ -28,14 +28,14 @@ function parseLinks(str) {
 		// we don't care about it, so we just drop it
 		strArr[i] = strArr[i].split('?')[0];
 		
-		if (match = songRegex.exec(strArr[i])) {
+		if (match = strArr[i].match(songRegex)) {
 			matches.push({
 				type: 'track',
 				url: match[0],
 				artist: match[1],
 				title: match[2]
 			});
-		} else if (match = setRegex.exec(strArr[i])) {
+		} else if (match = strArr[i].match(setRegex)) {
 			matches.push({
 				type: 'playlist',
 				url: match[0],
