@@ -54,11 +54,11 @@ module.exports = function (client) {
 							return;
 						}
 						
-						parsed = parsed.sort(function (a, b) { return a.age - b.age; });
 						parsed = parsed.filter(function (v) {
 							var distance = parseFloat(v.distance);
 							return Math.round(distance * 1000) <= 8;
 						});
+						parsed = parsed.sort(function (a, b) { return a.age - b.age; });
 						
 						if (parsed.length > 1) {
 							var responseMsg = parsed.length + ' posts found: ' +
