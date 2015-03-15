@@ -61,15 +61,14 @@ module.exports = function (client) {
 						});
 						
 						if (parsed.length > 1) {
-							var responseMsg = parsed.length + ' posts found: ';
+							var responseMsg = parsed.length + ' posts found: ' +
+							parsed.map(function (result) {
+								return (result.nsfw ? '[\x0304NSFW\x03] ' : '') +
+								'[' + result.sourceName + '] ' +
+								'[ http://reddit.com/' + result.externalId + ' ] ' +
+								'(' + humanize(result.age) + ')';
+							}).join(' | ');
 							
-							for (var i = 0; i < parsed.length; i++) {
-								responseMsg += (parsed[i].nsfw ? '[\x0304NSFW\x03] ' : '') +
-								'[' + parsed[i].sourceName + '] ' +
-								'[ http://reddit.com/' + parsed[i].externalId + ' ] ' +
-								'(' + humanize(parsed[i].age) + ') ' +
-								(i < parsed.length - 1 ? '| ' : '');
-							}
 							client.say(to, responseMsg);
 						} else if (parsed.length === 1) {
 							var found = parsed[0];
@@ -80,7 +79,7 @@ module.exports = function (client) {
 								'[' + found.sourceName + '] ' +
 								'[' + found.userName + '] ' +
 								found.title + ' [ http://reddit.com/' + found.externalId + ' ] ' +
-								'(' + humanize(found.age) + ') ');
+								'(' + humanize(found.age) + ')');
 						} else {
 							client.say(to, 'No reposts found for ' + msg);
 						}
