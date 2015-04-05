@@ -32,6 +32,9 @@ module.exports = function (client) {
 				
 				client.say(channel, from + ': ' + choices[random(choices.length)]);
 			}
+		},
+		help: {
+			choice: 'Returns a randomly selected element from the provided choices. Splitting happens between spaces, or single and double quotes. Usage: !choice OPTIONS...'
 		}
 	};
 };

@@ -58,6 +58,9 @@ try {
 						});
 					});
 				}
+			},
+			help: {
+				rehost: 'Rehosts the given url on imgur.com. Usage: !rehost URL'
 			}
 		};
 	};

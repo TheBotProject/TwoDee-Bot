@@ -33,6 +33,9 @@ var utils = require('../utils');
 				var best = bestAnime[random(bestAnime.length)];
 				client.say(from, 'Currently best aired anime: ' + best.title + ' - ' + best.description + ' a must watch! - ' + best.url);
 			}
+		},
+		help: {
+			whattowatch: 'Recommends an anime based on your observed preferences. Usage: !whattowatch'
 		}
 	};
 };
