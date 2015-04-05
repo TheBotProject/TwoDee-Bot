@@ -150,13 +150,13 @@ client.on('message', function (from, channel, message) {
 		activatedPlugins = state[channel].plugins;
 	}
 
-	if (message.trim() === '!commands') {
-		sendCommandsNotice(activatedPlugins, from);
-	} else if (message[0] === '!') {
+	if (message[0] === '!') {
 		var cmd = message.split(' ')[0].substring(1).toLowerCase();
 		var cmdMessage = message.substring(cmd.length + 2).trim();
 
-		if (cmd === 'man') {
+		if (cmd === 'commands') {
+			sendCommandsNotice(activatedPlugins, from);
+		} else if (cmd === 'man') {
 			sendManualEntryNotice(activatedPlugins, from, cmdMessage);
 		} else {
 			executeCommand(activatedPlugins, from, channel, cmd, cmdMessage);
