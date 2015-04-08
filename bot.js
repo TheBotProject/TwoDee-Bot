@@ -150,7 +150,7 @@ client.on('message', function (from, channel, message) {
 	}
 
 	if (message[0] === '!') {
-		var cmd = message.split(' ')[0].substring(1).toLowerCase();
+		var cmd = message.split(/\s/)[0].substring(1).toLowerCase();
 
 		for (var i = 0; i < activatedPlugins.length; ++i) {
 			var plugin = plugins[activatedPlugins[i]];
