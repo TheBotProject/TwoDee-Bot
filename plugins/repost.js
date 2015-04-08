@@ -52,6 +52,9 @@ module.exports = function (client) {
 					}
 				});
 			}
+		},
+		help: {
+			repost: 'Searches redditbooru.com for possible reposts of the given image on reddit. Usage: !repost URL'
 		}
 	};
 };

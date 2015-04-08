@@ -79,6 +79,9 @@ module.exports = function (client) {
 					client.say(channel, 'I haven\'t seen ' + message + ' yet :(');
 				}
 			}
+		},
+		help: {
+			seen: 'Returns the last time the specified user was seen in this channel. Usage: !seen USER'
 		}
 	};
 };

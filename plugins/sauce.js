@@ -2,6 +2,7 @@
 var cheerio = require('cheerio');
 var http = require('http');
 var fs = require('fs');
+var util = require('util');
 
 var api_key;
 try {
@@ -10,6 +11,11 @@ try {
 	console.error('Couldn\'t read saucenao api key: ' + e + '. Proceeding with anonymous account.');
 	api_key = '';
 }
+
+var sauceTxt = 'Looks on pixiv.net for the source of the given image. Usage: !%s URL';
+var help = {};
+help.sauce = util.format(sauceTxt, 'sauce');
+help.source = util.format(sauceTxt, 'source');
 
 module.exports = function (client) {
 
@@ -92,6 +98,7 @@ module.exports = function (client) {
 			source: function (from, channel, message) {
 				this.sauce(from, channel, message);
 			}
-		}
+		},
+		help: help
 	};
 };

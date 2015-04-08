@@ -73,6 +73,9 @@ module.exports = function (client) {
 					postInfo(match[2], postPixiv.bind(null, channel, null));
 				}
 			}
+		},
+		help: {
+			pixiv: 'Searches pixiv.net for the given tags. Usage: !pixiv TAGS...'
 		}
 	};
 };
