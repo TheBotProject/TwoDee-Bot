@@ -6,7 +6,7 @@
 	"dependencies": {
 		"redwrap": "x",
 		"irc": "git+https://github.com/Sebmaster/node-irc.git",
-		"youtube-feeds": "x",
+		"youtube-api": "~0.3.2",
 		"request": "x",
 		"google": "git+https://github.com/wearefractal/node-google.git",
 		"ent": "x",
