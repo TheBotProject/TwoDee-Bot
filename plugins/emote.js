@@ -180,7 +180,11 @@ module.exports = function (client) {
 
 				var rec = [];
 				for (var k in savedEmotes[p][tar]) {
-					rec.push(savedEmotes[p][tar][k] + ' ' + emotes[p][k][2]);
+					var count = savedEmotes[p][tar][k];
+					var noun = emotes[p][k][2];
+					if (noun) {
+						rec.push(count + ' ' + noun);
+					}
 				}
 
 				client.say(channel, message + ' has received ' + rec.join(', ') + '.');
