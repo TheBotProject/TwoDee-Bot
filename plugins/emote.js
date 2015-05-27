@@ -1,118 +1,118 @@
 var fs = require('fs');
 var utils = require('../utils');
 
-module.exports = function (client) {
+var savedEmotes = JSON.parse(fs.readFileSync(__dirname + '/.emotes', { encoding: 'utf8' }));
 
-	var savedEmotes = JSON.parse(fs.readFileSync(__dirname + '/.emotes', { encoding: 'utf8' }));
+var emotes = {
+	// the first column is probability weights
+	// the second column is the emote message
+	//  can contain '{0}' - the target of the emote
+	//  and '{1}' - the initiator
+	// the third column is the text for the count report command
+	//  omit it or give it a value that evaluates to false to not record it
 
-	var emotes = {
-		// the first column is probability weights
-		// the second column is the emote message
-		//  can contain '{0}' - the target of the emote
-		//  and '{1}' - the initiator
-		// the third column is the text for the count report command
-		//  omit it or give it a value that evaluates to false to not record it
+	pat: [
+		[20, 'pats {0}\'s head.', 'regular pats'],
+		[10, 'gently pats {0}.', 'gentle pats'],
+		[ 4, 'sensually pats {0}.', 'sensual pats'],
+		[ 1, 'gropes {0}\'s firm buttocks.', 'gropes']
+	],
+	pet: [
+		[2, 'pets {0}.', 'pets'],
+		[1, 'gives a catgirl to {0}.', 'catgirls'],
+		[1, 'gives a doggirl to {0}.', 'doggirls']
+	],
 
-		pat: [
-			[20, 'pats {0}\'s head.', 'regular pats'],
-			[10, 'gently pats {0}.', 'gentle pats'],
-			[ 4, 'sensually pats {0}.', 'sensual pats'],
-			[ 1, 'gropes {0}\'s firm buttocks.', 'gropes']
-		],
-		pet: [
-			[2, 'pets {0}.', 'pets'],
-			[1, 'gives a catgirl to {0}.', 'catgirls'],
-			[1, 'gives a doggirl to {0}.', 'doggirls']
-		],
+	hug: [
+		[50, 'hugs {0}.', 'hugs'],
+		[10, 'glomps {0} with victorious "Nyaaa!".', 'glomps'],
+		[ 1, 'hugs {0} and tries to cop a feel.'],
+	],
 
-		hug: [
-			[50, 'hugs {0}.', 'hugs'],
-			[10, 'glomps {0} with victorious "Nyaaa!".', 'glomps'],
-			[ 1, 'hugs {0} and tries to cop a feel.'],
-		],
+	thank: [
+		[1, 'thanks {0} on behalf of {1}.', 'thanks'],
+		// Refactor so that we can get custom messages?
+		// For example: "{0} has been thanked {1} times."
+	],
 
-		thank: [
-			[1, 'thanks {0} on behalf of {1}.', 'thanks'],
-			// Refactor so that we can get custom messages?
-			// For example: "{0} has been thanked {1} times."
-		],
-
-		highfive: [
-			[400, 'highfives {0}!', 'highfives'],
-			[ 20, 'swings her hand energetically and decks {0} squarely in the face! (It was an accident!)', 'slaps'],
-			[  1, 'jumps in the air, does a triple fucking somersault and sticks the landing, highfiving both {0} and {1} in the process!', 'higherfives'],
-		],
-		scarf: [
-			[1, 'shares her scarf with {0}.', 'scarf snuggles'],
-		],
-        
-		nuzzle: [
-			[20, 'nuzzles {0}.', 'nuzzles'],
-			[10, 'gently nuzzles {0} and softly purrs into {0}\'s ear', 'gentle nuzzles'],
-		],
-
-		applaud: [
-			[5,  'gives a standing ovation for {0}!', 'standing ovations'],
-			[20, 'enthusiastically applauds {0}.', 'applause'],
-			[1,  'moves her left hand in a clapping motion as she yawns into the other.', 'golfclaps'],
-		],
-	};
+	highfive: [
+		[400, 'highfives {0}!', 'highfives'],
+		[ 20, 'swings her hand energetically and decks {0} squarely in the face! (It was an accident!)', 'slaps'],
+		[  1, 'jumps in the air, does a triple fucking somersault and sticks the landing, highfiving both {0} and {1} in the process!', 'higherfives'],
+	],
+	scarf: [
+		[1, 'shares her scarf with {0}.', 'scarf snuggles'],
+	],
 	
-	// Christmas mode
-	var today = new Date();
-	var month = today.getUTCMonth();
-	var day = today.getUTCDate();
-	// only do if date is between Dec 24 and Jan 2
-	if ((month === 11 && day >= 24) || (month === 0 && today.getUTCDate() < 2)) {
-		emotes.pat = [
-			[20, 'pats {0}\'s head.', 'regular pats'],
-			[10, 'festively pats {0}.', 'festive pats'],
-			[ 4, 'gives {0} a pat of Christmas cheer.', 'Christmas pats'],
-			[ 1, 'pinches {0}\'s cheeks.', 'pinches']
-		];
-		
-		emotes.pet = [
-			[2, 'pets {0}.', 'pets'],
-			[1, 'gives a pet reindeer to {0}.', 'reindeer'],
-			[1, 'gives a pet polar bear to {0}.', 'polar bears']
-		];
-		
-		emotes.hug = [
-			[5, 'hugs {0}.', 'hugs'],
-			[1, 'glomps {0} with victorious "Nyaaa!".', 'glomps'],
-			[2, 'hugs {0} and hands them a Christmas present.', 'Christmas presents'],
-		];
-		
-		emotes.highfive = [
-			[400, 'highfives {0}!', 'highfives'],
-			[ 20, 'highfives {0} with the force of a thousand Santas!', 'Santa fives'],
-			[  1, 'jumps on the roof, does a triple fucking somersault and slides down the chimney, highfiving {0} and handing them a Christmas present in the process!', 'Christmas fives'],
-		];
+	nuzzle: [
+		[20, 'nuzzles {0}.', 'nuzzles'],
+		[10, 'gently nuzzles {0} and softly purrs into {0}\'s ear', 'gentle nuzzles'],
+	],
+
+	applaud: [
+		[5,  'gives a standing ovation for {0}!', 'standing ovations'],
+		[20, 'enthusiastically applauds {0}.', 'applause'],
+		[1,  'moves her left hand in a clapping motion as she yawns into the other.', 'golfclaps'],
+	],
+};
+
+// Christmas mode
+var today = new Date();
+var month = today.getUTCMonth();
+var day = today.getUTCDate();
+// only do if date is between Dec 24 and Jan 2
+if ((month === 11 && day >= 24) || (month === 0 && today.getUTCDate() < 2)) {
+	emotes.pat = [
+		[20, 'pats {0}\'s head.', 'regular pats'],
+		[10, 'festively pats {0}.', 'festive pats'],
+		[ 4, 'gives {0} a pat of Christmas cheer.', 'Christmas pats'],
+		[ 1, 'pinches {0}\'s cheeks.', 'pinches']
+	];
+	
+	emotes.pet = [
+		[2, 'pets {0}.', 'pets'],
+		[1, 'gives a pet reindeer to {0}.', 'reindeer'],
+		[1, 'gives a pet polar bear to {0}.', 'polar bears']
+	];
+	
+	emotes.hug = [
+		[5, 'hugs {0}.', 'hugs'],
+		[1, 'glomps {0} with victorious "Nyaaa!".', 'glomps'],
+		[2, 'hugs {0} and hands them a Christmas present.', 'Christmas presents'],
+	];
+	
+	emotes.highfive = [
+		[400, 'highfives {0}!', 'highfives'],
+		[ 20, 'highfives {0} with the force of a thousand Santas!', 'Santa fives'],
+		[  1, 'jumps on the roof, does a triple fucking somersault and slides down the chimney, highfiving {0} and handing them a Christmas present in the process!', 'Christmas fives'],
+	];
+}
+
+
+for (var p in emotes) {
+	savedEmotes[p] = savedEmotes[p] || {};
+}
+
+var format = utils.format;
+var random = utils.random;
+
+function isValidName(msg) {
+	// msg is a string and expected to be the name of the target of the pat
+	// TODO: output is true iff msg is a valid IRC name
+	// maybe also check if the target is online ATM
+
+	return true;
+}
+
+var totalWeight = {};
+for (var p in emotes) {
+	totalWeight[p] = 0;
+	for (i = 0; i < emotes[p].length; i++) {
+		totalWeight[p] += emotes[p][i][0];
 	}
+}
 
-
-	for (var p in emotes) {
-		savedEmotes[p] = savedEmotes[p] || {};
-	}
-
-	var format = utils.format;
-	var random = utils.random;
-
-	function isValidName(msg) {
-		// msg is a string and expected to be the name of the target of the pat
-		// TODO: output is true iff msg is a valid IRC name
-		// maybe also check if the target is online ATM
-
-		return true;
-	}
-
-	var totalWeight = {};
-	for (var p in emotes) {
-		totalWeight[p] = 0;
-		for (i = 0; i < emotes[p].length; i++) {
-			totalWeight[p] += emotes[p][i][0];
-		}
-	}
+module.exports = function (client) {
 
 	var commands = {};
 
