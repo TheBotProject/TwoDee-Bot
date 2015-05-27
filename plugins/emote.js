@@ -54,8 +54,8 @@ var emotes = {
 	],
 	
 	nuzzle: [
-		[20, 'nuzzles {0}.', 'nuzzles'],
-		[10, 'gently nuzzles {0} and softly purrs into {0}\'s ear', 'gentle nuzzles'],
+		[2, 'nuzzles {0}.', 'nuzzles'],
+		[1, 'nuzzles {0} and purrs into their ear.', 'gentle nuzzles'],
 	],
 
 	applaud: [
