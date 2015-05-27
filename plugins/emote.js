@@ -3,12 +3,21 @@ var utils = require('../utils');
 
 var savedEmotes = JSON.parse(fs.readFileSync(__dirname + '/.emotes', { encoding: 'utf8' }));
 
+// Emote command definitions
+// TODO: move these to a defaults file and add mechanics to manage network or channel setting such as adding/removing/enabling/disabling emotes
 var emotes = {
-	// the first column is probability weights
-	// the second column is the emote message
+	// Each property defines one emote command, and one statistics-report command.
+	// The property name defines the trigger for the command (e.g. !pet, or !pat).
+	// The corresponding stats command is triggered by adding an 's' at the end (e.g. !pets, or !pats).
+	//
+	// The value of each property is an array, the elements of which are possible responses. Every time an emote is triggered, one of these is picked at random.
+	//
+	// The first column contains numbers denoting probability weights.
+	//  The chance for each line to be picked is its weigth divided by the sum of all weights in that emote.
+	// The second column is the emote message string
 	//  can contain '{0}' - the target of the emote
 	//  and '{1}' - the initiator
-	// the third column is the text for the count report command
+	// The third column is a string used text for the count report command
 	//  omit it or give it a value that evaluates to false to not record it
 
 	pat: [
@@ -55,6 +64,7 @@ var emotes = {
 		[1,  'moves her left hand in a clapping motion as she yawns into the other.', 'golfclaps'],
 	],
 };
+
 
 // Christmas mode
 var today = new Date();
