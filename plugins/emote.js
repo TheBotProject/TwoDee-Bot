@@ -63,6 +63,14 @@ var emotes = {
 		[20, 'enthusiastically applauds {0}.', 'applause'],
 		[1,  'moves her left hand in a clapping motion as she yawns into the other.', 'golfclaps'],
 	],
+	
+	flop: [
+		[1, 'flops on {0}.', 'flops']
+	],
+	
+	pomf: [
+		[1, 'pomfs {0} on the bed.', 'pomfs']
+	]
 };
 
 
@@ -214,7 +222,9 @@ module.exports = function (client) {
 		thank: 'Thanks the other user on your behalf. Usage: !thank USER',
 		highfive: 'Highfives the other user. Usage: !highfive USER',
 		applaud: 'Give the other user an applause. Usage: !applaud USER',
-		scarf: 'Shares a scarf with the other user for some warmth. Usage: !scarf USER'
+		scarf: 'Shares a scarf with the other user for some warmth. Usage: !scarf USER',
+		flop: 'Flops on the other user, Renge-style. Usage: !flop USER',
+		pomf: 'Pomfs the other user on the bed. Usage: !pomf USER',
 	}
 
 	help.clap = help.applaud;
