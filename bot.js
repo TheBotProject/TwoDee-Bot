@@ -94,7 +94,7 @@ client.on('error', function (e) {
 
 client.on('invite', function (channel, inviteUser) {
 	client.whois(inviteUser, function (info) {
-		if (info.channels.indexOf('@' + channel) === -1) return;
+		if (!info || !info.channels || info.channels.indexOf('@' + channel) === -1) return;
 
 		if (!state[channel]) {
 			state[channel] = {};
