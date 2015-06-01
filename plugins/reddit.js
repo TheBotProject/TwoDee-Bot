@@ -28,22 +28,19 @@ module.exports = function (client) {
 			channel = channel.toLowerCase();
 			if (!reddits[channel]) return;
 
-			redwrap.r(Object.keys(reddits[channel]).join('+')).new(function (err, data, res) {
-				if (err || data.error) {
-					console.error('Couldn\'t retrieve last post! Error: ' + (err || data.error));
-					process.exit(1);
-				}
-				lastUpdate[channel] = data.data.children.length ? data.data.children[0].data.created_utc : 0;
-
-				console.log('saved last posts for ' + channel + ', ts:' + lastUpdate[channel]);
-			});
-
 			intervals[channel] = setInterval(function () {
 				if (!reddits[channel]) return;
 
 				redwrap.r(Object.keys(reddits[channel]).join('+')).new(function (err, data, res) {
 					if (err || data.error) {
 						console.error('Error "' + (err || data.error) + '" when refreshing post list, retrying on next interval');
+						return;
+					}
+					
+					if (!lastUpdate[channel]) { // first time fetching - just set lastUpdate value
+						lastUpdate[channel] = data.data.children.length ? data.data.children[0].data.created_utc : 0;
+						console.log('saved last posts for ' + channel + ', ts:' + lastUpdate[channel]);
+						
 						return;
 					}
 
