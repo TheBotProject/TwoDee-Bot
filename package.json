@@ -1,4 +1,4 @@
-﻿{
+{
 	"name": "TwoDee-Bot",
 	"version": "0.0.1",
 	"private": true,
@@ -17,8 +17,6 @@
 		"humanize": "x",
 		"xml2js": "x",
 		"azure": "x",
-		"express": "3.x",
-		"socket.io": "x",
 		"q": "^2.0.0",
 		"pixiv-api": "^1.0.4"
 	},

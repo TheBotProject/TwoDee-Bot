@@ -1,12 +1,7 @@
-﻿var irc = require('irc');
+var irc = require('irc');
 var fs = require('fs');
 var module = require('module');
 
-var server = require(__dirname + '/server');
-/*
-var channelName = '#TwoDeeTest';
-var reddits = 'all';
-*/
 var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', { encoding: 'utf8' }));
 var state = JSON.parse(fs.readFileSync(__dirname + '/state.json', { encoding: 'utf8' }));
 
@@ -277,7 +272,6 @@ config.plugins.forEach(function (plugin) {
 	});
 })();
 
-server(client);
 process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 
 client.on('registered', function () {
