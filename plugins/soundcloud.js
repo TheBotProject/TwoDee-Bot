@@ -1,4 +1,4 @@
-﻿var durationFormat = require('../utils.js').durationFormat;
+var durationFormat = require('../utils.js').durationFormat;
 var google = require('google');
 var request = require('request');
 var http = require('http');

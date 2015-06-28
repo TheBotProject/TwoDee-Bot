@@ -1,4 +1,4 @@
-﻿var request = require('request');
+var request = require('request');
 var csvs = require('csv');
 var utils = require('../utils');
 

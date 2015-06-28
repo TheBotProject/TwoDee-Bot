@@ -1,4 +1,4 @@
-﻿var filesize = require('humanize').filesize;
+var filesize = require('humanize').filesize;
 var nyaa = require("nyaatorrents");
 var xml2js = require('xml2js');
 var request = require('request');

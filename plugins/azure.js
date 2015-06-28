@@ -1,4 +1,4 @@
-﻿var fs = require('fs');
+var fs = require('fs');
 var request = require('request');
 var azure = require('azure');
 var url = require('url');

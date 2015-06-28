@@ -1,4 +1,4 @@
-﻿var xml2js = require('xml2js');
+var xml2js = require('xml2js');
 var utils = require('../utils');
 var request = require('request');
 

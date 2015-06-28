@@ -1,4 +1,4 @@
-﻿var request = require("request");
+var request = require("request");
 
 function humanize(age) {
 	// redditbooru gives age in seconds
