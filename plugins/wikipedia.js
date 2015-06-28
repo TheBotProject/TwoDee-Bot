@@ -1,4 +1,4 @@
-﻿var request = require('request');
+var request = require('request');
 var google = require('google');
 var http = require('http');
 var util = require('util');

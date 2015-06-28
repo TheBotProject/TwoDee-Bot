@@ -1,4 +1,4 @@
-﻿var second = 1000,
+var second = 1000,
 	minute = second * 60,
 	hour = minute * 60,
 	day = hour * 24;

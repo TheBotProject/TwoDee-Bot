@@ -1,4 +1,4 @@
-﻿var util = require('util');
+var util = require('util');
 var durationFormat = require('../utils.js').durationFormat;
 var youtube = require('youtube-api');
 var fs = require('fs');

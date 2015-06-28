@@ -1,4 +1,4 @@
-﻿var irc = require('irc');
+var irc = require('irc');
 var fs = require('fs');
 var module = require('module');
 

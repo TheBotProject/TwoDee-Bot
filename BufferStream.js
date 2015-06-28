@@ -1,4 +1,4 @@
-﻿var util = require('util');
+var util = require('util');
 var Readable = require('stream').Readable;
 
 function BufferStream(str, options) {

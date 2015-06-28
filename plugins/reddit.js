@@ -1,4 +1,4 @@
-﻿var redwrap = require('redwrap');
+var redwrap = require('redwrap');
 var ent = require('ent');
 var fs = require('fs');
 var sauce = require('./sauce')().search;

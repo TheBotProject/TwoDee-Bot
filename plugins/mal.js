@@ -1,4 +1,4 @@
-﻿var google = require('google');
+var google = require('google');
 var request = require('request');
 var ent = require('ent');
 
