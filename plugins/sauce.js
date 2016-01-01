@@ -20,6 +20,10 @@ help.source = util.format(sauceTxt, 'source');
 module.exports = function (client) {
 
 	function searchSauceNao(img, cb) {
+		if (!img) {
+			cb('You must provide a valid URL to search the source for.');
+			return;
+		}
 		// check before querying saucenao
 		request.head({ url: img, headers: { Referer: img }}, function (err, resp) {
 			if (err) {
