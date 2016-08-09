@@ -41,7 +41,7 @@ module.exports = function (client) {
 					to = from;
 				}
 				
-				request.get('http://redditbooru.com/images/?imageUri=' + encodeURIComponent(msg), function (err, res) {
+				request.get('http://redditbooru.com/images/?sources=-1&imageUri=' + encodeURIComponent(msg), function (err, res) {
 					if (err || res.statusCode >= 400) {
 						client.say(to, 'Error while retrieving repost information for ' + msg);
 						return;
