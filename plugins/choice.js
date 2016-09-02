@@ -10,7 +10,7 @@ module.exports = function (client) {
 				if (!message) return;
 
 				if (channel === client.nick) {
-					client === from;
+					channel = from;
 				}
 
 				// if we have an odd number of "
