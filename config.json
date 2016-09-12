@@ -20,7 +20,8 @@
 		"isup",
 		"soundcloud",
 		"repost",
-		"awwnime"
+		"awwnime",
+		"danbooru"
 	],
 
 	"convertPath": "convert"
