@@ -76,7 +76,15 @@ module.exports = function (client) {
 			catgirl: function (from, channel, message) {
 				this.sb(from, channel, 'cat_ears ' + message);
 			},
+			
+			doggirl: function (from, channel, message) {
+				this.sb(from, channel, 'dog_ears ' + message);
+			},
 
+			bunnygirl: function (from, channel, message) {
+				this.sb(from, channel, 'bunny_ears ' + message);
+			},
+			
 			sb: function (from, channel, message) {
 				getBooru(channel, 'http://safebooru.org', 'rating:safe ' + message, true);
 			},
