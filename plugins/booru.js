@@ -86,10 +86,16 @@ module.exports = function (client) {
 			},
 			
 			sb: function (from, channel, message) {
+				if (channel == client.nick) {
+					channel = from;
+				}
 				getBooru(channel, 'http://safebooru.org', 'rating:safe ' + message, true);
 			},
 
 			gb: function (from, channel, message) {
+				if (channel == client.nick) {
+					channel = from;
+				}
 				getBooru(channel, 'http://gelbooru.com', message, true);
 			}
 		},
