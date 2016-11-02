@@ -37,7 +37,7 @@ module.exports = function (client) {
 					if (broadcast) {
 						request.head({ url: res.posts.post[0].$.file_url, headers: { Referer: res.posts.post[0].$.file_url } }, function (err, resp) {
 							if (!err && resp.statusCode >= 200 && resp.statusCode < 300) {
-								client.say(channel, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '\x0304NSFW\x03 - ' : '') + res.posts.post[0].$.file_url);
+								client.say(channel, (res.posts.post[0].$.rating && res.posts.post[0].$.rating !== 's' ? '[\x0304NSFW\x03] ' : '') + (host + '/?page=post&s=view&id=' + res.posts.post[0].$.id) + ' | ' + res.posts.post[0].$.file_url);
 								client.emit('commands:image', channel, { image: res.posts.post[0].$.file_url });
 							} else if (times) {
 								retry(times - 1);
