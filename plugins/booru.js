@@ -34,6 +34,9 @@ module.exports = function (client) {
 						return;
 					}
 
+					if (res.posts.post[0].$.file_url.startsWith('//')) {
+						res.posts.post[0].$.file_url = 'https:' + res.posts.post[0].$.file_url;
+					}
 					if (broadcast) {
 						request.head({ url: res.posts.post[0].$.file_url, headers: { Referer: res.posts.post[0].$.file_url } }, function (err, resp) {
 							if (!err && resp.statusCode >= 200 && resp.statusCode < 300) {
