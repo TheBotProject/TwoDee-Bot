@@ -92,8 +92,8 @@ function stringifyVideo(video) {
 }
 
 function parseIso8601Duration(str) {
-	// format: PT#D#H#M#S, where # is a number and each of #D, #H, #M, and #S are optional
-	var re = /PT(?:(\d+)D)?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+	// format: P#DT#H#M#S, where # is a number and each of #D, #H, #M, and #S are optional
+	var re = /P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 	var match = str.match(re);
 	
 	var days = parseInt(match[1]) || 0;
