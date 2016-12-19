@@ -3,7 +3,7 @@ var google = require('google');
 var http = require('http');
 var util = require('util');
 
-var wikipediaRegex = /(?:^|\s)(?:https?:\/\/)?en\.wikipedia\.org\/(\S+)/gi;
+var wikipediaRegex = /(?:^|\s)(?:https?:\/\/)?en\.(?:m\.)?wikipedia\.org\/(\S+)/gi;
 
 function parseLinks(str) {
 	var match, re = wikipediaRegex;
