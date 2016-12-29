@@ -6,8 +6,8 @@ var utils = require('../utils');
 
 module.exports = function (client) {
 
-	var defaultBaseURL = 'http://www.nyaa.se/';
-	var sukebeiBaseURL = 'http://sukebei.nyaa.se/';
+	var defaultBaseURL = 'https://www.nyaa.se/';
+	var sukebeiBaseURL = 'https://sukebei.nyaa.se/';
 
 	function requestAndParse(url, cb) {
 		request.get({ url: url }, function (err, res, body) {
@@ -191,7 +191,7 @@ module.exports = function (client) {
 		messageHandler: function (from, channel, message) {
 			if (channel[0] !== '#') return; // we don't care about PMs
 
-			var re = /http:\/\/(sukebei|www)\.nyaa\.(eu|se)\/\?page=(view|download)&tid=(\d+)/gi;
+			var re = /https?:\/\/(sukebei|www)\.nyaa\.(eu|se)\/\?page=(view|download)&tid=(\d+)/gi;
 			var match;
 			var getData = function(nyu, id, cb) {
 				new nyaa({ baseUrl: nyu }).get(id, function (err, data) {
