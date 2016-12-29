@@ -9,5 +9,6 @@
 	"imouto": { "nsfl": false, "color": null },
 	"zettairyouiki": { "nsfl": false, "color": "06" },
 	"animefigures": { "nsfl": false, "color": null },
-	"kitsunemimi": { "nsfl": false, "color": null }
+	"kitsunemimi": { "nsfl": false, "color": null},
+	"hatsune": { "nsfl": false, "color": "02"} 
 }
