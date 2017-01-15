@@ -74,10 +74,10 @@ module.exports = function (client) {
 							+ ent.decode(post.title)
 							+ (post.link_flair_text ? (' [' + ent.decode(post.link_flair_text) + ']') : '')
 							+ ' [ https://reddit.com/' + post.id + ' ]'
-							+ (!post.is_self ? ' [ ' + post.url + ' ]' : '');
+							+ (!post.is_self ? ' [ ' + ent.decode(post.url) + ' ]' : '');
 
 							if (!post.is_self) {
-								sauce(post.url, function (err, results) {
+								sauce(ent.decode(post.url), function (err, results) {
 									var best;
 
 									if (!err && (best = results[0])) {
