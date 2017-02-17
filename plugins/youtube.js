@@ -89,7 +89,7 @@ function stringifyVideo(video) {
 	
 	// liveBroadcastContent can be "upcoming", "live", or "none"
 	var status = video.snippet.liveBroadcastContent;
-	if (status == "none") {
+	if (status === "none") {
 		status = durationFormat(parseIso8601Duration(video.contentDetails.duration));
 	}
 	
