@@ -86,9 +86,14 @@ function searchYoutube(term, cb) {
 function stringifyVideo(video) {
 	var url = 'https://youtu.be/' + video.id;
 	var title = video.snippet.title;
-	var duration = parseIso8601Duration(video.contentDetails.duration);
 	
-	return title + ' [' + durationFormat(duration) + '] - ' + url;
+	// liveBroadcastContent can be "upcoming", "live", or "none"
+	var status = video.snippet.liveBroadcastContent;
+	if (status == "none") {
+		status = durationFormat(parseIso8601Duration(video.contentDetails.duration));
+	}
+	
+	return title + ' [' + status + '] - ' + url;
 }
 
 function parseIso8601Duration(str) {
