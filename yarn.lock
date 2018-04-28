@@ -175,268 +175,9 @@ aws-sign2@~0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
 
-aws-sign@~0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/aws-sign/-/aws-sign-0.3.0.tgz#3d81ca69b474b1e16518728b51c24ff0bbedc6e9"
-
 aws4@^1.6.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.7.0.tgz#d4d0e9b9dbfca77bf08eeb0a8a471550fe39e289"
-
-azure-arm-authorization@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-arm-authorization/-/azure-arm-authorization-0.10.0.tgz#f126dffef6650682391b779fe39a6cee0243f7a0"
-  dependencies:
-    azure-common "0.9.12"
-    underscore "1.4.x"
-
-azure-arm-compute@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-arm-compute/-/azure-arm-compute-0.10.0.tgz#9343f2ec6becbd2ed58a1a39e6537cd00a5a4627"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-arm-dns@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-arm-dns/-/azure-arm-dns-0.10.0.tgz#160f7224aa90abcfd241320a6300aeee7e005914"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-arm-insights@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-arm-insights/-/azure-arm-insights-0.10.0.tgz#c11f50a160f591cb0160fa47fc536e4d3c5facfc"
-  dependencies:
-    azure-common "0.9.12"
-    moment "2.6.0"
-
-azure-arm-keyvault@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-arm-keyvault/-/azure-arm-keyvault-0.10.0.tgz#8bf90e90193cd14d29e2d435aff6e412a5a2d313"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-arm-network@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-arm-network/-/azure-arm-network-0.10.0.tgz#8a7d6e384cadff43af42589c036df3482913c337"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-arm-resource@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-arm-resource/-/azure-arm-resource-0.10.0.tgz#1779c2da6998fb9d0dadf5b47bc4840647b0f393"
-  dependencies:
-    azure-common "0.9.12"
-    underscore "1.4.x"
-
-azure-arm-storage@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-arm-storage/-/azure-arm-storage-0.10.0.tgz#2e8950ecdc0ae206a5bc0fa03c7b6d3ea446fef3"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-arm-website@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-arm-website/-/azure-arm-website-0.10.0.tgz#610400ecb801bff16b7e2d7c1c6d1fe99c4f9ec9"
-  dependencies:
-    azure-common "0.9.12"
-    moment "2.6.0"
-    underscore "1.4.x"
-
-azure-asm-compute@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-compute/-/azure-asm-compute-0.10.0.tgz#f2bf28e9fddaeef258f64b7cd1459b36d4f70367"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-asm-hdinsight@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-hdinsight/-/azure-asm-hdinsight-0.10.0.tgz#924078db04344c61b38a786a8edd8ddb74615838"
-  dependencies:
-    azure-common "0.9.12"
-    underscore "1.4.x"
-
-azure-asm-mgmt@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-mgmt/-/azure-asm-mgmt-0.10.0.tgz#a6e38822cff747310bd622cea3a9f518cea6e19e"
-  dependencies:
-    azure-common "0.9.12"
-    underscore "1.4.x"
-
-azure-asm-network@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-network/-/azure-asm-network-0.10.0.tgz#af44f03b051f8f7de450f61728da9650ba951d69"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-asm-sb@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-sb/-/azure-asm-sb-0.10.0.tgz#9ffd9b75249558383b9ef95e72d559052df65756"
-  dependencies:
-    azure-common "0.9.12"
-    underscore "1.4.x"
-
-azure-asm-scheduler@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-scheduler/-/azure-asm-scheduler-0.10.0.tgz#9f743cbd72d9da1b18738b7e004ea2b3483dba7e"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-asm-sql@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-sql/-/azure-asm-sql-0.10.0.tgz#3167b7c4cbe0c9ac445a1c6e98ddda8bad5551be"
-  dependencies:
-    azure-common "0.9.12"
-    underscore "1.4.x"
-
-azure-asm-storage@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-storage/-/azure-asm-storage-0.10.0.tgz#404e7ad6d674c0fdad3777ce1c2d696342d7d81f"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-asm-store@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-store/-/azure-asm-store-0.10.0.tgz#e20baa7e5a646876967c6813d53ffd2e071a47b0"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-asm-subscription@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-subscription/-/azure-asm-subscription-0.10.0.tgz#edd85e2f451e6d3315466de85b4c183d7d5dd59d"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-asm-trafficmanager@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-trafficmanager/-/azure-asm-trafficmanager-0.10.0.tgz#e4d6ffaded1e5217a70b651d50b0b7ef38200236"
-  dependencies:
-    azure-common "0.9.12"
-
-azure-asm-website@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-asm-website/-/azure-asm-website-0.10.0.tgz#7a31cafbf79768c03c97c66370fa846fb9110bda"
-  dependencies:
-    azure-common "0.9.12"
-    moment "2.6.0"
-    underscore "1.4.x"
-
-azure-common@0.9.10:
-  version "0.9.10"
-  resolved "https://registry.yarnpkg.com/azure-common/-/azure-common-0.9.10.tgz#b808c2704b14ea4c4054659087d8789e6ed52764"
-  dependencies:
-    dateformat "1.0.2-1.2.3"
-    duplexer "~0.1.1"
-    envconf "~0.0.4"
-    request "2.27.0"
-    through "~2.3.4"
-    tunnel "~0.0.2"
-    underscore "1.4.x"
-    validator "~3.1.0"
-    xml2js "0.2.7"
-    xmlbuilder "0.4.3"
-
-azure-common@0.9.12:
-  version "0.9.12"
-  resolved "https://registry.yarnpkg.com/azure-common/-/azure-common-0.9.12.tgz#8ca8167c2dbaa43b61e3caa9c7d98e78908749f6"
-  dependencies:
-    dateformat "1.0.2-1.2.3"
-    duplexer "~0.1.1"
-    envconf "~0.0.4"
-    request "2.45.0"
-    through "~2.3.4"
-    tunnel "~0.0.2"
-    underscore "1.4.x"
-    validator "~3.1.0"
-    xml2js "0.2.7"
-    xmlbuilder "0.4.3"
-
-azure-gallery@2.0.0-pre.16:
-  version "2.0.0-pre.16"
-  resolved "https://registry.yarnpkg.com/azure-gallery/-/azure-gallery-2.0.0-pre.16.tgz#cbbbfec82e97034aac271e4c9853f644e3fd847d"
-  dependencies:
-    azure-common "0.9.12"
-    underscore "1.4.x"
-
-azure-keyvault@0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/azure-keyvault/-/azure-keyvault-0.9.2.tgz#db97ea55580b37c9a81431c8d409a23f1516dda2"
-  dependencies:
-    azure-common "0.9.10"
-    node-uuid ">= 1.3.3"
-
-azure-monitoring@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-monitoring/-/azure-monitoring-0.10.0.tgz#cecaf5e5d91133c09598e0d4252352ccc2714788"
-  dependencies:
-    azure-common "0.9.12"
-    moment "2.6.0"
-    underscore "1.4.x"
-
-azure-sb@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-sb/-/azure-sb-0.10.0.tgz#0ba76087b52d42b2617bca7ae389c4dd40f29dd6"
-  dependencies:
-    azure-common "0.9.12"
-    mpns "~2.0.0"
-    underscore "1.4.x"
-    wns "~0.5.3"
-
-azure-scheduler@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/azure-scheduler/-/azure-scheduler-0.10.0.tgz#4b5e809d66e6e85205e5ded9dd4779b29a36aebc"
-  dependencies:
-    azure-common "0.9.12"
-    moment "2.6.0"
-
-azure-storage@0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/azure-storage/-/azure-storage-0.3.3.tgz#5e1920ba75c678cb3f5e52a89136ef36210b58a1"
-  dependencies:
-    extend "~1.2.1"
-    mime "~1.2.4"
-    node-uuid "~1.4.0"
-    request "~2.27.0"
-    underscore "~1.4.4"
-    validator "~3.1.0"
-    xml2js "0.2.7"
-    xmlbuilder "0.4.3"
-
-azure@^0.10.6:
-  version "0.10.6"
-  resolved "https://registry.yarnpkg.com/azure/-/azure-0.10.6.tgz#04a68a29eba0de3a0d0fc75111499e527e770e0c"
-  dependencies:
-    azure-arm-authorization "0.10.0"
-    azure-arm-compute "0.10.0"
-    azure-arm-dns "0.10.0"
-    azure-arm-insights "0.10.0"
-    azure-arm-keyvault "0.10.0"
-    azure-arm-network "0.10.0"
-    azure-arm-resource "0.10.0"
-    azure-arm-storage "0.10.0"
-    azure-arm-website "0.10.0"
-    azure-asm-compute "0.10.0"
-    azure-asm-hdinsight "0.10.0"
-    azure-asm-mgmt "0.10.0"
-    azure-asm-network "0.10.0"
-    azure-asm-sb "0.10.0"
-    azure-asm-scheduler "0.10.0"
-    azure-asm-sql "0.10.0"
-    azure-asm-storage "0.10.0"
-    azure-asm-store "0.10.0"
-    azure-asm-subscription "0.10.0"
-    azure-asm-trafficmanager "0.10.0"
-    azure-asm-website "0.10.0"
-    azure-common "0.9.12"
-    azure-gallery "2.0.0-pre.16"
-    azure-keyvault "0.9.2"
-    azure-monitoring "0.10.0"
-    azure-sb "0.10.0"
-    azure-scheduler "0.10.0"
-    azure-storage "0.3.3"
-    mime "~1.2.4"
-    node-uuid "~1.2.0"
-    request "2.45.0"
-    underscore "1.4.x"
 
 babel-code-frame@^6.22.0:
   version "6.26.0"
@@ -596,10 +337,6 @@ callsites@^0.2.0:
 caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
-
-caseless@~0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.6.0.tgz#8167c1ab8397fb5bb95f96d28e5a81c50f247ac4"
 
 caseless@~0.8.0:
   version "0.8.0"
@@ -811,10 +548,6 @@ content-type@~1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/content-type/-/content-type-1.0.4.tgz#e138cc75e040c727b1966fe5e5f8c9aee256fe3b"
 
-cookie-jar@~0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/cookie-jar/-/cookie-jar-0.3.0.tgz#bc9a27d4e2b97e186cd57c9e2063cb99fa68cccc"
-
 cookie-parser@~1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/cookie-parser/-/cookie-parser-1.3.5.tgz#9d755570fb5d17890771227a02314d9be7cf8356"
@@ -932,10 +665,6 @@ dashdash@^1.12.0:
   resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
   dependencies:
     assert-plus "^1.0.0"
-
-dateformat@1.0.2-1.2.3:
-  version "1.0.2-1.2.3"
-  resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-1.0.2-1.2.3.tgz#b0220c02de98617433b72851cf47de3df2cdbee9"
 
 debug@2.2.0, debug@~2.2.0:
   version "2.2.0"
@@ -1065,10 +794,6 @@ domutils@1.5, domutils@1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
-duplexer@~0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
-
 ecc-jsbn@~0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.1.tgz#0fc73a9ed5f0d53c38193398523ef7e543777505"
@@ -1137,10 +862,6 @@ entities@1.0:
 entities@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.1.tgz#6e5c2d0a5621b5dadaecef80b90edfb5cd7772f0"
-
-envconf@~0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/envconf/-/envconf-0.0.4.tgz#85675afba237c43f98de2d46adc0e532a4dcf48b"
 
 errorhandler@~1.4.2:
   version "1.4.3"
@@ -1317,10 +1038,6 @@ express@^3.21.2:
     send "0.13.0"
     utils-merge "1.0.0"
     vary "~1.0.1"
-
-extend@~1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/extend/-/extend-1.2.1.tgz#a0f5fd6cfc83a5fe49ef698d60ec8a624dd4576c"
 
 extend@~3.0.1:
   version "3.0.1"
@@ -1545,15 +1262,6 @@ has-flag@^3.0.0:
 hawk@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/hawk/-/hawk-1.1.1.tgz#87cd491f9b46e4e2aeaca335416766885d2d1ed9"
-  dependencies:
-    boom "0.4.x"
-    cryptiles "0.2.x"
-    hoek "0.9.x"
-    sntp "0.2.x"
-
-hawk@~1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/hawk/-/hawk-1.0.0.tgz#b90bb169807285411da7ffcb8dd2598502d3b52d"
   dependencies:
     boom "0.4.x"
     cryptiles "0.2.x"
@@ -1896,7 +1604,7 @@ mime@1.3.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.3.4.tgz#115f9e3b6b3daf2959983cb38f149a2d40eb5d53"
 
-mime@~1.2.11, mime@~1.2.2, mime@~1.2.4, mime@~1.2.7, mime@~1.2.9:
+mime@~1.2.11, mime@~1.2.2, mime@~1.2.7:
   version "1.2.11"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.2.11.tgz#58203eed86e3a5ef17aed2b7d9ebd47f0a60dd10"
 
@@ -1924,10 +1632,6 @@ mkdirp@~0.3:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.3.5.tgz#de3e5f8961c88c787ee1368df849ac4413eca8d7"
 
-moment@2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.6.0.tgz#0765b72b841dd213fa91914c0f6765122719f061"
-
 morgan@~1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.6.1.tgz#5fd818398c6819cba28a7cd6664f292fe1c0bbf2"
@@ -1937,10 +1641,6 @@ morgan@~1.6.1:
     depd "~1.0.1"
     on-finished "~2.3.0"
     on-headers "~1.0.0"
-
-mpns@~2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/mpns/-/mpns-2.0.1.tgz#24d269faed8f39726ed31e6250653d043fd44e16"
 
 ms@0.7.1:
   version "0.7.1"
@@ -1992,13 +1692,9 @@ node-icu-charset-detector@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/node-icu-charset-detector/-/node-icu-charset-detector-0.0.7.tgz#832867d4e70cc666a616339ff6637bad039c7d1f"
 
-"node-uuid@>= 1.3.3", node-uuid@~1.4.0:
+node-uuid@~1.4.0:
   version "1.4.8"
   resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
-
-node-uuid@~1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.2.0.tgz#81a9fe32934719852499b58b2523d2cd5fdfd65b"
 
 nopt@~2:
   version "2.2.1"
@@ -2028,10 +1724,6 @@ nth-check@~1.0.0, nth-check@~1.0.1:
 oauth-sign@~0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.3.0.tgz#cb540f93bb2b22a7d5941691a288d60e8ea9386e"
-
-oauth-sign@~0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.4.0.tgz#f22956f31ea7151a821e5f2fb32c113cad8b9f69"
 
 oauth-sign@~0.5.0:
   version "0.5.0"
@@ -2213,10 +1905,6 @@ qs@~0.6.0:
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/qs/-/qs-0.6.6.tgz#6e015098ff51968b8a3c819001d5f2c89bc4b107"
 
-qs@~1.2.0:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-1.2.2.tgz#19b57ff24dc2a99ce1f8bdf6afcda59f8ef61f88"
-
 qs@~2.3.1:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/qs/-/qs-2.3.3.tgz#e9e85adbe75da0bbe4c8e0476a086290f863b404"
@@ -2290,23 +1978,6 @@ regexpp@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/regexpp/-/regexpp-1.1.0.tgz#0e3516dd0b7904f413d2d4193dce4618c3a689ab"
 
-request@2.27.0, request@~2.27.0:
-  version "2.27.0"
-  resolved "https://registry.yarnpkg.com/request/-/request-2.27.0.tgz#dfb1a224dd3a5a9bade4337012503d710e538668"
-  dependencies:
-    aws-sign "~0.3.0"
-    cookie-jar "~0.3.0"
-    forever-agent "~0.5.0"
-    form-data "~0.1.0"
-    hawk "~1.0.0"
-    http-signature "~0.10.0"
-    json-stringify-safe "~5.0.0"
-    mime "~1.2.9"
-    node-uuid "~1.4.0"
-    oauth-sign "~0.3.0"
-    qs "~0.6.0"
-    tunnel-agent "~0.3.0"
-
 request@2.37.0:
   version "2.37.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.37.0.tgz#6c04c1f0f34af0c8b7408f1c1e30d4d6bd852d46"
@@ -2324,27 +1995,6 @@ request@2.37.0:
     oauth-sign "~0.3.0"
     tough-cookie ">=0.12.0"
     tunnel-agent "~0.4.0"
-
-request@2.45.0:
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/request/-/request-2.45.0.tgz#29d713a0a07f17fb2e7b61815d2010681718e93c"
-  dependencies:
-    bl "~0.9.0"
-    caseless "~0.6.0"
-    forever-agent "~0.5.0"
-    form-data "~0.1.0"
-    json-stringify-safe "~5.0.0"
-    mime-types "~1.0.1"
-    node-uuid "~1.4.0"
-    qs "~1.2.0"
-    tunnel-agent "~0.4.0"
-  optionalDependencies:
-    aws-sign2 "~0.5.0"
-    hawk "1.1.1"
-    http-signature "~0.10.0"
-    oauth-sign "~0.4.0"
-    stringstream "~0.0.4"
-    tough-cookie ">=0.12.0"
 
 request@^2.54.0, request@^2.55.0, request@^2.69.0:
   version "2.85.0"
@@ -2476,10 +2126,6 @@ safer-buffer@^2.1.0:
 sandwich-stream@^0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/sandwich-stream/-/sandwich-stream-0.0.4.tgz#da919a8a3a5fde1781979b16baec340d60c06167"
-
-sax@0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/sax/-/sax-0.5.2.tgz#735ffaa39a1cff8ffb9598f0223abdb03a9fb2ea"
 
 sax@>=0.6.0, sax@^1.1.4:
   version "1.2.4"
@@ -2748,7 +2394,7 @@ text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
-through@^2.3.6, through@~2.3.4:
+through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
@@ -2790,17 +2436,9 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-tunnel-agent@~0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.3.0.tgz#ad681b68f5321ad2827c4cfb1b7d5df2cfe942ee"
-
 tunnel-agent@~0.4.0:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.4.3.tgz#6373db76909fe570e08d73583365ed828a74eeeb"
-
-tunnel@~0.0.2:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/tunnel/-/tunnel-0.0.5.tgz#d1532254749ed36620fcd1010865495a1fa9d0ae"
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
@@ -2843,7 +2481,7 @@ ultron@1.0.x:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.0.2.tgz#ace116ab557cd197386a4e88f4685378c8b2e4fa"
 
-underscore@1.4.x, underscore@~1.4, underscore@~1.4.4:
+underscore@~1.4:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.4.4.tgz#61a6a32010622afa07963bf325203cf12239d604"
 
@@ -2862,10 +2500,6 @@ utils-merge@1.0.0:
 uuid@^3.1.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
-
-validator@~3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-3.1.0.tgz#2ea1ff7e92254d69367f385f015299e5ead8755b"
 
 vary@~1.0.1:
   version "1.0.1"
@@ -2907,10 +2541,6 @@ which@^1.2.9:
   dependencies:
     isexe "^2.0.0"
 
-wns@~0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/wns/-/wns-0.5.3.tgz#00f4e85cfcf8e3383dcbd81898906f1f6ad4845f"
-
 wordwrap@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
@@ -2940,22 +2570,12 @@ wtf-8@1.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-2.0.1.tgz#4d8b8f1eccd3419aa362061becef515e1e559635"
 
-xml2js@0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.2.7.tgz#1838518bb01741cae0878bab4915e494c32306af"
-  dependencies:
-    sax "0.5.2"
-
 xml2js@^0.4.16:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.19.tgz#686c20f213209e94abf0d1bcf1efaa291c7827a7"
   dependencies:
     sax ">=0.6.0"
     xmlbuilder "~9.0.1"
-
-xmlbuilder@0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-0.4.3.tgz#c4614ba74e0ad196e609c9272cd9e1ddb28a8a58"
 
 xmlbuilder@~9.0.1:
   version "9.0.7"

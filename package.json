@@ -4,7 +4,6 @@
 	"private": true,
 	"main": "bot.js",
 	"dependencies": {
-		"azure": "^0.10.6",
 		"cheerio": "^0.20.0",
 		"csv": "^0.2.9",
 		"ent": "^2.2.0",
