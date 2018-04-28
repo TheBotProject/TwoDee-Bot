@@ -21,5 +21,15 @@
 		"xml2js": "^0.4.16",
 		"youtube-api": "^0.3.2"
 	},
+	"devDependencies": {
+		"eslint": "^4.19.1",
+		"eslint-config-prettier": "^2.9.0",
+		"eslint-plugin-prettier": "^2.6.0",
+		"prettier": "^1.12.1"
+	},
+	"scripts": {
+		"format": "prettier --write **/*.js && eslint --fix .",
+		"lint": "eslint ."
+	},
 	"engines" : { "node" : ">=0.10" }
 }
