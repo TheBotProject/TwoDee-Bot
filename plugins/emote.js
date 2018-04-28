@@ -1,5 +1,5 @@
 var fs = require('fs');
-var utils = require('../utils');
+var { random } = require('../utils');
 
 var savedEmotes = JSON.parse(
   fs.readFileSync(__dirname + '/.emotes', { encoding: 'utf8' })
@@ -16,62 +16,65 @@ var emotes = {
   //
   // The first column contains numbers denoting probability weights.
   //  The chance for each line to be picked is its weigth divided by the sum of all weights in that emote.
-  // The second column is the emote message string
-  //  can contain '{0}' - the target of the emote
-  //  and '{1}' - the initiator
+  // The second column is a function generating the emote message string. It receives two args:
+  //  - the target of the emote
+  //  - the initiator
   // The third column is a string used text for the count report command
   //  omit it or give it a value that evaluates to false to not record it
 
   pat: [
-    [20, "pats {0}'s head.", 'regular pats'],
-    [10, 'gently pats {0}.', 'gentle pats'],
-    [4, 'sensually pats {0}.', 'sensual pats'],
-    [1, "gropes {0}'s firm buttocks.", 'gropes'],
+    [20, nick => `pats ${nick}'s head.`, 'regular pats'],
+    [10, nick => `gently pats ${nick}.`, 'gentle pats'],
+    [4, nick => `sensually pats ${nick}.`, 'sensual pats'],
+    [1, nick => `gropes ${nick}'s firm buttocks.`, 'gropes'],
   ],
   pet: [
-    [2, 'pets {0}.', 'pets'],
-    [1, 'gives a catgirl to {0}.', 'catgirls'],
-    [1, 'gives a doggirl to {0}.', 'doggirls'],
+    [2, nick => `pets ${nick}.`, 'pets'],
+    [1, nick => `gives a catgirl to ${nick}.`, 'catgirls'],
+    [1, nick => `gives a doggirl to ${nick}.`, 'doggirls'],
   ],
 
   hug: [
-    [50, 'hugs {0}.', 'hugs'],
-    [10, 'glomps {0} with victorious "Nyaaa!".', 'glomps'],
-    [1, 'hugs {0} and tries to cop a feel.'],
+    [50, nick => `hugs ${nick}.`, 'hugs'],
+    [10, nick => `glomps ${nick} with victorious "Nyaaa!".`, 'glomps'],
+    [1, nick => `hugs ${nick} and tries to cop a feel.`],
   ],
 
   thank: [
-    [1, 'thanks {0} on behalf of {1}.', 'thanks'],
+    [1, (nick, from) => `thanks ${nick} on behalf of ${from}.`, 'thanks'],
     // Refactor so that we can get custom messages?
-    // For example: "{0} has been thanked {1} times."
+    // For example: "${nick} has been thanked {1} times."
   ],
 
   highfive: [
-    [400, 'highfives {0}!', 'highfives'],
+    [400, nick => `highfives ${nick}!`, 'highfives'],
     [
       20,
-      'swings her hand energetically and decks {0} squarely in the face! (It was an accident!)',
+      nick =>
+        `swings her hand energetically and decks ${nick} squarely in the face! (It was an accident!)`,
       'slaps',
     ],
     [
       1,
-      'jumps in the air, does a triple fucking somersault and sticks the landing, highfiving both {0} and {1} in the process!',
+      (nick, from) =>
+        `jumps in the air, does a triple fucking somersault and sticks the landing, highfiving both ${nick} and ${from} in the process!`,
       'higherfives',
     ],
   ],
-  scarf: [[1, 'shares her scarf with {0}.', 'scarf snuggles']],
+  scarf: [[1, nick => `shares her scarf with ${nick}.`, 'scarf snuggles']],
 
   nuzzle: [
-    [2, 'nuzzles {0}.', 'nuzzles'],
-    [1, 'nuzzles {0} and purrs into their ear.', 'gentle nuzzles'],
+    [2, nick => `nuzzles ${nick}.`, 'nuzzles'],
+    [1, nick => `nuzzles ${nick} and purrs into their ear.`, 'gentle nuzzles'],
   ],
 
   applaud: [
-    [5, 'gives a standing ovation for {0}!', 'standing ovations'],
-    [20, 'enthusiastically applauds {0}.', 'applause'],
+    [5, nick => `gives a standing ovation for ${nick}!`, 'standing ovations'],
+    [20, nick => `enthusiastically applauds ${nick}.`, 'applause'],
     [
       1,
-      'moves her left hand in a clapping motion as she yawns into the other.',
+      () =>
+        `moves her left hand in a clapping motion as she yawns into the other.`,
       'golfclaps',
     ],
   ],
@@ -84,30 +87,39 @@ var day = today.getUTCDate();
 // only do if date is between Dec 24 and Jan 2
 if ((month === 11 && day >= 24) || (month === 0 && today.getUTCDate() < 2)) {
   emotes.pat = [
-    [20, "pats {0}'s head.", 'regular pats'],
-    [10, 'festively pats {0}.', 'festive pats'],
-    [4, 'gives {0} a pat of Christmas cheer.', 'Christmas pats'],
-    [1, "pinches {0}'s cheeks.", 'pinches'],
+    [20, nick => `pats ${nick}'s head.`, 'regular pats'],
+    [10, nick => `festively pats ${nick}.`, 'festive pats'],
+    [4, nick => `gives ${nick} a pat of Christmas cheer.`, 'Christmas pats'],
+    [1, nick => `pinches ${nick}'s cheeks.`, 'pinches'],
   ];
 
   emotes.pet = [
-    [2, 'pets {0}.', 'pets'],
-    [1, 'gives a pet reindeer to {0}.', 'reindeer'],
-    [1, 'gives a pet polar bear to {0}.', 'polar bears'],
+    [2, nick => `pets ${nick}.`, 'pets'],
+    [1, nick => `gives a pet reindeer to ${nick}.`, 'reindeer'],
+    [1, nick => `gives a pet polar bear to ${nick}.`, 'polar bears'],
   ];
 
   emotes.hug = [
-    [5, 'hugs {0}.', 'hugs'],
-    [1, 'glomps {0} with victorious "Nyaaa!".', 'glomps'],
-    [2, 'hugs {0} and hands them a Christmas present.', 'Christmas presents'],
+    [5, nick => `hugs ${nick}.`, 'hugs'],
+    [1, nick => `glomps ${nick} with victorious "Nyaaa!".`, 'glomps'],
+    [
+      2,
+      nick => `hugs ${nick} and hands them a Christmas present.`,
+      'Christmas presents',
+    ],
   ];
 
   emotes.highfive = [
-    [400, 'highfives {0}!', 'highfives'],
-    [20, 'highfives {0} with the force of a thousand Santas!', 'Santa fives'],
+    [400, nick => `highfives ${nick}!`, 'highfives'],
+    [
+      20,
+      nick => `highfives ${nick} with the force of a thousand Santas!`,
+      'Santa fives',
+    ],
     [
       1,
-      'jumps on the roof, does a triple fucking somersault and slides down the chimney, highfiving {0} and handing them a Christmas present in the process!',
+      nick =>
+        `jumps on the roof, does a triple fucking somersault and slides down the chimney, highfiving ${nick} and handing them a Christmas present in the process!`,
       'Christmas fives',
     ],
   ];
@@ -116,9 +128,6 @@ if ((month === 11 && day >= 24) || (month === 0 && today.getUTCDate() < 2)) {
 for (var p in emotes) {
   savedEmotes[p] = savedEmotes[p] || {};
 }
-
-var format = utils.format;
-var random = utils.random;
 
 function isValidName(msg) {
   // msg is a string and expected to be the name of the target of the pat
@@ -156,10 +165,7 @@ module.exports = function(client) {
         }
 
         if (message === from) {
-          client.say(
-            channel,
-            format("W-Who'd want to {0} you!? Baka {1}!", p, from)
-          );
+          client.say(channel, `W-Who'd want to ${p} you!? Baka ${from}!`);
           return;
         }
 
@@ -179,7 +185,7 @@ module.exports = function(client) {
           else savedEmotes[p][tar][i] = 1;
         }
 
-        client.action(channel, format(emote[1], message, from));
+        client.action(channel, emote[1](message, from));
       };
     })(p)),
       (commands[p + 's'] = (function(p) {

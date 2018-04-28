@@ -2,7 +2,7 @@ var filesize = require('humanize').filesize;
 var nyaa = require('nyaatorrents');
 var xml2js = require('xml2js');
 var request = require('request');
-var utils = require('../utils');
+var util = require('util');
 
 module.exports = function(client) {
   var defaultBaseURL = 'https://www.nyaa.se/';
@@ -36,8 +36,8 @@ module.exports = function(client) {
   }
 
   function formatData(data, searchURL) {
-    return utils.format(
-      '{0} - {1} | S: {2} | L: {3} | {4} | {5}',
+    return util.format(
+      '%s - %s | S: %i | L: %i | %s | %s',
       data.title,
       data.size,
       data.seeders,

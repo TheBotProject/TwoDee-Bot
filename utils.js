@@ -12,15 +12,6 @@ module.exports = {
     return min + Math.floor(Math.random() * (max - min));
   },
 
-  // replaces {0}, {1}, ..., {n}, ... etc. in str with
-  // the n-th argument after str
-  format: function(str) {
-    var args = Array.prototype.slice.call(arguments, 1);
-    return str.replace(/{(\d+)}/g, function(match, number) {
-      return typeof args[number] !== 'undefined' ? args[number] : match;
-    });
-  },
-
   // a URL shortener function, using google's goo.gl service
   // see https://developers.google.com/url-shortener/v1/getting_started
   shortenURL: function(url, cb) {
