@@ -4,7 +4,6 @@
 	"private": true,
 	"main": "bot.js",
 	"dependencies": {
-		"azure": "^0.10.6",
 		"cheerio": "^0.20.0",
 		"csv": "^0.2.9",
 		"ent": "^2.2.0",
@@ -20,6 +19,16 @@
 		"socket.io": "^1.4.5",
 		"xml2js": "^0.4.16",
 		"youtube-api": "^0.3.2"
+	},
+	"devDependencies": {
+		"eslint": "^4.19.1",
+		"eslint-config-prettier": "^2.9.0",
+		"eslint-plugin-prettier": "^2.6.0",
+		"prettier": "^1.12.1"
+	},
+	"scripts": {
+		"format": "prettier --write **/*.js && eslint --fix .",
+		"lint": "eslint ."
 	},
 	"engines" : { "node" : ">=0.10" }
 }
